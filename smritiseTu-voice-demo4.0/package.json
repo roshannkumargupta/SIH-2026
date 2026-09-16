@@ -1,0 +1,11 @@
+{
+  "name": "smritisetu-voice-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Voice-enabled multilingual navigation proof of concept for SmritiSetu.",
+  "scripts": {
+    "start": "node backend/server.js",
+    "test": "node backend/nlp/interpreter.test.js"
+  },
+  "engines": { "node": ">=18" }
+}

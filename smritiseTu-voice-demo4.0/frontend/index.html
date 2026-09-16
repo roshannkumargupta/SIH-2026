@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmritiSetu | Voice Navigation</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">SMRITISETU</p>
+      <h1 id="page-title">Your helpful day, made simple.</h1>
+    </div>
+    <div class="header-controls">
+      <button id="read-aloud-btn" class="read-aloud-btn" aria-label="Read Screen Aloud"><span
+          aria-hidden="true">🔊</span> <span id="read-aloud-label">Read Aloud</span></button>
+      <label class="language-label"><span id="language-label">Language</span><select id="language">
+          <option value="en">English</option>
+          <option value="hi">हिंदी</option>
+          <option value="as">অসমীয়া</option>
+          <option value="mni">মণিপুরী</option>
+          <option value="brx">बर'</option>
+          <option value="bn">বাংলা</option>
+          <option value="ne">नेपाली</option>
+        </select></label>
+    </div>
+  </header>
+  <main>
+    <section class="welcome">
+      <div class="sun" aria-hidden="true">☀</div>
+      <div>
+        <h2 id="welcome-title">Hello! What would you like to do?</h2>
+        <p id="welcome-copy">Choose a card, or use the Voice Assistant to speak naturally.</p>
+      </div>
+    </section>
+    <section id="games-card" class="main-card" tabindex="-1">
+      <div class="card-heading">
+        <div class="icon">♟</div>
+        <div>
+          <p class="selected-label" id="games-selected">Voice selected</p>
+          <h2 id="games-title">Games</h2>
+          <p id="games-subtitle">A little activity for your mind</p>
+        </div>
+      </div>
+      <div id="games-list" class="item-list"></div>
+    </section>
+    <section id="reminders-card" class="main-card" tabindex="-1">
+      <div class="card-heading">
+        <div class="icon">✓</div>
+        <div>
+          <p class="selected-label" id="reminders-selected">Voice selected</p>
+          <h2 id="reminders-title">Today's Reminders</h2>
+          <p id="reminders-subtitle">Your gentle plan for today</p>
+        </div>
+      </div>
+      <ol id="reminders-list" class="reminder-list"></ol>
+    </section>
+    <section id="command-panel" class="command-panel">
+      <h2 id="try-title">Try typing a command</h2>
+      <p id="try-copy">Useful if microphone permission is not available.</p>
+      <div class="input-row"><input id="command-input" aria-label="Type a voice command"
+          placeholder="e.g. What should I do today?"><button id="send-command">Send</button></div>
+    </section>
+    <section aria-live="polite" class="status-panel">
+      <div class="status-top"><span class="mic-small">🎤</span><strong id="assistant-title">Voice
+          Assistant</strong><span id="status-dot" class="status-dot"></span></div>
+      <p id="voice-status">Ready when you are. Press the microphone to speak.</p>
+      <div id="transcript" class="transcript" hidden></div>
+      <div id="nlp-result" class="nlp-result" hidden></div>
+    </section>
+    <section id="help-panel" class="help-panel" hidden>
+      <h2 id="help-title">Things you can say</h2>
+      <div id="help-commands"></div>
+    </section>
+  </main>
+  <button id="voice-button" class="voice-button" aria-label="Start Voice Assistant"><span>🎤</span><strong
+      id="voice-button-label">Voice Assistant</strong></button>
+  <dialog id="game-dialog"><button id="close-dialog" aria-label="Close">×</button>
+    <div class="dialog-icon">★</div>
+    <h2 id="dialog-title">Memory Match</h2>
+    <p id="dialog-text">Game demo placeholder — ready to play!</p><button id="dialog-ok">Okay</button>
+  </dialog>
+  <script src="js/data.js"></script>
+  <script src="js/nlp.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/voice.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "SmritiSetu - Elderly Cognitive Care",
+  "short_name": "SmritiSetu",
+  "description": "A warm daily companion for memories, medicine, cognitive games, and daily routines.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121316",
+  "theme_color": "#E5A93C",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/brain-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/brain-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["medical", "health", "lifestyle"]
+}

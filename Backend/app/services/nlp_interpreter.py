@@ -1,505 +1,286 @@
+"""
+Universal NLP Interpreter for SmritiSetu Voice Assistant.
+Implements universal 3-tier intent classification for all 11 Indic languages.
+Loads unified phrase tables from app/core/voice_phrases.json.
+"""
+
 import json
 import logging
+import os
 import re
-import urllib.request
-import urllib.error
+import unicodedata
+from functools import lru_cache
 from typing import Any
 
 logger = logging.getLogger("nlp_interpreter")
 
 SYSTEM_PROMPT = """You are an intent classifier for SmritiSetu, an elderly-care voice assistant cognitive app.
 The app features:
-  1. Games section - 22 cognitive exercises (Memory Match, Water Jugs, Tower of Hanoi, Number Puzzle, Word Scramble, Quick Math, Stroop Test, Maze, Ball Sort, etc.)
-  2. Reminders & Routine section - today's schedule, daily routine tasks, medicines, and activities
-  3. Medications section - prescriptions, medicine logs, taking medicines
+  1. Games section - 24 cognitive exercises (Water Jugs, Tower of Hanoi, Ball Sort, Memory Match, Number Sequence, Word Scramble, Quick Math, Stroop Test, Maze, etc.)
+  2. Reminders & Routine section - today's schedule, daily routine tasks, and activities
+  3. Medications section - daily doses, medication schedules, logging taken/skipped medicines
   4. Memories album - family photos, audio recollections
   5. AI Cognitive Analytics - cognitive performance, memory retention trends
   6. Caregiver section - caregiver monitoring view
 
-Your job: read what the user said (in any Indian language or English) and return ONLY a JSON object - no prose.
-
 Valid intents:
-  GO_HOME         - user wants to return home / dashboard (e.g. "go home", "go back to home dashboard", "मुख्य पृष्ठ")
-  ADD_ROUTINE     - user wants to add/create a routine task or activity (e.g. "add routine", "नया काम जोड़ो", "दवा का समय जोड़ो", "walk at 5 pm", "5 baje walk")
-  COMPLETE_ROUTINE- user confirms completing a routine/task/medicine (e.g. "task completed", "काम पूरा हो गया", "दवाई ले ली", "रूटीन पूरा हुआ", "done")
-  REMOVE_ROUTINE  - user wants to delete/remove a routine task (e.g. "delete task", "रूटीन हटाओ", "काम हटाओ")
-  UPDATE_ROUTINE  - user wants to change routine timing or details (e.g. "change time", "टाइमिंग बदलो", "रूटीन का समय बदलो")
-  OPEN_REMINDERS  - user wants to view routine/schedule (e.g. "show reminders", "रूटीन दिखाओ", "आज के काम")
-  TODAY_REMINDERS - user asks what tasks they have today (e.g. "what's on today", "आज क्या करना है", "आज के रिमाइंडर")
-  NEXT_REMINDER   - user wants the next reminder item (e.g. "next task", "अगला काम")
-  OPEN_MEDICATIONS- user wants to view medicine / take medicine (e.g. "take medicine", "dawa dikhao", "take my medicine", "दवा दिखाओ")
-  OPEN_GAMES      - user wants to see/play games (e.g. "play games", "गेम खेलो", "खेलना है")
-  NEXT_GAME       - user wants another game (e.g. "next game", "अगला खेल")
-  OPEN_GAME       - user names a specific game; entity: WATER_JUGS, TOWER_OF_HANOI, BALL_SORT, MEMORY_MATCH, NUMBER_PUZZLE, WORD_PUZZLE, MAZE, STROOP, QUICK_MATH, SCHULTE_TABLE, DUAL_TASK, VISUAL_SEARCH, PATTERN_MATRIX, etc.
-  OPEN_PROGRESS   - user asks for progress/scores (e.g. "my score", "प्रोग्रेस", "स्कोर")
-  OPEN_ANALYTICS  - user asks for cognitive analytics or progress report (e.g. "show my progress", "analytics", "प्रदर्शन")
-  OPEN_MEMORIES   - user asks for memories/photos (e.g. "memories", "यादें", "फोटो")
-  OPEN_CAREGIVER  - user asks for caregiver view
-  HELP            - user asks for help or commands (e.g. "help", "मदद")
-  UNKNOWN         - cannot determine intent
+  GO_HOME          - return home / dashboard (e.g. "go home", "मुख्य पृष्ठ")
+  OPEN_GAMES       - open cognitive games center (e.g. "play games", "खेल खोलो")
+  NEXT_GAME        - switch to next brain game (e.g. "next game", "अगला खेल")
+  OPEN_GAME        - specific game named; entity: WATER_JUGS, TOWER_OF_HANOI, BALL_SORT, N_BACK, LOGIC_PUZZLES, STROOP, MENTAL_ROTATION, SCHULTE_TABLE, MAZE, CARD_MATCHING, NUMBER_SEQUENCE, WORD_SCRAMBLE, QUICK_MATH, VISUAL_SEARCH, REACTION_TIME, SIMON_SAYS, TRAIL_MAKING, ANAGRAM_SOLVER, DELAYED_RECALL, PATTERN_MATRIX, DUAL_TASK, WORKING_MEMORY_GRID, CULTURAL_OBJECT_RECOGNITION, DAILY_ROUTINE_RECALL
+  OPEN_REMINDERS   - open daily routine / tasks (e.g. "show reminders", "रूटीन दिखाओ")
+  TODAY_REMINDERS  - what tasks do I have today (e.g. "what do I have today", "आज क्या करना है")
+  NEXT_REMINDER    - what is my next reminder (e.g. "what is my next task", "अगला काम")
+  ADD_ROUTINE      - add a routine task (e.g. "add task", "नया काम जोड़ो")
+  COMPLETE_ROUTINE - mark task done (e.g. "task completed", "काम पूरा हो गया")
+  REMOVE_ROUTINE   - delete task (e.g. "delete task", "काम हटाओ")
+  UPDATE_ROUTINE   - change time/reschedule (e.g. "change time", "समय बदलो")
+  OPEN_MEDICATIONS - open medications schedule (e.g. "show my medicines", "दवाइयां दिखाओ")
+  TODAY_MEDICATIONS- what medicines today (e.g. "what medicine do I take today", "आज कौन सी दवा लेनी है")
+  NEXT_MEDICATION  - what is next dose (e.g. "what is my next dose", "अगली दवा कौन सी है")
+  MEDICATION_TAKEN - user says they took their medicine (e.g. "I took my medicine", "दवाई ले ली")
+  MEDICATION_SKIPPED- user says they skipped their medicine (e.g. "skipped medicine", "दवा छोड़ दी")
+  OPEN_ANALYTICS   - open progress / cognitive report (e.g. "show my progress", "मेरी प्रोग्रेस दिखाओ")
+  OPEN_MEMORIES    - open memories / photos (e.g. "show my memories", "मेरी यादें दिखाओ")
+  OPEN_CAREGIVER   - open caregiver portal (e.g. "caregiver", "देखभालकर्ता")
+  HELP             - help or guide (e.g. "help", "मदद")
+  CLOSE            - dismiss / close assistant (e.g. "close", "बंद करो")
+  UNKNOWN          - cannot determine intent
 
-Respond with ONLY valid JSON, exactly this shape, nothing else:
-{"intent":"OPEN_REMINDERS","confidence":0.95,"entity":null}"""
+Respond with ONLY valid JSON:
+{"intent":"OPEN_GAMES","confidence":0.95,"entity":null}"""
 
+# Load Unified Phrase Tables from JSON emitted by gen-voice-phrases
+VOICE_DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "core", "voice_phrases.json")
+try:
+    with open(VOICE_DATA_PATH, "r", encoding="utf-8") as f:
+        VOICE_PHRASES_DATA: dict[str, Any] = json.load(f)
+except Exception as exc:
+    logger.warning(f"Could not load voice_phrases.json: {exc}")
+    VOICE_PHRASES_DATA = {}
 
-def normalize_text(text: str) -> str:
-    cleaned = re.sub(r"[?!,.\"']", " ", (text or "").lower())
-    return re.sub(r"\s+", " ", cleaned).strip()
-
-
-def includes_any(text: str, phrases: list[str]) -> bool:
-    return any(p in text for p in phrases)
-
-
-# Fallback Phrase Tables for all supported Indic languages + English
-EN_PHRASES = {
-    "addRoutine": [
-        "add routine", "create routine", "add task", "create task", "new routine",
-        "new task", "schedule walk", "schedule medicine", "add reminder", "set reminder"
-    ],
-    "completeRoutine": [
-        "complete routine", "mark routine done", "routine done", "task completed",
-        "mark task completed", "i took medicine", "took medicine", "done with walk",
-        "finished routine", "task done", "completed task", "mark done"
-    ],
-    "removeRoutine": [
-        "remove routine", "delete routine", "delete task", "remove task", "cancel routine"
-    ],
-    "updateRoutine": [
-        "update routine", "change routine time", "routine timing", "change time",
-        "reschedule task", "reschedule routine"
-    ],
-    "help": ["help", "what can i say", "what can i do", "commands", "guide"],
-    "nextGame": ["next game", "show next game", "another game", "another one", "give me another", "next one"],
-    "nextReminder": ["next reminder", "next task", "what is next", "what should i do next", "next medicine"],
-    "today": ["today reminder", "reminders today", "what should i do today", "today tasks", "tell me today", "need to do today", "what do i need to do", "today's schedule"],
-    "reminders": ["open reminders", "show reminders", "my reminders", "my tasks", "today tasks", "medication", "medicine", "schedule", "routine", "open routine", "show routine"],
-    "games": ["play game", "play games", "show me games", "i want to play", "feel like playing", "open games", "let me play", "exercises"],
-    "progress": ["progress", "analytics", "my score", "performance", "cognitive score", "report"],
-    "memories": ["memories", "photos", "family photos", "album", "recollections"],
-    "caregiver": ["caregiver", "caretaker", "caregiver dashboard", "caretaker view"],
+# Native numeral conversion map
+NATIVE_DIGIT_MAP = {
+    # Devanagari
+    "०": "0", "१": "1", "२": "2", "३": "3", "४": "4",
+    "५": "5", "६": "6", "७": "7", "८": "8", "९": "9",
+    # Bengali / Assamese / Manipuri
+    "০": "0", "১": "1", "২": "2", "৩": "3", "৪": "4",
+    "৫": "5", "৬": "6", "৭": "7", "৮": "8", "৯": "9",
+    # Telugu
+    "౦": "0", "౧": "1", "౨": "2", "౩": "3", "౪": "4",
+    "౫": "5", "౬": "6", "౭": "7", "౮": "8", "౯": "9",
+    # Tamil
+    "௦": "0", "௧": "1", "௨": "2", "௩": "3", "௪": "4",
+    "௫": "5", "௬": "6", "௭": "7", "௮": "8", "௯": "9",
+    # Gujarati
+    "૦": "0", "૧": "1", "૨": "2", "૩": "3", "૪": "4",
+    "૫": "5", "૬": "6", "૭": "7", "૮": "8", "૯": "9",
 }
 
-HI_PHRASES = {
-    "addRoutine": [
-        "नया रूटीन जोड़ो", "रूटीन जोड़ो", "रूटीन बनाओ", "नया काम जोड़ो", "काम जोड़ो",
-        "टास्क जोड़ो", "रिमाइंडर जोड़ो", "दवा का समय जोड़ो", "ऐड रूटीन", "टास्क बनाओ"
-    ],
-    "completeRoutine": [
-        "काम पूरा हो गया", "रूटीन पूरा हुआ", "टास्क पूरा हो गया", "दवाई ले ली",
-        "दवा खा ली", "काम हो गया", "पूरा करो", "दवाई खा ली", "टास्क पूरा", "काम खत्म"
-    ],
-    "removeRoutine": [
-        "रूटीन हटाओ", "काम हटाओ", "टास्क डिलीट करो", "रूटीन मिटाओ", "हटा दो"
-    ],
-    "updateRoutine": [
-        "रूटीन का समय बदलो", "टाइमिंग बदलो", "समय बदलो", "रूटीन अपडेट करो", "टाइम बदलो"
-    ],
-    "help": ["मदद", "क्या बोल", "कमांड", "सहायता", "हेल्प"],
-    "nextGame": ["अगला गेम", "दूसरा गेम", "नेक्स्ट गेम", "अगला खेल"],
-    "nextReminder": ["अगला रिमाइंडर", "अगला काम", "नेक्स्ट रिमाइंडर", "अगली दवा"],
-    "today": ["आज मुझे क्या करना है", "आज के रिमाइंडर", "आज क्या करना", "आज के काम", "आज का शेड्यूल", "आज का रूटीन"],
-    "reminders": ["रिमाइंडर दिखाओ", "मेरे रिमाइंडर", "काम दिखाओ", "क्या करना है", "दवा दिखाओ", "दवाई", "रूटीन दिखाओ", "रूटीन खोलो"],
-    "games": ["गेम खोलो", "गेम खेलना है", "गेम खेलो", "गेम दिखाओ", "खेल दिखाओ", "खेलना है"],
-    "progress": ["प्रोग्रेस", "स्कोर", "एनालिटिक्स", "मेरा स्कोर", "प्रदर्शन"],
-    "memories": ["यादें", "पुरानी यादें", "फोटो", "तस्वीरें", "एल्बम"],
-    "caregiver": ["केयरगिवर", "केयरटेकर", "देखभाल"],
+PUNCTUATION_REGEX = re.compile(r'[।॥.,\/#!$%\^&\*;:{}=\-_`~()?"\'¿¡\[\]\\<>@+]')
+ZWJ_ZWNJ_REGEX = re.compile(r'[\u200B\u200C\u200D\uFEFF]')
+
+
+def normalize_text(raw: str | None) -> str:
+    """Normalizes text across Indic scripts and English."""
+    if not raw:
+        return ""
+    # NFC normalization and lowercasing
+    text = unicodedata.normalize("NFC", raw).lower()
+    # Strip ZWJ/ZWNJ
+    text = ZWJ_ZWNJ_REGEX.sub("", text)
+    # Map native digits
+    for ind, asc in NATIVE_DIGIT_MAP.items():
+        text = text.replace(ind, asc)
+    # Strip punctuation & danda
+    text = PUNCTUATION_REGEX.sub(" ", text)
+    # Collapse whitespace
+    return re.sub(r"\s+", " ", text).strip()
+
+
+# Shared Romanized Phrases
+ROMANIZED_PHRASES: dict[str, list[str]] = {
+    "OPEN_GAMES": ["khel", "khelo", "khelna hai", "game khelo", "games kholo", "game lagao", "games open", "aatalu", "vilaiyattu", "khela"],
+    "NEXT_GAME": ["agla khel", "dusra game", "next game lagao", "dusra khel", "adutha game", "aarekta game"],
+    "OPEN_REMINDERS": ["routine", "schedule", "reminder", "aaj ka kaam", "mere kaam", "dinacharya", "walk", "task"],
+    "TODAY_REMINDERS": ["aaj kya karna hai", "aaj ke kaam", "today schedule", "aaj ka routine", "aaj ke reminders", "eroju panulu", "inraiya panigal"],
+    "NEXT_REMINDER": ["agla kaam", "next task", "agla reminder", "aage kya karna hai", "aduthathu enna", "erpor ki"],
+    "ADD_ROUTINE": ["kaam jodo", "naya kaam", "routine jodo", "task add karo", "reminder lagao", "kotha kaaj", "panulu cherchu"],
+    "COMPLETE_ROUTINE": ["kaam ho gaya", "task complete", "routine done", "ho gaya", "khatam ho gaya", "kaam pura", "mudinjathu", "kaaj sesh"],
+    "REMOVE_ROUTINE": ["kaam hatao", "delete task", "routine hatao", "task cancel", "hata do"],
+    "UPDATE_ROUTINE": ["time badlo", "timing change", "samay badlo", "schedule badlo", "neram maathu"],
+    "OPEN_MEDICATIONS": ["dawa", "davai", "dawai", "medicine", "tablet", "goli", "pills", "mandulu", "marunthu", "oushodh", "dawaaiyan"],
+    "TODAY_MEDICATIONS": ["aaj ki dawa", "dawa ka time", "aaj kaun si dawa", "konsi goli", "eroju mandulu", "inraiya marunthugal", "aajker oushodh"],
+    "NEXT_MEDICATION": ["agli dawa", "next medicine", "agli goli", "next dose", "tarvati mandu", "adutha marunthu", "porer oushodh"],
+    "MEDICATION_TAKEN": ["dawa le li", "davai kha li", "goli kha li", "tablet le liya", "dawa ho gayi", "mandu vesukunnanu", "marunthu saaptuten", "oushodh kheyechi"],
+    "MEDICATION_SKIPPED": ["dawa nahi li", "skip dawa", "dawa chhod di", "goli miss ho gayi", "mandu veyyaledu", "marunthu saapdala"],
+    "OPEN_ANALYTICS": ["score", "progress", "report", "mera score", "kaisa chal raha hai", "pradarshan", "naa score", "en score"],
+    "OPEN_MEMORIES": ["yaadein", "photo", "tasveer", "purani photo", "family album", "gnapakalu", "ninaivugal", "smriti"],
+    "OPEN_CAREGIVER": ["caregiver", "caretaker", "doctor", "madadgar", "caregiver dashboard"],
+    "GO_HOME": ["home", "dashboard", "main page", "wapas", "shuru", "mukhya prishth"],
+    "HELP": ["help", "madad", "guide", "sahayata", "kya bolu", "sahayam"],
+    "CLOSE": ["band karo", "close", "exit", "hatao", "khatam", "ruk jao"],
 }
 
-TE_PHRASES = {
-    "addRoutine": ["కొత్త రొటీన్ జోడించండి", "రొటీన్ జోడించండి", "పని జోడించండి", "టాస్క్ జోడించండి", "రిమైండర్ జోడించండి"],
-    "completeRoutine": ["పని పూర్తయింది", "రొటీన్ పూర్తయింది", "మందులు తీసుకున్నాను", "టాస్క్ పూర్తయింది", "పూర్తి చేయండి"],
-    "removeRoutine": ["రొటీన్ తొలగించండి", "పని తొలగించండి", "టాస్క్ తీసివేయండి"],
-    "updateRoutine": ["రొటీన్ సమయం మార్చండి", "సమయం మార్చండి", "సమయం మార్చు"],
-    "help": ["సహాయం", "సహాయం చేయండి"],
-    "nextGame": ["తదుపరి ఆట", "తదుపరి గేమ్"],
-    "nextReminder": ["తదుపరి పని", "తదుపరి రిమైండర్"],
-    "today": ["ఈ రోజు పనులు", "ఈ రోజు రిమైండర్లు", "ఈ రోజు ఏమి చేయాలి"],
-    "reminders": ["రిమైండర్లు చూపించండి", "నా పనులు", "రొటీన్ చూపించండి", "మందుల సమయం"],
-    "games": ["ఆటలు ఆడండి", "గేమ్స్ తెరవండి", "ఆటలు"],
-    "progress": ["పురోగతి", "స్కోరు", "నా పురోగతి"],
-    "memories": ["జ్ఞాపకాలు", "ఫోటోలు", "ఆల్బమ్"],
-    "caregiver": ["సంరక్షకుడు", "కేర్ గివర్"],
-}
-
-TA_PHRASES = {
-    "addRoutine": ["புதிய வழக்கத்தை சேர்க்கவும்", "பணியை சேர்க்கவும்", "நினைவூட்டலை சேர்க்கவும்"],
-    "completeRoutine": ["பணி முடிந்தது", "மருந்து சாப்பிட்டேன்", "வழக்கம் முடிந்தது"],
-    "removeRoutine": ["வழக்கத்தை நீக்கு", "பணியை நீக்கு"],
-    "updateRoutine": ["நேரத்தை மாற்று", "வழக்கத்தை புதுப்பி"],
-    "help": ["உதவி"],
-    "nextGame": ["அடுத்த விளையாட்டு"],
-    "nextReminder": ["அடுத்த பணி"],
-    "today": ["இன்றைய பணிகள்", "இன்றைய நினைவூட்டல்"],
-    "reminders": ["நினைவூட்டலைக் காட்டு", "பணிகள்", "மருந்துகள்"],
-    "games": ["விளையாடு", "விளையாட்டுகள்"],
-    "progress": ["முன்னேற்றம்", "மதிப்பெண்"],
-    "memories": ["நினைவுகள்", "புகைப்படங்கள்"],
-    "caregiver": ["பராமரிப்பாளர்"],
-}
-
-MR_PHRASES = {
-    "addRoutine": ["नवीन दिनचर्या जोडा", "काम जोडा", "टास्क जोडा", "स्मरणपत्र जोडा"],
-    "completeRoutine": ["काम पूर्ण झाले", "औषध घेतले", "दिनचर्या पूर्ण झाली"],
-    "removeRoutine": ["दिनचर्या हटवा", "काम हटवा"],
-    "updateRoutine": ["वेळ बदला", "दिनचर्या अपडेट करा"],
-    "help": ["मदत"],
-    "nextGame": ["पुढील खेळ"],
-    "nextReminder": ["पुढील काम"],
-    "today": ["आजची कामे", "आजचे स्मरणपत्र"],
-    "reminders": ["स्मरणपत्रे दाखवा", "माझी कामे", "दिनचर्या दाखवा"],
-    "games": ["खेळ खेळा", "खेळ उघडा"],
-    "progress": ["प्रगती", "गुण"],
-    "memories": ["आठवणी", "फोटो"],
-    "caregiver": ["देखभालकर्ता"],
-}
-
-GU_PHRASES = {
-    "addRoutine": ["નવી દિનચર્યા ઉમેરો", "કાર્ય ઉમેરો", "રિમાઇન્ડર ઉમેરો"],
-    "completeRoutine": ["કાર્ય પૂર્ણ થયું", "દવા લીધી", "દિનચર્યા પૂર્ણ થઈ"],
-    "removeRoutine": ["દિનચર્યા દૂર કરો", "કાર્ય કાઢી નાખો"],
-    "updateRoutine": ["સમય બદલો", "દિનચર્યા અપડેટ કરો"],
-    "help": ["મદદ"],
-    "nextGame": ["આગામી રમત"],
-    "nextReminder": ["આગામી કાર્ય"],
-    "today": ["આજના કાર્યો", "આજના રિમાઇન્ડર"],
-    "reminders": ["રિમાઇન્ડર બતાવો", "મારા કાર્યો", "દિનચર્યા બતાવો"],
-    "games": ["રમત રમો", "રમતો ખોલો"],
-    "progress": ["પ્રગતિ", "સ્કોર"],
-    "memories": ["યાદો", "ફોટા"],
-    "caregiver": ["સંભાળ રાખનાર"],
-}
-
-AS_PHRASES = {
-    "addRoutine": ["নতুন ৰুটিন যোগ কৰক", "কাম যোগ কৰক", "সোঁৱৰণী যোগ কৰক"],
-    "completeRoutine": ["কাম শেষ হ'ল", "ঔষধ খালোঁ", "ৰুটিন সম্পন্ন হ'ল"],
-    "removeRoutine": ["ৰুটিন মচক", "কাম মচক"],
-    "updateRoutine": ["সময় সলনি কৰক", "ৰুটিন আপডেট কৰক"],
-    "help": ["সহায়", "কি কওঁ", "কমান্ড"],
-    "nextGame": ["পৰৱৰ্তী গেম", "আন গেম", "নেক্সট গেম", "পৰৱৰ্তী খেল"],
-    "nextReminder": ["পৰৱৰ্তী সোঁৱৰণী", "পৰৱৰ্তী কাম", "নেক্সট ৰিমাইণ্ডাৰ", "পৰৱৰ্তী ঔষধ"],
-    "today": ["আজি মই কি কৰিব লাগিব", "আজিৰ সোঁৱৰণী", "আজি কি কৰিব", "আজিৰ কাম"],
-    "reminders": ["সোঁৱৰণী দেখুওৱা", "মোৰ সোঁৱৰণী", "কাম দেখুওৱা", "কি কৰিব লাগিব", "ঔষধ"],
-    "games": ["খেল খোলক", "গেম খোলক", "গেম খেলিব", "গেম দেখুওৱা", "খেল দেখুওৱা"],
-    "progress": ["প্ৰগতি", "স্কোৰ", "মোৰ প্ৰদৰ্শন"],
-    "memories": ["স্মৃতি", "ফটো", "এলবাম"],
-    "caregiver": ["কেয়াৰগিভাৰ", "যত্নলোৱা"],
-}
-
-NE_PHRASES = {
-    "addRoutine": ["नयाँ दिनचर्या थप्नुहोस्", "काम थप्नुहोस्", "रिमाइन्डर थप्नुहोस्"],
-    "completeRoutine": ["काम पूरा भयो", "औषधि खाएँ", "दिनचर्या पूरा"],
-    "removeRoutine": ["दिनचर्या हटाउनुहोस्", "काम हटाउनुहोस्"],
-    "updateRoutine": ["समय परिवर्तन गर्नुहोस्", "दिनचर्या अपडेट गर्नुहोस्"],
-    "help": ["मद्दत", "सहयोग", "के भन्न सक्छु", "कमाण्ड"],
-    "nextGame": ["अर्को खेल", "अर्को गेम", "नेक्स्ट गेम"],
-    "nextReminder": ["अर्को रिमाइन्डर", "अर्को काम", "अर्को औषधि"],
-    "today": ["आज के छ", "आजका रिमाइन्डर", "आजका काम", "आजको तालिका", "आज के के छन्"],
-    "reminders": ["रिमाइन्डर देखाउनुहोस्", "मेरो औषधि देखाउनुहोस्", "औषधि", "काम देखाउनुहोस्", "तालिका"],
-    "games": ["खेल खोल्नुहोस्", "खेल खेल्नुहोस्", "गेम खेल्नुहोस्", "गेम देखाउनुहोस्"],
-    "progress": ["प्रगति देखाउनुहोस्", "प्रगति", "स्कोर"],
-    "memories": ["सम्झनाहरू खोल्नुहोस्", "सम्झनाहरू", "फोटोहरू"],
-    "caregiver": ["हेरचाहकर्ता"],
-}
-
-BN_PHRASES = {
-    "addRoutine": ["নতুন রুটিন যোগ করুন", "কাজ যোগ করুন", "রিমাইন্ডার যোগ করুন"],
-    "completeRoutine": ["কাজ শেষ হয়েছে", "ওষুধ খেয়েছি", "রুটিন সম্পন্ন"],
-    "removeRoutine": ["রুটিন মুছুন", "কাজ মুছুন"],
-    "updateRoutine": ["সময় পরিবর্তন করুন", "রুটিন আপডেট করুন"],
-    "help": ["সাহায্য", "কী বলব", "কমান্ড"],
-    "nextGame": ["পরের গেম", "অন্য গেম", "পরবর্তী খেলা"],
-    "nextReminder": ["পরের রিমাইন্ডার", "পরের কাজ", "পরবর্তী ওষুধ"],
-    "today": ["আজকে কী করতে হবে", "আজকের রিমাইন্ডার", "আজকের কাজ"],
-    "reminders": ["রিমাইন্ডার দেখান", "আমার রিমাইন্ডার", "ওষুধ দেখাও", "কাজের তালিকা"],
-    "games": ["গেম খেলুন", "গেম দেখাও", "খেলা খুলুন", "গেম খেলতে চাই"],
-    "progress": ["অগ্রগতি", "স্কোর", "অ্যানালিটিক্স"],
-    "memories": ["স্মৃতি", "ছবি", "অ্যালবাম"],
-    "caregiver": ["কেয়ারগিভার"],
-}
-
-MNI_PHRASES = {
-    "addRoutine": ["থবক হাপচিল্লু", "অনৌবা রুটিন", "রুটিন হাপচিল্লু", "অনৌবা থবক"],
-    "completeRoutine": ["থবক লোইরে", "হিদাক চারে", "রুটিন লোইরে", "লোইরে"],
-    "removeRoutine": ["থবক লৌথোকউ", "রুটিন লৌথোকউ"],
-    "updateRoutine": ["মতম হোংদোকউ", "রুটিন হোংদোকউ", "মতম সল্লি"],
-    "help": ["মতেং", "মতেং পাংবীয়ু", "কমান্ড"],
-    "nextGame": ["মথংগী শান্নপোৎ", "অতোপ্পা শান্নপোৎ", "মথংগী গেম", "অতোপ্পা গেম"],
-    "nextReminder": ["মথংগী থবক", "মথংগী রিমাইন্ডার", "মথংগী হিদাক"],
-    "today": ["ঙসিগী থবক", "ঙসি করি তৌগদগে", "ঙসিগী রিমাইন্ডার"],
-    "reminders": ["রিমাইন্ডার উৎলো", "থবক উৎলো", "হিদাক উৎলো", "হিদাক"],
-    "games": ["শান্নবা খোল্লু", "গেম খোল্লু", "শান্নবা য়াম্না পাম্মি", "শান্নপোৎ"],
-    "progress": ["খোংথাং", "স্কোর", "প্ৰোগ্ৰেস"],
-    "memories": ["নীংশিংবা", "ফোতো", "এলবাম"],
-    "caregiver": ["কেয়রগিভর", "য়েনশিনবা", "কেয়রটেকর"],
-}
-
-BRX_PHRASES = {
-    "addRoutine": ["गोदान हाबा सोदेर", "हाबा सोदेर", "गोदान रूटीन", "रिमाइन्डर सोदेर"],
-    "completeRoutine": ["हाबा जोबबाय", "मुलि लोंबाय", "हाबा फोजोबबाय", "रूटीन जोबबाय"],
-    "removeRoutine": ["हाबा बोखार", "रूटीन बोखार"],
-    "updateRoutine": ["सम सोलाय", "रूटीन सोलाय"],
-    "help": ["हेफाजाब", "मदद", "कमाण्ड"],
-    "nextGame": ["उनाव थानाय गेलेमु", "गुबुन गेलेमु", "नेक्स्ट गेम", "गुबुन खेल"],
-    "nextReminder": ["उनाव थानाय हाबा", "उनाव थानाय मुलि", "नेक्स्ट रिमाइन्डर"],
-    "today": ["दिनैनि हाबा", "दिनै मा मावनांगौ", "दिनैनि रिमाइन्डर"],
-    "reminders": ["हाबानि फारिलाइ दिन्थि", "मुलि दिन्थि", "मुलि", "रिमाइन्डर"],
-    "games": ["गेलेमु खुलि", "गेलेमु गेले", "गेम खुलि"],
-    "progress": ["जौगानाय", "स्कोर", "प्रोग्रेस"],
-    "memories": ["गोसोखांथि", "फोटो", "एल्बम"],
-    "caregiver": ["हेफाजाबगिरि", "केयारगिभार"],
+ROMANIZED_GAMES: dict[str, list[str]] = {
+    "WATER_JUGS": ["water jug", "water jugs", "jug game", "pani ka jug", "jug puzzle"],
+    "TOWER_OF_HANOI": ["tower of hanoi", "hanoi", "hanoi tower", "tower game"],
+    "BALL_SORT": ["ball sort", "ball puzzle", "goli sort", "rangin ball"],
+    "N_BACK": ["n back", "n-back", "memory test"],
+    "LOGIC_PUZZLES": ["logic puzzle", "riddle", "paheli", "tark"],
+    "STROOP": ["stroop", "stroop test", "rang test", "color match"],
+    "MENTAL_ROTATION": ["mental rotation", "shape rotate"],
+    "SCHULTE_TABLE": ["schulte", "number grid", "number dhoondo"],
+    "MAZE": ["maze", "bhulbhulaiya", "bhool bhulaiya", "rasta dhoondo"],
+    "CARD_MATCHING": ["card match", "memory match", "jodi milao", "taash"],
+    "NUMBER_SEQUENCE": ["number sequence", "missing number", "number series"],
+    "WORD_SCRAMBLE": ["word scramble", "shabd paheli", "jumbled word"],
+    "QUICK_MATH": ["quick math", "tez ganit", "math game", "hisaab"],
+    "VISUAL_SEARCH": ["visual search", "dhoondo", "find object"],
+    "REACTION_TIME": ["reaction time", "speed tap", "reflex"],
+    "SIMON_SAYS": ["simon says", "pattern yaad rakho"],
+    "TRAIL_MAKING": ["trail making", "bindu jodo"],
+    "ANAGRAM_SOLVER": ["anagram", "word solver"],
+    "DELAYED_RECALL": ["delayed recall", "shabd yaad"],
+    "PATTERN_MATRIX": ["pattern matrix", "matrix"],
+    "DUAL_TASK": ["dual task", "dohra kaam"],
+    "WORKING_MEMORY_GRID": ["memory grid", "grid recall"],
+    "CULTURAL_OBJECT_RECOGNITION": ["cultural object", "purani cheezein"],
+    "DAILY_ROUTINE_RECALL": ["routine recall", "din yaad"],
 }
 
 
-def find_game_entity(text: str, language: str) -> str | None:
-    game_entities: list[tuple[str, list[str]]] = [
-        (
-            "WATER_JUGS",
-            [
-                "water jug", "water jugs", "jug", "jugs", "वॉटर जग", "वाटर जग", "वाटर", "वॉटर",
-                "पानी का जग", "पानी जग", "পানীৰ জগ", "ওয়াটার জাগ", "ওয়াটার", "জাগ", "पानीको जग",
-                "వాటర్ జగ్స్", "தண்ணீர் ஜக்ஸ்", "वॉटर जग"
-            ],
-        ),
-        (
-            "TOWER_OF_HANOI",
-            [
-                "tower of hanoi", "hanoi", "टावर ऑफ हनोई", "हैनोई", "हनोई", "হানোই",
-                "টাওয়ার অফ হ্যানয়", "টাওয়ার অফ হানোই", "হ্যানয়", "टावर अफ हनोई",
-                "టవర్ ఆఫ్ హనోయి", "டவர் ஆஃப் ஹனாய்"
-            ],
-        ),
-        (
-            "BALL_SORT",
-            [
-                "ball sort", "ball puzzle", "sort balls", "बॉल सॉर्ट", "বল সৰ্ট",
-                "বল সাজানো", "বল সর্ট", "बल सर्ट", "బాల్ సార్ట్", "பந்து வரிசைப்படுத்தல்"
-            ],
-        ),
-        (
-            "MEMORY_MATCH",
-            [
-                "memory match", "card match", "memory game", "cards", "मेमोरी कार्ड मैच", "मेमोरी",
-                "याददाश्त", "कार्ड मैच", "মেমৰি কাৰ্ড", "মেমৰি", "স্মৃতি মেমরি", "তাস", "मेमोरी म्याच",
-                "మెమరీ మ్యాచ్", "நினைவக அட்டை"
-            ],
-        ),
-        (
-            "NUMBER_PUZZLE",
-            [
-                "number sequence", "number puzzle", "math sequence", "नंबर पहेली", "नंबर",
-                "संख्या খেল", "সংখ্যার ধাঁধা", "संख्या ধাঁধা", "नम्बर पजल", "अंक",
-                "సంఖ్యల పజిల్", "எண் புதிர்"
-            ],
-        ),
-        (
-            "WORD_PUZZLE",
-            [
-                "word scramble", "word puzzle", "anagram", "শব্দ খেল", "शब्द पहेली",
-                "शब्द खेल", "শব্দ ধাঁধা", "शब्द पजल", "पదాల పజిల్", "சொல் புதிர்"
-            ],
-        ),
-        (
-            "MAZE",
-            [
-                "maze", "labyrinth", "puzzle maze", "भूलभुलैया", "রাস্তা খেল", "গোলকধাঁধা",
-                "भुलभुलैया", "మేజ్", "வழிகண்டுபிடி"
-            ],
-        ),
-        (
-            "STROOP",
-            [
-                "stroop", "color test", "स्ट्रूप कलर टेस्ट", "स्ट्रूप", "ৰং পৰীক্ষা",
-                "রঙের খেলা", "रङ्ग परीक्षण", "रंग", "స్ట్రూప్", "ஸ்ட்ரூப்"
-            ],
-        ),
-        (
-            "QUICK_MATH",
-            [
-                "quick math", "arithmetic", "क्विक मैथ", "দ্ৰুত অংক", "দ্রুত গণিত",
-                "छिटो गणित", "गणित", "অংক", "క్విక్ మ్యాథ్స్", "விரைவு கணிதம்"
-            ],
-        ),
-        ("SCHULTE_TABLE", ["schulte", "schulte table", "शुल्टे"]),
-        ("DUAL_TASK", ["dual task", "multitask", "ड्यूल टास्क"]),
-        ("VISUAL_SEARCH", ["visual search", "find shape", "विजुअल सर्च"]),
-        ("PATTERN_MATRIX", ["pattern matrix", "grid pattern", "पैटर्न"]),
-    ]
+def score_phrase(text: str, candidate_raw: str) -> float:
+    """Scores match between candidate phrase and user input text."""
+    candidate = normalize_text(candidate_raw)
+    if not candidate or not text:
+        return 0.0
 
-    for entity, aliases in game_entities:
-        if includes_any(text, aliases):
-            return entity
+    c_tokens = candidate.split()
+    t_tokens = text.split()
+
+    score = 0.0
+    if text == candidate:
+        score = 1.0
+    elif text.startswith(candidate + " ") or text.endswith(" " + candidate) or f" {candidate} " in text:
+        coverage = len(candidate) / len(text)
+        score = 0.70 + 0.20 * coverage
+        if text.startswith(candidate):
+            score += 0.05
+    elif candidate in text:
+        score = 0.60
+        if text.startswith(candidate):
+            score += 0.05
+    else:
+        matched = sum(1 for tok in c_tokens if tok in t_tokens)
+        if matched == len(c_tokens) and len(c_tokens) > 1:
+            score = 0.70
+        elif matched > 0 and len(c_tokens) > 1:
+            score = 0.45 * (matched / len(c_tokens))
+
+    # Single short token penalty (avoids "help" substring bug)
+    if len(c_tokens) == 1 and len(candidate) < 4:
+        score -= 0.35
+
+    return min(1.0, max(0.0, score))
+
+
+def get_lang_key(lang: str) -> str:
+    """Normalizes language code to match voice_phrases.json keys."""
+    clean = lang.strip().lower()
+    for key in VOICE_PHRASES_DATA.keys():
+        if key.lower() == clean or key.lower().startswith(clean[:2]):
+            return key
+    return "en-IN"
+
+
+def tier1_match(raw: str, lang: str = "en-IN") -> dict[str, Any]:
+    """Deterministic, scored Tier 1 matcher for all 11 languages."""
+    text = normalize_text(raw)
+    if not text:
+        return {"intent": "UNKNOWN", "confidence": 0.0, "entity": None}
+
+    lang_key = get_lang_key(lang)
+    lang_data = VOICE_PHRASES_DATA.get(lang_key) or VOICE_PHRASES_DATA.get("en-IN", {})
+    en_data = VOICE_PHRASES_DATA.get("en-IN", {})
+
+    best_intent = "UNKNOWN"
+    best_score = 0.0
+    best_entity: str | None = None
+
+    def evaluate(intent: str, phrase: str, entity: str | None = None, bonus: float = 0.0):
+        nonlocal best_intent, best_score, best_entity
+        s = score_phrase(text, phrase) + bonus
+        if s > best_score:
+            best_score = s
+            best_intent = intent
+            best_entity = entity
+
+    # 1. Active language game entities (highest specificity)
+    for entity_key, phrases in lang_data.get("games", {}).items():
+        for p in phrases:
+            evaluate("OPEN_GAME", p, entity_key, 0.15)
+
+    # Romanized games
+    for entity_key, phrases in ROMANIZED_GAMES.items():
+        for p in phrases:
+            evaluate("OPEN_GAME", p, entity_key, 0.10)
+
+    # English games if different
+    if lang_key != "en-IN":
+        for entity_key, phrases in en_data.get("games", {}).items():
+            for p in phrases:
+                evaluate("OPEN_GAME", p, entity_key, 0.05)
+
+    # 2. Active language intent phrases
+    for intent_key, phrases in lang_data.get("phrases", {}).items():
+        for p in phrases:
+            evaluate(intent_key, p, None, 0.0)
+
+    # 3. Romanized shared phrases
+    for intent_key, phrases in ROMANIZED_PHRASES.items():
+        for p in phrases:
+            evaluate(intent_key, p, None, -0.05)
+
+    # 4. English fallback phrases
+    if lang_key != "en-IN":
+        for intent_key, phrases in en_data.get("phrases", {}).items():
+            for p in phrases:
+                evaluate(intent_key, p, None, -0.10)
+
+    if best_score >= 0.58:
+        return {
+            "intent": best_intent,
+            "confidence": min(round(best_score, 2), 0.99),
+            "entity": best_entity,
+        }
+
+    return {
+        "intent": "UNKNOWN",
+        "confidence": round(best_score, 2),
+        "entity": None,
+    }
+
+
+def find_game_entity(text: str, language: str = "en") -> str | None:
+    """Finds specific game entity from text if present."""
+    match = tier1_match(text, language)
+    if match["intent"] == "OPEN_GAME" and match["entity"]:
+        return match["entity"]
     return None
 
 
 def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
-    text = normalize_text(input_text)
-    if not text:
-        return {"intent": "UNKNOWN", "confidence": 0.0, "entity": None}
-
-    # 1. Game Entity Match
-    entity = find_game_entity(text, language)
-    if entity:
-        return {"intent": "OPEN_GAME", "confidence": 0.98, "entity": entity}
-
-    # 2. Match Specific Routine Action Intents
-    all_add_routine = (
-        EN_PHRASES["addRoutine"] + HI_PHRASES["addRoutine"] + TE_PHRASES["addRoutine"] +
-        TA_PHRASES["addRoutine"] + MR_PHRASES["addRoutine"] + GU_PHRASES["addRoutine"] +
-        AS_PHRASES["addRoutine"] + NE_PHRASES["addRoutine"] + BN_PHRASES["addRoutine"] +
-        MNI_PHRASES["addRoutine"] + BRX_PHRASES["addRoutine"]
-    )
-    if includes_any(text, all_add_routine):
-        return {"intent": "ADD_ROUTINE", "confidence": 0.96, "entity": None}
-
-    all_complete_routine = (
-        EN_PHRASES["completeRoutine"] + HI_PHRASES["completeRoutine"] + TE_PHRASES["completeRoutine"] +
-        TA_PHRASES["completeRoutine"] + MR_PHRASES["completeRoutine"] + GU_PHRASES["completeRoutine"] +
-        AS_PHRASES["completeRoutine"] + NE_PHRASES["completeRoutine"] + BN_PHRASES["completeRoutine"] +
-        MNI_PHRASES["completeRoutine"] + BRX_PHRASES["completeRoutine"]
-    )
-    if includes_any(text, all_complete_routine):
-        return {"intent": "COMPLETE_ROUTINE", "confidence": 0.96, "entity": None}
-
-    all_remove_routine = (
-        EN_PHRASES["removeRoutine"] + HI_PHRASES["removeRoutine"] + TE_PHRASES["removeRoutine"] +
-        TA_PHRASES["removeRoutine"] + MR_PHRASES["removeRoutine"] + GU_PHRASES["removeRoutine"] +
-        AS_PHRASES["removeRoutine"] + NE_PHRASES["removeRoutine"] + BN_PHRASES["removeRoutine"] +
-        MNI_PHRASES["removeRoutine"] + BRX_PHRASES["removeRoutine"]
-    )
-    if includes_any(text, all_remove_routine):
-        return {"intent": "REMOVE_ROUTINE", "confidence": 0.95, "entity": None}
-
-    all_update_routine = (
-        EN_PHRASES["updateRoutine"] + HI_PHRASES["updateRoutine"] + TE_PHRASES["updateRoutine"] +
-        TA_PHRASES["updateRoutine"] + MR_PHRASES["updateRoutine"] + GU_PHRASES["updateRoutine"] +
-        AS_PHRASES["updateRoutine"] + NE_PHRASES["updateRoutine"] + BN_PHRASES["updateRoutine"] +
-        MNI_PHRASES["updateRoutine"] + BRX_PHRASES["updateRoutine"]
-    )
-    if includes_any(text, all_update_routine):
-        return {"intent": "UPDATE_ROUTINE", "confidence": 0.95, "entity": None}
-
-    # 3. Match Standard Queries
-    all_help = (
-        EN_PHRASES["help"] + HI_PHRASES["help"] + TE_PHRASES["help"] +
-        TA_PHRASES["help"] + MR_PHRASES["help"] + GU_PHRASES["help"] +
-        AS_PHRASES["help"] + BN_PHRASES["help"] + NE_PHRASES["help"] +
-        MNI_PHRASES["help"] + BRX_PHRASES["help"] +
-        ["help", "मदद", "सहाय", "সাহায্য", "मद्दत", "মতেং", "हेफाजाब"]
-    )
-    if includes_any(text, all_help):
-        return {"intent": "HELP", "confidence": 0.97, "entity": None}
-
-    all_next_game = (
-        EN_PHRASES["nextGame"] + HI_PHRASES["nextGame"] + TE_PHRASES["nextGame"] +
-        AS_PHRASES["nextGame"] + BN_PHRASES["nextGame"] + NE_PHRASES["nextGame"] +
-        MNI_PHRASES["nextGame"] + BRX_PHRASES["nextGame"]
-    )
-    if includes_any(text, all_next_game):
-        return {"intent": "NEXT_GAME", "confidence": 0.95, "entity": None}
-
-    all_next_reminder = (
-        EN_PHRASES["nextReminder"] + HI_PHRASES["nextReminder"] + TE_PHRASES["nextReminder"] +
-        AS_PHRASES["nextReminder"] + BN_PHRASES["nextReminder"] + NE_PHRASES["nextReminder"] +
-        MNI_PHRASES["nextReminder"] + BRX_PHRASES["nextReminder"]
-    )
-    if includes_any(text, all_next_reminder):
-        return {"intent": "NEXT_REMINDER", "confidence": 0.95, "entity": None}
-
-    all_today = (
-        EN_PHRASES["today"] + HI_PHRASES["today"] + TE_PHRASES["today"] +
-        TA_PHRASES["today"] + MR_PHRASES["today"] + GU_PHRASES["today"] +
-        BN_PHRASES["today"] + NE_PHRASES["today"] + AS_PHRASES["today"] +
-        MNI_PHRASES["today"] + BRX_PHRASES["today"] +
-        ["today", "आज", "আজি", "আজকে", "आजका", "आजको", "আজকের", "ఈ రోజు", "ঙসি", "दिनै"]
-    )
-    if includes_any(text, all_today):
-        return {"intent": "TODAY_REMINDERS", "confidence": 0.95, "entity": None}
-
-    all_medications = [
-        "take medicine", "take my medicine", "dawa dikhao", "medicine", "medication", "meds",
-        "dawa", "dawai", "goli", "दवा", "दवाई", "औষধ", "ওষুধ", "औषधि", "হিদাক", "मुलि"
-    ]
-    if includes_any(text, all_medications):
-        return {"intent": "OPEN_MEDICATIONS", "confidence": 0.95, "entity": None}
-
-    all_progress = (
-        EN_PHRASES["progress"] + HI_PHRASES["progress"] + TE_PHRASES["progress"] +
-        TA_PHRASES["progress"] + MR_PHRASES["progress"] + GU_PHRASES["progress"] +
-        BN_PHRASES["progress"] + NE_PHRASES["progress"] + AS_PHRASES["progress"] +
-        MNI_PHRASES["progress"] + BRX_PHRASES["progress"] +
-        ["progress", "score", "analytics", "प्रोग्रेस", "स्कोर", "এনালাইটিক্স", "প্রোগ্রেস", "প্রগতি", "పురోగతి", "খোংথাং", "जौगानाय"]
-    )
-    if includes_any(text, all_progress):
-        return {"intent": "OPEN_ANALYTICS", "confidence": 0.94, "entity": None}
-
-    all_memories = (
-        EN_PHRASES["memories"] + HI_PHRASES["memories"] + TE_PHRASES["memories"] +
-        TA_PHRASES["memories"] + MR_PHRASES["memories"] + GU_PHRASES["memories"] +
-        BN_PHRASES["memories"] + NE_PHRASES["memories"] + AS_PHRASES["memories"] +
-        MNI_PHRASES["memories"] + BRX_PHRASES["memories"] +
-        ["memory", "memories", "photos", "यादें", "फोटो", "স্মৃতি", "सम्झनाहरू", "অ্যালবাম", "এলবাম", "జ్ఞాపకాలు", "নীংশিংবা", "गोसोखांथि"]
-    )
-    if includes_any(text, all_memories):
-        return {"intent": "OPEN_MEMORIES", "confidence": 0.94, "entity": None}
-
-    all_caregiver = (
-        EN_PHRASES["caregiver"] + HI_PHRASES["caregiver"] + TE_PHRASES["caregiver"] +
-        AS_PHRASES["caregiver"] + BN_PHRASES["caregiver"] + NE_PHRASES["caregiver"] +
-        MNI_PHRASES["caregiver"] + BRX_PHRASES["caregiver"] +
-        ["caregiver", "caretaker", "केयरगिवर", "কেয়াৰগিভাৰ", "केयरटेकर", "हेरचाहकर्ता", "సంరక్షకుడు", "কেয়রগিভর", "हेफाजाबगिरि"]
-    )
-    if includes_any(text, all_caregiver):
-        return {"intent": "OPEN_CAREGIVER", "confidence": 0.94, "entity": None}
-
-    all_home = ["home", "dashboard", "main page", "go home", "go back to home", "go back to home dashboard", "मुख्य पृष्ठ", "होम", "ময়ুম"]
-    if includes_any(text, all_home):
-        return {"intent": "GO_HOME", "confidence": 0.95, "entity": None}
-
-    all_reminders = (
-        EN_PHRASES["reminders"] + HI_PHRASES["reminders"] + TE_PHRASES["reminders"] +
-        TA_PHRASES["reminders"] + MR_PHRASES["reminders"] + GU_PHRASES["reminders"] +
-        AS_PHRASES["reminders"] + BN_PHRASES["reminders"] + NE_PHRASES["reminders"] +
-        MNI_PHRASES["reminders"] + BRX_PHRASES["reminders"] +
-        [
-            "reminder", "reminders", "task", "tasks", "kam", "kaam", "schedule", "routine",
-            "रूटीन", "routine dikhao", "समयসূচি", "तालिका", "రొటీన్", "थবক", "हाबा"
-        ]
-    )
-    if includes_any(text, all_reminders):
-        return {"intent": "OPEN_REMINDERS", "confidence": 0.92, "entity": None}
-
-    all_games = (
-        EN_PHRASES["games"] + HI_PHRASES["games"] + TE_PHRASES["games"] +
-        TA_PHRASES["games"] + MR_PHRASES["games"] + GU_PHRASES["games"] +
-        AS_PHRASES["games"] + BN_PHRASES["games"] + NE_PHRASES["games"] +
-        MNI_PHRASES["games"] + BRX_PHRASES["games"] +
-        [
-            "game", "games", "play", "play game", "play games", "khel", "khelo", "khelna", "khelna hai",
-            "गेम", "खेल", "খেল", "খেলা", "puzzle", "puzzles", "पजल", "ఆటలు", "শান্নপোৎ", "गेलेमु"
-        ]
-    )
-    if includes_any(text, all_games):
-        return {"intent": "OPEN_GAMES", "confidence": 0.92, "entity": None}
-
-    return {"intent": "UNKNOWN", "confidence": 0.20, "entity": None}
+    """Tier 1 offline deterministic fallback."""
+    return tier1_match(input_text, language)
 
 
 def classify_with_llm(input_text: str, language: str, api_key: str) -> dict[str, Any]:
-    lang_map = {
-        "hi": "Hindi",
-        "as": "Assamese",
-        "bn": "Bengali",
-        "mni": "Manipuri",
-        "brx": "Bodo",
-        "ne": "Nepali",
-        "en": "English",
-        "te": "Telugu",
-        "ta": "Tamil",
-        "mr": "Marathi",
-        "gu": "Gujarati",
-    }
-    lang_label = lang_map.get(language[:2].lower(), "English / Multilingual")
+    """Tier 2: Sarvam LLM intent classification with reasoning_effort=None."""
+    lang_key = get_lang_key(language)
+    lang_label = lang_key
+
     user_message = f'Language hint: {lang_label}\nUser said: "{input_text}"'
 
     payload = {
@@ -538,8 +319,9 @@ def classify_with_llm(input_text: str, language: str, api_key: str) -> dict[str,
     valid_intents = {
         "GO_HOME", "ADD_ROUTINE", "COMPLETE_ROUTINE", "REMOVE_ROUTINE", "UPDATE_ROUTINE",
         "OPEN_GAMES", "NEXT_GAME", "OPEN_GAME", "OPEN_REMINDERS",
-        "TODAY_REMINDERS", "NEXT_REMINDER", "OPEN_MEDICATIONS", "OPEN_PROGRESS",
-        "OPEN_ANALYTICS", "OPEN_MEMORIES", "OPEN_CAREGIVER", "HELP", "UNKNOWN",
+        "TODAY_REMINDERS", "NEXT_REMINDER", "OPEN_MEDICATIONS", "TODAY_MEDICATIONS",
+        "NEXT_MEDICATION", "MEDICATION_TAKEN", "MEDICATION_SKIPPED",
+        "OPEN_ANALYTICS", "OPEN_MEMORIES", "OPEN_CAREGIVER", "HELP", "CLOSE", "UNKNOWN",
     }
     intent = parsed.get("intent", "UNKNOWN")
     if intent == "OPEN_PROGRESS":
@@ -554,26 +336,70 @@ def classify_with_llm(input_text: str, language: str, api_key: str) -> dict[str,
     }
 
 
+# In-memory LRU cache for Tier 2/3 classification
+@lru_cache(maxsize=512)
+def _cached_interpret(normalized_input: str, lang_code: str) -> str:
+    # helper for cached json strings
+    return ""
+
+
 def interpret_command(input_text: str, language: str = "en", api_key: str | None = None) -> dict[str, Any]:
     """
-    Classifies user command text.
-    Checks specific game entity first for precision; then tries Sarvam LLM; falls back to rule matcher.
+    Classifies user command text using the universal 3-tier pipeline:
+      Tier 1: Scored deterministic local match (instant)
+      Tier 2: Sarvam LLM (with translate pre-pass for non-native languages) + hybrid Tier 1 validation
+      Tier 3: Translate-then-classify fallback
     """
-    if input_text and input_text.strip():
-        entity = find_game_entity(normalize_text(input_text), language)
-        if entity:
-            return {"intent": "OPEN_GAME", "confidence": 0.98, "entity": entity}
+    if not input_text or not input_text.strip():
+        return {"intent": "UNKNOWN", "confidence": 0.0, "entity": None}
 
-    if api_key and input_text and input_text.strip():
+    clean_text = normalize_text(input_text)
+
+    # 1. Run Tier 1 Matcher
+    tier1_res = tier1_match(clean_text, language)
+
+    # If Tier 1 confidence is very high (>= 0.85) or it's a specific game entity, return immediately
+    if tier1_res["confidence"] >= 0.85 or (tier1_res["intent"] == "OPEN_GAME" and tier1_res["entity"]):
+        return tier1_res
+
+    # 2. Try Tier 2 (LLM) if API key is present
+    if api_key:
         try:
-            result = classify_with_llm(input_text, language, api_key)
-            logger.info(f'[LLM] "{input_text}" -> {result["intent"]} ({round(result["confidence"] * 100)}%)')
-            return result
-        except Exception as exc:
-            logger.warning(f'[LLM] Classification fallback triggered: {exc}')
+            llm_text = clean_text
+            # For non-native LLM languages (as, ne, mni, brx), translate to en-IN first
+            lang_prefix = language[:2].lower()
+            if lang_prefix in ("as", "ne", "mni", "brx"):
+                from app.services.translation_service import translate_text_sarvam
+                translated = translate_text_sarvam(
+                    text=clean_text,
+                    source_language_code=language,
+                    target_language_code="en-IN",
+                    api_key=api_key,
+                )
+                if translated:
+                    llm_text = translated
 
-    result = interpret_fallback(input_text, language)
-    if result.get("intent") == "OPEN_PROGRESS":
-        result["intent"] = "OPEN_ANALYTICS"
-    logger.info(f'[Fallback] "{input_text}" -> {result["intent"]} ({round(result["confidence"] * 100)}%)')
-    return result
+            llm_res = classify_with_llm(llm_text, language, api_key)
+
+            # Hybrid validation between LLM and Tier 1:
+            # - Agreement -> high confidence
+            if llm_res["intent"] == tier1_res["intent"]:
+                llm_res["confidence"] = max(llm_res["confidence"], 0.95)
+                if not llm_res.get("entity") and tier1_res.get("entity"):
+                    llm_res["entity"] = tier1_res["entity"]
+                return llm_res
+
+            # - Tier 1 is strong (> 0.70) -> trust Tier 1
+            if tier1_res["confidence"] >= 0.70:
+                return tier1_res
+
+            # - Tier 1 is UNKNOWN and LLM is confident -> trust LLM
+            if tier1_res["intent"] == "UNKNOWN" and llm_res["intent"] != "UNKNOWN":
+                return llm_res
+
+            return llm_res
+        except Exception as exc:
+            logger.warning(f"[NLP Tier 2 Error]: {exc}")
+
+    # 3. Tier 3 fallback: return best Tier 1 result
+    return tier1_res

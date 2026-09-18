@@ -508,24 +508,24 @@ def classify_with_llm(input_text: str, language: str, api_key: str) -> dict[str,
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_message},
         ],
-        "temperature": 0.1,
-        "max_tokens": 120,
+        "temperature": 0.0,
+        "max_tokens": 64,
+        "reasoning_effort": None,
     }
 
-    req = urllib.request.Request(
+    import httpx
+    res = httpx.post(
         "https://api.sarvam.ai/v1/chat/completions",
-        data=json.dumps(payload).encode("utf-8"),
         headers={
             "api-subscription-key": api_key,
             "Content-Type": "application/json",
         },
-        method="POST",
+        json=payload,
+        timeout=3.5,
     )
-
-    with urllib.request.urlopen(req, timeout=4.0) as resp:
-        if resp.status != 200:
-            raise RuntimeError(f"Sarvam LLM status {resp.status}")
-        raw_resp = json.loads(resp.read().decode("utf-8"))
+    if res.status_code != 200:
+        raise RuntimeError(f"Sarvam LLM status {res.status_code}: {res.text}")
+    raw_resp = res.json()
 
     content = raw_resp.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
     if not content:

@@ -782,6 +782,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           break;
         }
 
+        case "OPEN_ANALYTICS":
         case "OPEN_PROGRESS": {
           const resp = VOICE_PROMPTS.OPEN_PROGRESS[l] || VOICE_PROMPTS.OPEN_PROGRESS.en;
           setLastResponse(resp);

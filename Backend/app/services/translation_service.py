@@ -114,3 +114,44 @@ def batch_translate_texts(
         source_language=detected_src,
         target_language=target_lang,
     )
+
+
+def translate_text_sarvam(
+    text: str,
+    source_language_code: str,
+    target_language_code: str,
+    api_key: str,
+) -> str | None:
+    """Uses Sarvam API to translate text."""
+    if not text.strip():
+        return ""
+    
+    import httpx
+    
+    payload = {
+        "input": text.strip(),
+        "source_language_code": source_language_code,
+        "target_language_code": target_language_code,
+        "speaker_gender": "Female",
+        "mode": "formal",
+        "model": "sarvam-translate:v1"
+    }
+
+    try:
+        res = httpx.post(
+            "https://api.sarvam.ai/translate",
+            headers={
+                "api-subscription-key": api_key,
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=4.0,
+        )
+        if res.status_code == 200:
+            return res.json().get("translated_text", "")
+        else:
+            logger.warning(f"Sarvam translate error {res.status_code}: {res.text}")
+    except Exception as exc:
+        logger.error(f"Sarvam translate exception: {exc}")
+    
+    return None

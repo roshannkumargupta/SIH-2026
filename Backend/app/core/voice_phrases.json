@@ -1,0 +1,4964 @@
+{
+  "en-IN": {
+    "phrases": {
+      "OPEN_GAMES": [
+        "open games",
+        "play games",
+        "show games",
+        "brain games",
+        "cognitive exercises",
+        "i want to play games",
+        "start games",
+        "take me to games"
+      ],
+      "NEXT_GAME": [
+        "next game",
+        "another game",
+        "new game",
+        "show next game",
+        "give me another game",
+        "switch game"
+      ],
+      "OPEN_GAME": [
+        "play",
+        "open",
+        "start",
+        "launch"
+      ],
+      "OPEN_REMINDERS": [
+        "open reminders",
+        "show reminders",
+        "my reminders",
+        "routine",
+        "daily routine",
+        "open routine",
+        "show schedule",
+        "view schedule"
+      ],
+      "TODAY_REMINDERS": [
+        "what do i have today",
+        "today reminders",
+        "what tasks today",
+        "what is on today",
+        "today's schedule",
+        "what should i do today",
+        "schedule for today"
+      ],
+      "NEXT_REMINDER": [
+        "what is my next task",
+        "next reminder",
+        "next task",
+        "what is next",
+        "what should i do next",
+        "upcoming reminder"
+      ],
+      "ADD_ROUTINE": [
+        "add a task",
+        "add routine",
+        "create task",
+        "new routine",
+        "new task",
+        "schedule walk",
+        "schedule activity",
+        "add reminder",
+        "set reminder"
+      ],
+      "COMPLETE_ROUTINE": [
+        "mark task done",
+        "task completed",
+        "routine done",
+        "completed task",
+        "finished task",
+        "i finished my task",
+        "mark routine completed"
+      ],
+      "REMOVE_ROUTINE": [
+        "delete task",
+        "remove task",
+        "delete routine",
+        "remove routine",
+        "cancel task",
+        "clear task"
+      ],
+      "UPDATE_ROUTINE": [
+        "change the time",
+        "update routine",
+        "change routine time",
+        "reschedule task",
+        "reschedule routine",
+        "modify task time"
+      ],
+      "OPEN_MEDICATIONS": [
+        "show my medicines",
+        "open medications",
+        "my medicines",
+        "show medicines",
+        "medicine list",
+        "prescriptions",
+        "open medicine schedule"
+      ],
+      "TODAY_MEDICATIONS": [
+        "what medicine do i take today",
+        "today's medicines",
+        "medicines for today",
+        "what pills today",
+        "what medicines should i take today",
+        "daily medication"
+      ],
+      "NEXT_MEDICATION": [
+        "what is my next dose",
+        "next medicine",
+        "next pill",
+        "when is my next dose",
+        "what medicine next",
+        "upcoming medicine"
+      ],
+      "MEDICATION_TAKEN": [
+        "i took my medicine",
+        "medicine taken",
+        "took pill",
+        "took tablet",
+        "already took medicine",
+        "i have taken my medicine",
+        "mark medicine taken"
+      ],
+      "MEDICATION_SKIPPED": [
+        "skip medicine",
+        "skip dose",
+        "skipped medicine",
+        "did not take medicine",
+        "missed medicine"
+      ],
+      "OPEN_ANALYTICS": [
+        "show my progress",
+        "open analytics",
+        "my progress",
+        "cognitive score",
+        "performance report",
+        "how am i doing",
+        "show report"
+      ],
+      "OPEN_MEMORIES": [
+        "show my memories",
+        "open memories",
+        "my photos",
+        "family photos",
+        "photo album",
+        "view memories"
+      ],
+      "OPEN_CAREGIVER": [
+        "caregiver",
+        "caretaker",
+        "caregiver dashboard",
+        "caretaker portal",
+        "open caregiver"
+      ],
+      "GO_HOME": [
+        "go home",
+        "home page",
+        "back to dashboard",
+        "main screen",
+        "return home",
+        "exit to home"
+      ],
+      "HELP": [
+        "help",
+        "what can i say",
+        "voice commands",
+        "how does this work",
+        "assistant guide"
+      ],
+      "CLOSE": [
+        "close",
+        "exit",
+        "quit",
+        "dismiss",
+        "stop",
+        "cancel"
+      ]
+    },
+    "games": {
+      "WATER_JUGS": [
+        "water jugs",
+        "water jug",
+        "jugs puzzle",
+        "measuring jugs"
+      ],
+      "TOWER_OF_HANOI": [
+        "tower of hanoi",
+        "hanoi towers",
+        "hanoi puzzle",
+        "peg disks"
+      ],
+      "BALL_SORT": [
+        "ball sort",
+        "ball puzzle",
+        "sort balls",
+        "color balls"
+      ],
+      "N_BACK": [
+        "n back",
+        "n-back",
+        "memory n back",
+        "dual n back"
+      ],
+      "LOGIC_PUZZLES": [
+        "logic puzzles",
+        "logic puzzle",
+        "math logic",
+        "riddles"
+      ],
+      "STROOP": [
+        "stroop test",
+        "stroop color",
+        "color test",
+        "stroop effect"
+      ],
+      "MENTAL_ROTATION": [
+        "mental rotation",
+        "rotate shape",
+        "3d rotation",
+        "shape matching"
+      ],
+      "SCHULTE_TABLE": [
+        "schulte table",
+        "number grid",
+        "schulte grid",
+        "find numbers"
+      ],
+      "MAZE": [
+        "pathway maze",
+        "maze",
+        "labyrinth",
+        "find path"
+      ],
+      "CARD_MATCHING": [
+        "card matching",
+        "memory match",
+        "flip cards",
+        "match pairs",
+        "memory cards"
+      ],
+      "NUMBER_SEQUENCE": [
+        "number sequence",
+        "number puzzle",
+        "missing number",
+        "number series"
+      ],
+      "WORD_SCRAMBLE": [
+        "word scramble",
+        "word puzzle",
+        "unscramble words",
+        "jumbled words"
+      ],
+      "QUICK_MATH": [
+        "quick math",
+        "speed math",
+        "mental math",
+        "arithmetic game"
+      ],
+      "VISUAL_SEARCH": [
+        "visual search",
+        "find object",
+        "hidden object",
+        "spot difference"
+      ],
+      "REACTION_TIME": [
+        "reaction time",
+        "speed test",
+        "reflex test",
+        "tap speed"
+      ],
+      "SIMON_SAYS": [
+        "simon says",
+        "follow pattern",
+        "light sequence",
+        "simon sequence"
+      ],
+      "TRAIL_MAKING": [
+        "trail making",
+        "connect dots",
+        "trail test",
+        "connect numbers"
+      ],
+      "ANAGRAM_SOLVER": [
+        "anagram solver",
+        "anagrams",
+        "word rearrangement",
+        "letter puzzle"
+      ],
+      "DELAYED_RECALL": [
+        "delayed recall",
+        "word memory",
+        "recall list",
+        "remember words"
+      ],
+      "PATTERN_MATRIX": [
+        "pattern matrix",
+        "matrix puzzle",
+        "shape pattern",
+        "raven matrix"
+      ],
+      "DUAL_TASK": [
+        "dual task",
+        "multitasking game",
+        "split attention",
+        "two tasks"
+      ],
+      "WORKING_MEMORY_GRID": [
+        "working memory grid",
+        "memory grid",
+        "spatial grid",
+        "grid recall"
+      ],
+      "CULTURAL_OBJECT_RECOGNITION": [
+        "cultural object recognition",
+        "object recognition",
+        "heritage items",
+        "vintage objects"
+      ],
+      "DAILY_ROUTINE_RECALL": [
+        "daily routine recall",
+        "routine memory",
+        "day recall",
+        "activity memory"
+      ]
+    },
+    "gameTitles": {
+      "WATER_JUGS": "Water Jugs",
+      "TOWER_OF_HANOI": "Tower of Hanoi",
+      "BALL_SORT": "Ball Sort Puzzle",
+      "N_BACK": "N-Back",
+      "LOGIC_PUZZLES": "Logic Puzzles",
+      "STROOP": "Stroop Test",
+      "MENTAL_ROTATION": "Mental Rotation",
+      "SCHULTE_TABLE": "Schulte Table",
+      "MAZE": "Pathway Maze",
+      "CARD_MATCHING": "Card Matching Memory",
+      "NUMBER_SEQUENCE": "Number Sequence",
+      "WORD_SCRAMBLE": "Word Scramble",
+      "QUICK_MATH": "Quick Math",
+      "VISUAL_SEARCH": "Visual Search",
+      "REACTION_TIME": "Reaction Time",
+      "SIMON_SAYS": "Simon Says",
+      "TRAIL_MAKING": "Trail Making",
+      "ANAGRAM_SOLVER": "Anagram Solver",
+      "DELAYED_RECALL": "Delayed Recall",
+      "PATTERN_MATRIX": "Pattern Matrix",
+      "DUAL_TASK": "Dual Task",
+      "WORKING_MEMORY_GRID": "Working Memory Grid",
+      "CULTURAL_OBJECT_RECOGNITION": "Cultural Object Recognition",
+      "DAILY_ROUTINE_RECALL": "Daily Routine Recall"
+    },
+    "responses": {
+      "OPEN_GAMES": "Opening brain training games center.",
+      "NEXT_GAME": "Opening another brain training exercise.",
+      "OPEN_GAME": "Opening {{name}} game.",
+      "OPEN_REMINDERS": "Opening your daily routine and reminders.",
+      "TODAY_REMINDERS": "Here is your routine schedule for today.",
+      "NEXT_REMINDER": "Checking your next upcoming reminder.",
+      "ADD_ROUTINE": "Please enter or confirm the new routine details.",
+      "COMPLETE_ROUTINE": "Great job! Marking your task as completed.",
+      "REMOVE_ROUTINE": "Removing the specified routine item.",
+      "UPDATE_ROUTINE": "Opening routine editor to update your schedule.",
+      "OPEN_MEDICATIONS": "Opening your medication schedule.",
+      "TODAY_MEDICATIONS": "Here are your scheduled medications for today.",
+      "NEXT_MEDICATION": "Checking your next scheduled medication dose.",
+      "MEDICATION_TAKEN": "Would you like to confirm that you have taken your medicine?",
+      "MEDICATION_SKIPPED": "Marking medication dose as skipped.",
+      "OPEN_ANALYTICS": "Opening your cognitive performance analytics and report.",
+      "OPEN_MEMORIES": "Opening your cherished memories album.",
+      "OPEN_CAREGIVER": "Opening the caregiver monitoring portal.",
+      "GO_HOME": "Returning to the home dashboard.",
+      "HELP": "Here are the voice commands you can use.",
+      "CLOSE": "Closing voice assistant.",
+      "UNKNOWN": "I did not understand that. Please try again or tap a suggestion.",
+      "CARETAKER_ONLY": "The caregiver dashboard is accessible to authorized caretakers only."
+    },
+    "shortPhrases": {
+      "OPEN_GAMES": "Opening games",
+      "NEXT_GAME": "Next game",
+      "OPEN_GAME": "Opening game",
+      "OPEN_REMINDERS": "Opening reminders",
+      "TODAY_REMINDERS": "Showing today's reminders",
+      "NEXT_REMINDER": "Showing next reminder",
+      "ADD_ROUTINE": "Add routine",
+      "COMPLETE_ROUTINE": "Task marked done",
+      "REMOVE_ROUTINE": "Task removed",
+      "UPDATE_ROUTINE": "Update routine",
+      "OPEN_MEDICATIONS": "Opening medicines",
+      "TODAY_MEDICATIONS": "Showing today's medicines",
+      "NEXT_MEDICATION": "Showing next medicine",
+      "MEDICATION_TAKEN": "Medicine recorded",
+      "MEDICATION_SKIPPED": "Medicine skipped",
+      "OPEN_ANALYTICS": "Opening progress report",
+      "OPEN_MEMORIES": "Opening memories",
+      "OPEN_CAREGIVER": "Opening caregiver view",
+      "GO_HOME": "Going home",
+      "HELP": "Opening help",
+      "CLOSE": "Closing assistant",
+      "UNKNOWN": "Please repeat",
+      "CONFIRM_DOSE": "Confirm dose taken?",
+      "VOICE_NOT_AVAILABLE": "Voice reading unavailable"
+    },
+    "status": {
+      "listening": "Listening… Speak clearly into microphone",
+      "processing": "Processing your voice command…",
+      "speaking": "Speaking response…",
+      "ready": "Ready. Tap microphone to speak.",
+      "micDenied": "Microphone access denied. Please check permissions.",
+      "error": "Voice assistant encountered an error.",
+      "notUnderstood": "Could not understand. Please try again.",
+      "wakeWordActive": "Hey Setu wake-word listener active"
+    },
+    "ui": {
+      "youSaid": "You said:",
+      "action": "Action:",
+      "intent": "Intent:",
+      "match": "Match:",
+      "listeningPrompt": "Listening… Tap mic when done",
+      "tapToSpeak": "Tap to speak",
+      "tapToStop": "Tap to stop",
+      "spokenSummary": "Voice Summary",
+      "voiceReadingUnavailable": "Voice reading is not yet available in {{language}}",
+      "confirmMarkTaken": "Confirm marked as taken?",
+      "confirmYes": "Yes, Taken",
+      "confirmNo": "No, Cancel",
+      "undo": "Undo",
+      "markedAsTaken": "Dose marked as taken"
+    }
+  },
+  "hi-IN": {
+    "phrases": {
+      "OPEN_GAMES": [
+        "गेम खेलो",
+        "दिमाग के खेल",
+        "खेलना है",
+        "गेम्स खोलो",
+        "नया खेल",
+        "खेल शुरू करो",
+        "खेल दिखाओ",
+        "मस्तिष्क खेल"
+      ],
+      "NEXT_GAME": [
+        "अगला खेल",
+        "दूसरा गेम",
+        "नेक्स्ट गेम",
+        "नया गेम दिखाओ",
+        "दूसरा खेल"
+      ],
+      "OPEN_GAME": [
+        "खेलो",
+        "खोलो",
+        "शुरू करो",
+        "चलाओ"
+      ],
+      "OPEN_REMINDERS": [
+        "रूटीन दिखाओ",
+        "रिमाइंडर दिखाओ",
+        "मेरे काम",
+        "आज के काम",
+        "रूटीन खोलो",
+        "शेड्यूल दिखाओ",
+        "दिनचर्या"
+      ],
+      "TODAY_REMINDERS": [
+        "आज क्या करना है",
+        "आज के रिमाइंडर",
+        "आज के काम क्या हैं",
+        "आज का शेड्यूल",
+        "आज के काम बताओ",
+        "आज की दिनचर्या"
+      ],
+      "NEXT_REMINDER": [
+        "अगला काम क्या है",
+        "अगला रिमाइंडर",
+        "नेक्स्ट टास्क",
+        "अगला काम बताओ",
+        "आगे क्या करना है"
+      ],
+      "ADD_ROUTINE": [
+        "नया काम जोड़ो",
+        "रूटीन जोड़ो",
+        "टास्क जोड़ो",
+        "रिमाइंडर जोड़ो",
+        "काम बनाओ",
+        "नया रूटीन बनाओ"
+      ],
+      "COMPLETE_ROUTINE": [
+        "काम पूरा हो गया",
+        "टास्क पूरा हुआ",
+        "रूटीन पूरा",
+        "काम खत्म हुआ",
+        "काम पूरा करो",
+        "टास्क खत्म"
+      ],
+      "REMOVE_ROUTINE": [
+        "काम हटाओ",
+        "रूटीन हटाओ",
+        "टास्क डिलीट करो",
+        "काम मिटाओ",
+        "रिमाइंडर हटाओ"
+      ],
+      "UPDATE_ROUTINE": [
+        "समय बदलो",
+        "रूटीन का समय बदलो",
+        "टाइमिंग बदलो",
+        "टास्क अपडेट करो",
+        "रूटीन बदलो"
+      ],
+      "OPEN_MEDICATIONS": [
+        "दवाइयां दिखाओ",
+        "दवा खोलो",
+        "मेरी दवाइयां",
+        "दवा का समय",
+        "दवाइयों की सूची",
+        "दवा देखना है"
+      ],
+      "TODAY_MEDICATIONS": [
+        "आज कौन सी दवा लेनी है",
+        "आज की दवाइयां",
+        "आज क्या दवा खाऊं",
+        "दवाइयों का शेड्यूल",
+        "आज की खुराक"
+      ],
+      "NEXT_MEDICATION": [
+        "अगली दवा कौन सी है",
+        "नेक्स्ट दवा",
+        "अगली दवाई का समय",
+        "अगली खुराक",
+        "आगे की दवा"
+      ],
+      "MEDICATION_TAKEN": [
+        "दवाई ले ली",
+        "दवा खा ली",
+        "मैंने दवा ले ली है",
+        "दवा पूरी हुई",
+        "दवाई खा ली है"
+      ],
+      "MEDICATION_SKIPPED": [
+        "दवा छोड़ दी",
+        "दवा नहीं ली",
+        "खुराक छूट गई",
+        "दवा स्किप करो"
+      ],
+      "OPEN_ANALYTICS": [
+        "मेरी प्रोग्रेस दिखाओ",
+        "मेरा स्कोर",
+        "प्रदर्शन रिपोर्ट",
+        "प्रोग्रेस रिपोर्ट",
+        "एनालिटिक्स खोलो",
+        "प्रोग्रेस"
+      ],
+      "OPEN_MEMORIES": [
+        "मेरी यादें दिखाओ",
+        "पुरानी यादें",
+        "फोटो एल्बम",
+        "यादें खोलो",
+        "परिवार की फोटो",
+        "तस्वीरें"
+      ],
+      "OPEN_CAREGIVER": [
+        "देखभालकर्ता",
+        "केयरटेकर पोर्टल",
+        "केयरगिवर डैशबोर्ड",
+        "केयरटेकर व्यू"
+      ],
+      "GO_HOME": [
+        "होम पर चलो",
+        "मुख्य पृष्ठ",
+        "डैशबोर्ड पर जाओ",
+        "घर चलो",
+        "होम स्क्रीन"
+      ],
+      "HELP": [
+        "मदद",
+        "कमांड बताओ",
+        "सहायता",
+        "क्या बोल सकते हैं",
+        "हेल्प"
+      ],
+      "CLOSE": [
+        "बंद करो",
+        "बाहर निकलो",
+        "रद्द करो",
+        "समाप्त करो",
+        "असिस्टेंट बंद करो"
+      ]
+    },
+    "games": {
+      "WATER_JUGS": [
+        "वॉटर जग",
+        "पानी का जग",
+        "जग पहेली"
+      ],
+      "TOWER_OF_HANOI": [
+        "टावर ऑफ हनोई",
+        "हनोई टावर",
+        "हनोई पहेली"
+      ],
+      "BALL_SORT": [
+        "बॉल सॉर्ट",
+        "गेंद छांटो",
+        "रंगीन गेंद"
+      ],
+      "N_BACK": [
+        "एन बैक",
+        "एन-बैक",
+        "स्मृति परीक्षण"
+      ],
+      "LOGIC_PUZZLES": [
+        "तर्क पहेलियां",
+        "लॉजिक पजल",
+        "तार्किक प्रश्न"
+      ],
+      "STROOP": [
+        "स्ट्रूप टेस्ट",
+        "रंग परीक्षण",
+        "स्ट्रूप कलर"
+      ],
+      "MENTAL_ROTATION": [
+        "मेंटल रोटेशन",
+        "आकार घुमाओ",
+        "मानसिक घूर्णन"
+      ],
+      "SCHULTE_TABLE": [
+        "शुल्टे टेबल",
+        "संख्या ग्रिड",
+        "नंबर ढूंढो"
+      ],
+      "MAZE": [
+        "भूलभुलैया",
+        "रास्ता ढूंढो",
+        "भूलभुलैया खेल"
+      ],
+      "CARD_MATCHING": [
+        "कार्ड मैच",
+        "जोड़ी मिलाओ",
+        "मेमोरी कार्ड",
+        "ताश मिलान"
+      ],
+      "NUMBER_SEQUENCE": [
+        "संख्या क्रम",
+        "नंबर पहेली",
+        "नंबर सीक्वेंस"
+      ],
+      "WORD_SCRAMBLE": [
+        "शब्द पहेली",
+        "अक्षर सुलझाओ",
+        "वर्ड स्क्रैम्बल"
+      ],
+      "QUICK_MATH": [
+        "क्विक मैथ",
+        "तेज गणित",
+        "गणित खेल",
+        "हिसाब खेल"
+      ],
+      "VISUAL_SEARCH": [
+        "दृष्टि खोज",
+        "वस्तु ढूंढो",
+        "विजुअल सर्च"
+      ],
+      "REACTION_TIME": [
+        "प्रतिक्रिया समय",
+        "रिफ्लेक्स टेस्ट",
+        "स्पीड टेस्ट"
+      ],
+      "SIMON_SAYS": [
+        "साइमन सेज",
+        "पैटर्न दोहराओ",
+        "क्रम याद रखो"
+      ],
+      "TRAIL_MAKING": [
+        "ट्रेल मेकिंग",
+        "बिंदु जोड़ो",
+        "लाइन बनाओ"
+      ],
+      "ANAGRAM_SOLVER": [
+        "एनाग्राम सॉल्वर",
+        "शब्द पुनर्व्यवस्था",
+        "एनाग्राम"
+      ],
+      "DELAYED_RECALL": [
+        "विलंबित स्मरण",
+        "शब्द स्मरण",
+        "याददाश्त परीक्षण"
+      ],
+      "PATTERN_MATRIX": [
+        "पैटर्न मैट्रिक्स",
+        "आकृति पैटर्न",
+        "मैट्रिक्स"
+      ],
+      "DUAL_TASK": [
+        "दोहरा कार्य",
+        "ड्यूल टास्क",
+        "मल्टीटास्क"
+      ],
+      "WORKING_MEMORY_GRID": [
+        "वर्किंग मेमोरी ग्रिड",
+        "ग्रिड स्मरण",
+        "मेमोरी ग्रिड"
+      ],
+      "CULTURAL_OBJECT_RECOGNITION": [
+        "सांस्कृतिक वस्तु पहचान",
+        "पुरानी वस्तुएं",
+        "ऑब्जेक्ट पहचान"
+      ],
+      "DAILY_ROUTINE_RECALL": [
+        "दैनिक दिनचर्या स्मरण",
+        "रूटीन स्मरण",
+        "दिन की याददाश्त"
+      ]
+    },
+    "gameTitles": {
+      "WATER_JUGS": "वॉटर जग",
+      "TOWER_OF_HANOI": "टावर ऑफ हनोई",
+      "BALL_SORT": "बॉल सॉर्ट पजल",
+      "N_BACK": "एन-बैक",
+      "LOGIC_PUZZLES": "तर्क पहेलियां",
+      "STROOP": "स्ट्रूप टेस्ट",
+      "MENTAL_ROTATION": "मेंटल रोटेशन",
+      "SCHULTE_TABLE": "शुल्टे टेबल",
+      "MAZE": "भूलभुलैया",
+      "CARD_MATCHING": "मेमोरी कार्ड मैच",
+      "NUMBER_SEQUENCE": "संख्या क्रम",
+      "WORD_SCRAMBLE": "शब्द पहेली",
+      "QUICK_MATH": "क्विक मैथ",
+      "VISUAL_SEARCH": "विजुअल सर्च",
+      "REACTION_TIME": "रिएक्शन टाइम",
+      "SIMON_SAYS": "साइमन सेज",
+      "TRAIL_MAKING": "ट्रेल मेकिंग",
+      "ANAGRAM_SOLVER": "एनाग्राम सॉल्वर",
+      "DELAYED_RECALL": "विलंबित स्मरण",
+      "PATTERN_MATRIX": "पैटर्न मैट्रिक्स",
+      "DUAL_TASK": "ड्यूल टास्क",
+      "WORKING_MEMORY_GRID": "वर्किंग मेमोरी ग्रिड",
+      "CULTURAL_OBJECT_RECOGNITION": "सांस्कृतिक वस्तु पहचान",
+      "DAILY_ROUTINE_RECALL": "दैनिक दिनचर्या स्मरण"
+    },
+    "responses": {
+      "OPEN_GAMES": "दिमाग की कसरत के खेल खोल रहा हूँ।",
+      "NEXT_GAME": "नया खेल शुरू कर रहे हैं।",
+      "OPEN_GAME": "{{name}} खेल खोल रहा हूँ।",
+      "OPEN_REMINDERS": "आपके आज के रिमाइंडर और रूटीन खोल रहा हूँ।",
+      "TODAY_REMINDERS": "यहाँ आज के आपके काम और शेड्यूल हैं।",
+      "NEXT_REMINDER": "आपके अगले काम की जानकारी ला रहे हैं।",
+      "ADD_ROUTINE": "कृपया नए काम की जानकारी दर्ज करें या पुष्टि करें।",
+      "COMPLETE_ROUTINE": "बहुत बढ़िया! काम पूरा दर्ज कर दिया गया है।",
+      "REMOVE_ROUTINE": "रूटीन हटाया जा रहा है।",
+      "UPDATE_ROUTINE": "रूटीन का समय बदलने के लिए पृष्ठ खोल रहा हूँ।",
+      "OPEN_MEDICATIONS": "दवाइयों का शेड्यूल खोल रहा हूँ।",
+      "TODAY_MEDICATIONS": "यहाँ आज की आपकी दवाइयों का विवरण है।",
+      "NEXT_MEDICATION": "अगली खुराक की जानकारी ला रहे हैं।",
+      "MEDICATION_TAKEN": "क्या आप पुष्टि करते हैं कि आपने अपनी दवा ले ली है?",
+      "MEDICATION_SKIPPED": "दवा की खुराक छोड़ दी गई दर्ज कर रहे हैं।",
+      "OPEN_ANALYTICS": "आपकी मानसिक क्षमता और प्रोग्रेस रिपोर्ट खोल रहा हूँ।",
+      "OPEN_MEMORIES": "आपकी प्यारी यादों का एल्बम खोल रहा हूँ।",
+      "OPEN_CAREGIVER": "देखभालकर्ता पोर्टल खोल रहा हूँ।",
+      "GO_HOME": "मुख्य पृष्ठ पर लौट रहे हैं।",
+      "HELP": "यहाँ वे वॉयस कमांड हैं जिनका आप उपयोग कर सकते हैं।",
+      "CLOSE": "वॉयस असिस्टेंट बंद कर रहा हूँ।",
+      "UNKNOWN": "माफ़ कीजिए, मैं समझ नहीं पाया। कृपया दोबारा बोलें।",
+      "CARETAKER_ONLY": "यह पृष्ठ केवल अधिकृत देखभालकर्ता के लिए उपलब्ध है।"
+    },
+    "shortPhrases": {
+      "OPEN_GAMES": "खेल खोल रहा हूँ",
+      "NEXT_GAME": "अगला खेल",
+      "OPEN_GAME": "खेल खोल रहा हूँ",
+      "OPEN_REMINDERS": "रिमाइंडर खोल रहा हूँ",
+      "TODAY_REMINDERS": "आज के रिमाइंडर",
+      "NEXT_REMINDER": "अगला काम",
+      "ADD_ROUTINE": "काम जोड़ें",
+      "COMPLETE_ROUTINE": "काम पूरा हुआ",
+      "REMOVE_ROUTINE": "काम हटाया",
+      "UPDATE_ROUTINE": "समय अपडेट",
+      "OPEN_MEDICATIONS": "दवाइयां खोल रहा हूँ",
+      "TODAY_MEDICATIONS": "आज की दवाइयां",
+      "NEXT_MEDICATION": "अगली खुराक",
+      "MEDICATION_TAKEN": "दवा दर्ज हुई",
+      "MEDICATION_SKIPPED": "दवा छूटी दर्ज",
+      "OPEN_ANALYTICS": "रिपोर्ट खोल रहा हूँ",
+      "OPEN_MEMORIES": "यादें खोल रहा हूँ",
+      "OPEN_CAREGIVER": "केयरटेकर पृष्ठ",
+      "GO_HOME": "होम पर",
+      "HELP": "मदद खोल रहे हैं",
+      "CLOSE": "असिस्टेंट बंद",
+      "UNKNOWN": "कृपया दोबारा बोलें",
+      "CONFIRM_DOSE": "दवा ले ली?",
+      "VOICE_NOT_AVAILABLE": "आवाज उपलब्ध नहीं है"
+    },
+    "status": {
+      "listening": "सुन रहा हूँ… माइक्रोफ़ोन में स्पष्ट बोलें",
+      "processing": "कमांड समझ रहे हैं…",
+      "speaking": "उत्तर बोल रहे हैं…",
+      "ready": "तैयार। बोलने के लिए माइक दबाएँ।",
+      "micDenied": "माइक्रोफ़ोन अनुमति नहीं मिली। कृपया जांचें।",
+      "error": "वॉयस असिस्टेंट में त्रुटि आई।",
+      "notUnderstood": "समझ नहीं आया। कृपया पुनः प्रयास करें।",
+      "wakeWordActive": "हे सेतु वेक-वर्ड सक्रिय है"
+    },
+    "ui": {
+      "youSaid": "आपने कहा:",
+      "action": "कार्रवाई:",
+      "intent": "इरादा:",
+      "match": "मिलान:",
+      "listeningPrompt": "सुन रहे हैं… बोलने के बाद माइक दबाएँ",
+      "tapToSpeak": "बोलने के लिए दबाएं",
+      "tapToStop": "रोकने के लिए दबाएं",
+      "spokenSummary": "वॉयस सारांश",
+      "voiceReadingUnavailable": "{{language}} में आवाज पढ़ना अभी उपलब्ध नहीं है",
+      "confirmMarkTaken": "क्या दवा ले ली दर्ज करें?",
+      "confirmYes": "हाँ, ले ली",
+      "confirmNo": "नहीं, रद्द करें",
+      "undo": "वापस लें",
+      "markedAsTaken": "खुराक पूरी दर्ज की गई"
+    }
+  },
+  "te-IN": {
+    "phrases": {
+      "OPEN_GAMES": [
+        "ఓపెన్ గేమ్స్",
+        "ప్లే గేమ్స్",
+        "షో గేమ్స్",
+        "బ్రెయిన్ గేమ్స్",
+        "కాగ్నిటివ్ ఎక్సర్సైజెస్",
+        "నేను గేమ్స్ ఆడాలనుకుంటున్నాను",
+        "స్టార్ట్ గేమ్స్",
+        "నన్ను గేమ్స్ కి తీసుకెళ్ళు",
+        "open games",
+        "play games"
+      ],
+      "NEXT_GAME": [
+        "తదుపరి గేమ్",
+        "మరొక గేమ్",
+        "కొత్త గేమ్",
+        "తదుపరి గేమ్ చూపించు",
+        "నాకు మరొక గేమ్ ఇవ్వు",
+        "స్విచ్ గేమ్",
+        "next game",
+        "another game"
+      ],
+      "OPEN_GAME": [
+        "ప్లే",
+        "ఓపెన్",
+        "స్టార్ట్",
+        "లాంచ్",
+        "play",
+        "open"
+      ],
+      "OPEN_REMINDERS": [
+        "ఓపెన్ రిమైండర్స్",
+        "షో రిమైండర్స్",
+        "my reminders",
+        "routine",
+        "daily routine",
+        "open routine",
+        "show schedule",
+        "view schedule",
+        "open reminders",
+        "show reminders"
+      ],
+      "TODAY_REMINDERS": [
+        "what do i have today",
+        "today reminders",
+        "what tasks today",
+        "what is on today",
+        "today's schedule",
+        "what should i do today",
+        "schedule for today"
+      ],
+      "NEXT_REMINDER": [
+        "what is my next task",
+        "next reminder",
+        "next task",
+        "what is next",
+        "what should i do next",
+        "upcoming reminder"
+      ],
+      "ADD_ROUTINE": [
+        "add a task",
+        "క్రమం చేర్చు",
+        "పని సృష్టించు",
+        "కొత్త క్రమం",
+        "కొత్త పని",
+        "నడకను షెడ్యూల్ చేయి",
+        "కార్యకలాపాన్ని షెడ్యూల్ చేయి",
+        "గుర్తుచేసేది చేర్చు",
+        "గుర్తుచేసేది పెట్టు",
+        "add routine"
+      ],
+      "COMPLETE_ROUTINE": [
+        "పని పూర్తయినట్లు గుర్తించు",
+        "పని పూర్తయింది",
+        "క్రమం పూర్తయింది",
+        "పూర్తయిన పని",
+        "ముగించిన పని",
+        "నేను నా పనిని ముగించాను",
+        "క్రమం పూర్తయినట్లు గుర్తించు",
+        "mark task done",
+        "task completed"
+      ],
+      "REMOVE_ROUTINE": [
+        "పనిని తొలగించు",
+        "పనిని తీసివేయి",
+        "క్రమాన్ని తొలగించు",
+        "క్రమాన్ని తొలగించు",
+        "పనిని రద్దు చేయి",
+        "clear task",
+        "delete task",
+        "remove task"
+      ],
+      "UPDATE_ROUTINE": [
+        "change the time",
+        "update routine",
+        "change routine time",
+        "reschedule task",
+        "reschedule routine",
+        "modify task time"
+      ],
+      "OPEN_MEDICATIONS": [
+        "show my medicines",
+        "open medications",
+        "my medicines",
+        "show medicines",
+        "medicine list",
+        "prescriptions",
+        "open medicine schedule"
+      ],
+      "TODAY_MEDICATIONS": [
+        "what medicine do i take today",
+        "today's medicines",
+        "medicines for today",
+        "what pills today",
+        "what medicines should i take today",
+        "daily medication"
+      ],
+      "NEXT_MEDICATION": [
+        "నా తదుపరి మోతాదు ఏమిటి?",
+        "తదుపరి మందు",
+        "తదుపరి మాత్ర",
+        "నా తదుపరి మోతాదు ఎప్పుడు?",
+        "తదుపరి మందు ఏమిటి?",
+        "రాబోయే మందు",
+        "what is my next dose",
+        "next medicine"
+      ],
+      "MEDICATION_TAKEN": [
+        "నేను నా మందు తీసుకున్నాను",
+        "తీసుకున్న మందు",
+        "మాత్ర తీసుకున్నాను",
+        "టాబ్లెట్ తీసుకున్నాను",
+        "ఇప్పటికే మందు తీసుకున్నాను",
+        "నేను నా మందు తీసుకున్నాను",
+        "తీసుకున్న మందును గుర్తించు",
+        "i took my medicine",
+        "medicine taken"
+      ],
+      "MEDICATION_SKIPPED": [
+        "మందును దాటవేయి",
+        "మోతాదును దాటవేయి",
+        "మందును దాటవేశాను",
+        "మందు తీసుకోలేదు",
+        "మందును కోల్పోయాను",
+        "skip medicine",
+        "skip dose"
+      ],
+      "OPEN_ANALYTICS": [
+        "నా పురోగతిని చూపించు",
+        "విశ్లేషణలను తెరువు",
+        "నా పురోగతి",
+        "జ్ఞాన స్కోరు",
+        "పనితీరు నివేదిక",
+        "నేను ఎలా చేస్తున్నాను",
+        "నివేదికను చూపించు",
+        "show my progress",
+        "open analytics"
+      ],
+      "OPEN_MEMORIES": [
+        "నా జ్ఞాపకాలను చూపించు",
+        "జ్ఞాపకాలను తెరువు",
+        "నా ఫోటోలు",
+        "కుటుంబ ఫోటోలు",
+        "ఫోటో ఆల్బమ్",
+        "జ్ఞాపకాలను చూడండి",
+        "show my memories",
+        "open memories"
+      ],
+      "OPEN_CAREGIVER": [
+        "సంరక్షకురాలు",
+        "సంరక్షకుడు",
+        "సంరక్షకురాలి డాష్‌బోర్డ్",
+        "సంరక్షకురాలి పోర్టల్",
+        "సంరక్షకురాలిని తెరువు",
+        "caregiver",
+        "caretaker"
+      ],
+      "GO_HOME": [
+        "ఇంటికి వెళ్ళు",
+        "హోమ్ పేజీ",
+        "డాష్‌బోర్డ్‌కు తిరిగి వెళ్ళు",
+        "ప్రధాన తెర",
+        "ఇంటికి తిరిగి వెళ్ళు",
+        "ఇంటి నుండి నిష్క్రమించు",
+        "go home",
+        "home page"
+      ],
+      "HELP": [
+        "సహాయం",
+        "నేను ఏమి చెప్పగలను",
+        "వాయిస్ ఆదేశాలు",
+        "ఇది ఎలా పని చేస్తుంది",
+        "సహాయకురాలు గైడ్",
+        "help",
+        "what can i say"
+      ],
+      "CLOSE": [
+        "మూసివేయి",
+        "నిష్క్రమించు",
+        "నిష్క్రమించు",
+        "తొలగించు",
+        "ఆపు",
+        "రద్దు చేయి",
+        "close",
+        "exit"
+      ]
+    },
+    "games": {
+      "WATER_JUGS": [
+        "నీళ్ల కూజాలు",
+        "నీళ్ల కూజా",
+        "కూజాల పజిల్",
+        "కొలిచే కూజాలు"
+      ],
+      "TOWER_OF_HANOI": [
+        "హనోయి టవర్",
+        "హనోయి టవర్స్",
+        "హనోయి పజిల్",
+        "పెగ్ డిస్క్స్"
+      ],
+      "BALL_SORT": [
+        "బాల్ సార్ట్",
+        "బాల్ పజిల్",
+        "సార్ట్ బాల్స్",
+        "కలర్ బాల్స్"
+      ],
+      "N_BACK": [
+        "ఎన్ బ్యాక్",
+        "ఎన్-బ్యాక్",
+        "మెమరీ ఎన్ బ్యాక్",
+        "డ్యూయల్ ఎన్ బ్యాక్"
+      ],
+      "LOGIC_PUZZLES": [
+        "లాజిక్ పజిల్స్",
+        "లాజిక్ పజిల్",
+        "మ్యాథ్ లాజిక్",
+        "రిడిల్స్"
+      ],
+      "STROOP": [
+        "స్ట్రూప్ టెస్ట్",
+        "స్ట్రూప్ రంగు",
+        "రంగు పరీక్ష",
+        "స్ట్రూప్ ప్రభావం"
+      ],
+      "MENTAL_ROTATION": [
+        "మానసిక భ్రమణం",
+        "ఆకారాన్ని తిప్పండి",
+        "3D భ్రమణం",
+        "ఆకారం సరిపోల్చడం"
+      ],
+      "SCHULTE_TABLE": [
+        "షుల్టే పట్టిక",
+        "సంఖ్య గ్రిడ్",
+        "షుల్టే గ్రిడ్",
+        "సంఖ్యలను కనుగొనండి"
+      ],
+      "MAZE": [
+        "మార్గం చిట్టడివి",
+        "చిట్టడివి",
+        "ప్రహరణ",
+        "మార్గం కనుగొనండి"
+      ],
+      "CARD_MATCHING": [
+        "కార్డ్ సరిపోల్చడం",
+        "మెమరీ మ్యాచ్",
+        "ఫ్లిప్ కార్డులు",
+        "జత చేయండి",
+        "మెమరీ కార్డులు"
+      ],
+      "NUMBER_SEQUENCE": [
+        "సంఖ్య క్రమం",
+        "సంఖ్య పజిల్",
+        "తప్పిపోయిన సంఖ్య",
+        "సంఖ్య శ్రేణి"
+      ],
+      "WORD_SCRAMBLE": [
+        "వర్డ్ స్క్రాంబుల్",
+        "వర్డ్ పజిల్",
+        "పదాలను విడదీయండి",
+        "గందరగోళంగా ఉన్న పదాలు"
+      ],
+      "QUICK_MATH": [
+        "క్విక్ మ్యాథ్",
+        "స్పీడ్ మ్యాథ్",
+        "మెంటల్ మ్యాథ్",
+        "అంకగణిత ఆట"
+      ],
+      "VISUAL_SEARCH": [
+        "దృశ్య శోధన",
+        "వస్తువును కనుగొను",
+        "దాచిన వస్తువు",
+        "తేడాను గుర్తించు"
+      ],
+      "REACTION_TIME": [
+        "స్పందన సమయం",
+        "వేగ పరీక్ష",
+        "రిఫ్లెక్స్ పరీక్ష",
+        "ట్యాప్ వేగం"
+      ],
+      "SIMON_SAYS": [
+        "సైమన్ చెబుతున్నాడు",
+        "నమూనాను అనుసరించు",
+        "కాంతి క్రమం",
+        "సైమన్ క్రమం"
+      ],
+      "TRAIL_MAKING": [
+        "ట్రెయిల్ మేకింగ్",
+        "చుక్కలను కలుపు",
+        "ట్రెయిల్ పరీక్ష",
+        "సంఖ్యలను కలుపు"
+      ],
+      "ANAGRAM_SOLVER": [
+        "అనాగ్రామ్ సాల్వర్",
+        "అనాగ్రామ్స్",
+        "పదాల పునర్వ్యవస్థీకరణ",
+        "అక్షరాల పజిల్"
+      ],
+      "DELAYED_RECALL": [
+        "ఆలస్యమైన రీకాల్",
+        "పదాల మెమరీ",
+        "రీకాల్ లిస్ట్",
+        "గుర్తుంచుకునే పదాలు"
+      ],
+      "PATTERN_MATRIX": [
+        "పాటర్న్ మ్యాట్రిక్స్",
+        "మ్యాట్రిక్స్ పజిల్",
+        "ఆకారం నమూనా",
+        "రావెన్ మ్యాట్రిక్స్"
+      ],
+      "DUAL_TASK": [
+        "ద్వంద్వ కార్యం",
+        "మల్టీ టాస్కింగ్ గేమ్",
+        "విభజించబడిన శ్రద్ధ",
+        "రెండు పనులు"
+      ],
+      "WORKING_MEMORY_GRID": [
+        "పనిచేసే జ్ఞాపకశక్తి గ్రిడ్",
+        "జ్ఞాపకశక్తి గ్రిడ్",
+        "స్థానిక గ్రిడ్",
+        "గ్రిడ్ రీకాల్"
+      ],
+      "CULTURAL_OBJECT_RECOGNITION": [
+        "సాంస్కృతిక వస్తువు గుర్తింపు",
+        "వస్తువు గుర్తింపు",
+        "వారసత్వ అంశాలు",
+        "వింటేజ్ వస్తువులు"
+      ],
+      "DAILY_ROUTINE_RECALL": [
+        "రోజువారీ దినచర్య రీకాల్",
+        "దినచర్య జ్ఞాపకశక్తి",
+        "రోజు రీకాల్",
+        "కార్యకలాపాల జ్ఞాపకశక్తి"
+      ]
+    },
+    "gameTitles": {
+      "WATER_JUGS": "నీళ్ల కూజా",
+      "TOWER_OF_HANOI": "హనోయి టవర్",
+      "BALL_SORT": "బాల్ సార్ట్ పజిల్",
+      "N_BACK": "ఎన్-బ్యాక్",
+      "LOGIC_PUZZLES": "లాజిక్ పజిల్స్",
+      "STROOP": "స్ట్రూప్ టెస్ట్",
+      "MENTAL_ROTATION": "మానసిక భ్రమణం",
+      "SCHULTE_TABLE": "షుల్టే పట్టిక",
+      "MAZE": "మార్గం చిట్టడివి",
+      "CARD_MATCHING": "కార్డ్ సరిపోల్చే జ్ఞాపకశక్తి",
+      "NUMBER_SEQUENCE": "సంఖ్య క్రమం",
+      "WORD_SCRAMBLE": "వర్డ్ స్క్రాంబుల్",
+      "QUICK_MATH": "క్విక్ మ్యాథ్",
+      "VISUAL_SEARCH": "విజువల్ సెర్చ్",
+      "REACTION_TIME": "స్పందన సమయం",
+      "SIMON_SAYS": "సైమన్ చెబుతున్నాడు",
+      "TRAIL_MAKING": "ట్రెయిల్ మేకింగ్",
+      "ANAGRAM_SOLVER": "అనాగ్రామ్ సాల్వర్",
+      "DELAYED_RECALL": "ఆలస్యమైన రీకాల్",
+      "PATTERN_MATRIX": "పాటర్న్ మ్యాట్రిక్స్",
+      "DUAL_TASK": "ద్వంద్వ కార్యం",
+      "WORKING_MEMORY_GRID": "వర్కింగ్ మెమరీ గ్రిడ్",
+      "CULTURAL_OBJECT_RECOGNITION": "సాంస్కృతిక వస్తువు గుర్తింపు",
+      "DAILY_ROUTINE_RECALL": "రోజువారీ దినచర్య రీకాల్"
+    },
+    "responses": {
+      "OPEN_GAMES": "మెదడు శిక్షణ ఆటల కేంద్రాన్ని తెరుస్తున్నాను.",
+      "NEXT_GAME": "మరొక మెదడు శిక్షణ వ్యాయామాన్ని ప్రారంభిస్తున్నాను.",
+      "OPEN_GAME": "{{name}} ఆటను ప్రారంభిస్తున్నాను.",
+      "OPEN_REMINDERS": "మీ రోజువారీ దినచర్య మరియు రిమైండర్‌లను ప్రారంభిస్తున్నాను.",
+      "TODAY_REMINDERS": "ఈ రోజు కోసం మీ దినచర్య షెడ్యూల్ ఇక్కడ ఉంది.",
+      "NEXT_REMINDER": "మీ తదుపరి రాబోయే రిమైండర్‌ను తనిఖీ చేస్తున్నాను.",
+      "ADD_ROUTINE": "దయచేసి కొత్త రొటీన్ వివరాలను నమోదు చేయండి లేదా నిర్ధారించండి.",
+      "COMPLETE_ROUTINE": "చాలా బాగుంది! మీ పని పూర్తయినట్లు గుర్తించబడింది.",
+      "REMOVE_ROUTINE": "సూచించిన రొటీన్ అంశాన్ని తొలగిస్తున్నాము.",
+      "UPDATE_ROUTINE": "మీ షెడ్యూల్‌ను నవీకరించడానికి రొటీన్ ఎడిటర్‌ను తెరుస్తున్నాము.",
+      "OPEN_MEDICATIONS": "మీ మందుల షెడ్యూల్‌ను తెరుస్తున్నాము.",
+      "TODAY_MEDICATIONS": "ఈ రోజు కోసం మీరు షెడ్యూల్ చేసిన మందులు ఇక్కడ ఉన్నాయి.",
+      "NEXT_MEDICATION": "మీ తదుపరి షెడ్యూల్ చేయబడిన మందుల మోతాదును తనిఖీ చేస్తున్నాము.",
+      "MEDICATION_TAKEN": "మీరు మీ మందులు తీసుకున్నారని నిర్ధారించాలనుకుంటున్నారా?",
+      "MEDICATION_SKIPPED": "మందుల మోతాదును దాటవేయబడినట్లుగా గుర్తించబడింది.",
+      "OPEN_ANALYTICS": "మీ కాగ్నిటివ్ పెర్ఫార్మెన్స్ అనలిటిక్స్ మరియు రిపోర్ట్‌ను తెరుస్తున్నాము.",
+      "OPEN_MEMORIES": "మీ ప్రియమైన జ్ఞాపకాల ఆల్బమ్‌ను తెరుస్తున్నాము.",
+      "OPEN_CAREGIVER": "సంరక్షకుల పర్యవేక్షణ పోర్టల్‌ను తెరుస్తున్నాము.",
+      "GO_HOME": "హోమ్ డాష్‌బోర్డ్‌కు తిరిగి వస్తున్నాము.",
+      "HELP": "మీరు ఉపయోగించగల వాయిస్ ఆదేశాలు ఇక్కడ ఉన్నాయి.",
+      "CLOSE": "వాయిస్ అసిస్టెంట్‌ను మూసివేస్తున్నాము.",
+      "UNKNOWN": "నాకు అది అర్థం కాలేదు. దయచేసి మళ్లీ ప్రయత్నించండి లేదా సూచనను నొక్కండి.",
+      "CARETAKER_ONLY": "సంరక్షకుల డాష్‌బోర్డ్ అధీకృత సంరక్షకులకు మాత్రమే అందుబాటులో ఉంటుంది."
+    },
+    "shortPhrases": {
+      "OPEN_GAMES": "గేమ్స్‌ను తెరుస్తున్నాము",
+      "NEXT_GAME": "తదుపరి గేమ్",
+      "OPEN_GAME": "గేమ్‌ను తెరుస్తున్నాము",
+      "OPEN_REMINDERS": "గుర్తుచేసే విషయాలు తెరుచుకుంటున్నాయి",
+      "TODAY_REMINDERS": "ఈ రోజు గుర్తుచేసే విషయాలు చూపిస్తోంది",
+      "NEXT_REMINDER": "తదుపరి గుర్తుచేసే విషయం చూపిస్తోంది",
+      "ADD_ROUTINE": "క్రమబద్ధీకరణను చేర్చు",
+      "COMPLETE_ROUTINE": "పని పూర్తయినట్లు గుర్తించబడింది",
+      "REMOVE_ROUTINE": "పని తొలగించబడింది",
+      "UPDATE_ROUTINE": "క్రమబద్ధీకరణను నవీకరించు",
+      "OPEN_MEDICATIONS": "మందులు తెరుచుకుంటున్నాయి",
+      "TODAY_MEDICATIONS": "ఈ రోజు మందులు చూపిస్తోంది",
+      "NEXT_MEDICATION": "తదుపరి మందు చూపిస్తోంది",
+      "MEDICATION_TAKEN": "మందు నమోదు చేయబడింది",
+      "MEDICATION_SKIPPED": "మందు దాటవేయబడింది",
+      "OPEN_ANALYTICS": "ప్రగతి నివేదిక తెరుచుకుంటున్నది",
+      "OPEN_MEMORIES": "జ్ఞాపకాలను తెరుచుకుంటున్నది",
+      "OPEN_CAREGIVER": "సంరక్షకుని వీక్షణ తెరుచుకుంటున్నది",
+      "GO_HOME": "ఇంటికి వెళ్తున్నాను",
+      "HELP": "సహాయం తెరుచుకుంటున్నది",
+      "CLOSE": "సహాయకురాలు మూసివేస్తున్నది",
+      "UNKNOWN": "దయచేసి పునరావృతం చేయండి",
+      "CONFIRM_DOSE": "తీసుకున్న మోతాదును నిర్ధారించారా?",
+      "VOICE_NOT_AVAILABLE": "వాయిస్ రీడింగ్ అందుబాటులో లేదు"
+    },
+    "status": {
+      "listening": "వింటున్నాను... మైక్రోఫోన్‌లో స్పష్టంగా మాట్లాడండి",
+      "processing": "మీ వాయిస్ ఆదేశాన్ని ప్రాసెస్ చేస్తున్నాము...",
+      "speaking": "స్పందనను చెబుతున్నాను...",
+      "ready": "సిద్ధంగా ఉంది. మాట్లాడటానికి మైక్రోఫోన్‌ను నొక్కండి.",
+      "micDenied": "మైక్రోఫోన్ యాక్సెస్ నిరాకరించబడింది. దయచేసి అనుమతులను తనిఖీ చేయండి.",
+      "error": "వాయిస్ అసిస్టెంట్‌కు లోపం ఎదురైంది.",
+      "notUnderstood": "అర్థం కాలేదు. దయచేసి మళ్లీ ప్రయత్నించండి.",
+      "wakeWordActive": "హే సేతు వేక్-వర్డ్ లిజనర్ యాక్టివ్"
+    },
+    "ui": {
+      "youSaid": "మీరు చెప్పారు:",
+      "action": "చర్య:",
+      "intent": "ఉద్దేశం:",
+      "match": "సరిపోలిక:",
+      "listeningPrompt": "వింటున్నాను... పూర్తయిన తర్వాత మైక్‌ను నొక్కండి",
+      "tapToSpeak": "మాట్లాడటానికి నొక్కండి",
+      "tapToStop": "ఆపడానికి నొక్కండి",
+      "spokenSummary": "వాయిస్ సారాంశం",
+      "voiceReadingUnavailable": "{{language}}లో వాయిస్ రీడింగ్ ఇంకా అందుబాటులో లేదు",
+      "confirmMarkTaken": "తీసుకున్నట్లు నిర్ధారించారా?",
+      "confirmYes": "అవును, తీసుకున్నారు",
+      "confirmNo": "లేదు, రద్దు చేయి",
+      "undo": "వెనక్కి తీయి",
+      "markedAsTaken": "తీసుకున్నట్లుగా డోస్ గుర్తించబడింది"
+    }
+  },
+  "ta-IN": {
+    "phrases": {
+      "OPEN_GAMES": [
+        "திறந்த விளையாட்டுகள்",
+        "விளையாடு விளையாட்டுகள்",
+        "காட்சி விளையாட்டுகள்",
+        "மூளை விளையாட்டுகள்",
+        "அறிவாற்றல் பயிற்சிகள்",
+        "நான் விளையாட்டுகள் விளையாட விரும்புகிறேன்",
+        "ஆரம்ப விளையாட்டுகள்",
+        "என்னை விளையாட்டுகளுக்கு அழைத்துச் செல்லுங்கள்",
+        "open games",
+        "play games"
+      ],
+      "NEXT_GAME": [
+        "அடுத்த விளையாட்டு",
+        "மற்றொரு விளையாட்டு",
+        "புதிய விளையாட்டு",
+        "அடுத்த விளையாட்டைக் காட்டு",
+        "எனக்கு இன்னொரு விளையாட்டு கொடு",
+        "விளையாட்டை மாற்று",
+        "next game",
+        "another game"
+      ],
+      "OPEN_GAME": [
+        "விளையாடு",
+        "திற",
+        "தொடங்கு",
+        "துவங்கு",
+        "play",
+        "open"
+      ],
+      "OPEN_REMINDERS": [
+        "திற நினைவூட்டல்கள்",
+        "நினைவூட்டல்களைக் காட்டு",
+        "என் நினைவூட்டல்கள்",
+        "வழக்கம்",
+        "தினசரி வழக்கம்",
+        "திறந்த வழக்கம்",
+        "கால அட்டவணை காட்டு",
+        "கால அட்டவணை பார்",
+        "open reminders",
+        "show reminders"
+      ],
+      "TODAY_REMINDERS": [
+        "இன்று என்ன இருக்கிறது",
+        "இன்றைய நினைவூட்டல்கள்",
+        "இன்று என்ன வேலைகள்",
+        "இன்று என்ன இருக்கிறது",
+        "இன்றைய கால அட்டவணை",
+        "நான் இன்று என்ன செய்ய வேண்டும்",
+        "இன்றைய கால அட்டவணை",
+        "what do i have today",
+        "today reminders"
+      ],
+      "NEXT_REMINDER": [
+        "எனது அடுத்த பணி என்ன",
+        "அடுத்த நினைவூட்டல்",
+        "அடுத்த பணி",
+        "அடுத்து என்ன இருக்கிறது",
+        "நான் அடுத்து என்ன செய்ய வேண்டும்",
+        "வரவிருக்கும் நினைவூட்டல்",
+        "what is my next task",
+        "next reminder"
+      ],
+      "ADD_ROUTINE": [
+        "ஒரு பணியைச் சேர்",
+        "சாதாரணத்தை சேர்",
+        "வேலையை உருவாக்கு",
+        "புதிய சாதாரணத்தை",
+        "புதிய வேலை",
+        "நடைப்பயிற்சிக்கு நேரம் ஒதுக்கு",
+        "செயல்பாட்டிற்கு நேரம் ஒதுக்கு",
+        "நினைவூட்டலை சேர்",
+        "நினைவூட்டலை அமை",
+        "add a task",
+        "add routine"
+      ],
+      "COMPLETE_ROUTINE": [
+        "வேலை முடிந்தது என்று குறி",
+        "வேலை முடிந்தது",
+        "சாதாரணத்தை முடிந்தது",
+        "முடிக்கப்பட்ட வேலை",
+        "வேலை முடிந்தது",
+        "நான் என் வேலையை முடித்தேன்",
+        "சாதாரணத்தை முடிந்தது என்று குறி",
+        "mark task done",
+        "task completed"
+      ],
+      "REMOVE_ROUTINE": [
+        "வேலையை நீக்கு",
+        "வேலையை அகற்று",
+        "சாதாரணத்தை நீக்கு",
+        "வேலையை நீக்கு",
+        "வேலையை ரத்து செய்",
+        "clear task",
+        "delete task",
+        "remove task"
+      ],
+      "UPDATE_ROUTINE": [
+        "change the time",
+        "update routine",
+        "change routine time",
+        "reschedule task",
+        "reschedule routine",
+        "modify task time"
+      ],
+      "OPEN_MEDICATIONS": [
+        "show my medicines",
+        "open medications",
+        "my medicines",
+        "show medicines",
+        "medicine list",
+        "prescriptions",
+        "open medicine schedule"
+      ],
+      "TODAY_MEDICATIONS": [
+        "what medicine do i take today",
+        "today's medicines",
+        "medicines for today",
+        "what pills today",
+        "what medicines should i take today",
+        "daily medication"
+      ],
+      "NEXT_MEDICATION": [
+        "எனது அடுத்த டோஸ் என்ன?",
+        "அடுத்த மருந்து",
+        "அடுத்த மாத்திரை",
+        "எனது அடுத்த டோஸ் எப்போது?",
+        "அடுத்த மருந்து என்ன?",
+        "வரவிருக்கும் மருந்து",
+        "what is my next dose",
+        "next medicine"
+      ],
+      "MEDICATION_TAKEN": [
+        "நான் மருந்து எடுத்துக்கொண்டேன்",
+        "எடுத்துக்கொண்ட மருந்து",
+        "மாத்திரை எடுத்தேன்",
+        "டேப்லெட் எடுத்தேன்",
+        "ஏற்கனவே மருந்து எடுத்துக்கொண்டேன்",
+        "நான் மருந்து எடுத்துக்கொண்டேன்",
+        "எடுத்துக்கொண்ட மருந்தை குறித்துக்கொள்",
+        "i took my medicine",
+        "medicine taken"
+      ],
+      "MEDICATION_SKIPPED": [
+        "மருந்தை தவிர்க்கவும்",
+        "டோஸ் தவிர்க்கவும்",
+        "மருந்து தவிர்க்கப்பட்டது",
+        "மருந்து எடுக்கவில்லை",
+        "மருந்து தவறவிட்டது",
+        "skip medicine",
+        "skip dose"
+      ],
+      "OPEN_ANALYTICS": [
+        "எனது முன்னேற்றத்தைக் காட்டு",
+        "அனலிட்டிக்ஸைத் திற",
+        "என் முன்னேற்றம்",
+        "அறிவாற்றல் புள்ளி",
+        "செயல்திறன் அறிக்கை",
+        "நான் எப்படி இருக்கிறேன்",
+        "அறிக்கையைக் காட்டு",
+        "show my progress",
+        "open analytics"
+      ],
+      "OPEN_MEMORIES": [
+        "என் நினைவுகளைக் காட்டு",
+        "நினைவுகளைத் திற",
+        "என் புகைப்படங்கள்",
+        "குடும்ப புகைப்படங்கள்",
+        "புகைப்பட ஆல்பம்",
+        "நினைவுகளைப் பார்",
+        "show my memories",
+        "open memories"
+      ],
+      "OPEN_CAREGIVER": [
+        "பராமரிப்பாளர்",
+        "கவனிப்பாளர்",
+        "பராமரிப்பாளர் டாஷ்போர்டு",
+        "கவனிப்பாளர் போர்டல்",
+        "பராமரிப்பாளரைத் திற",
+        "caregiver",
+        "caretaker"
+      ],
+      "GO_HOME": [
+        "வீட்டுக்கு போ",
+        "முகப்புப் பக்கம்",
+        "டாஷ்போர்டுக்குத் திரும்பு",
+        "முதன்மைத் திரை",
+        "வீடு திரும்பு",
+        "வீட்டிற்கு வெளியேறு",
+        "go home",
+        "home page"
+      ],
+      "HELP": [
+        "உதவி",
+        "நான் என்ன சொல்ல முடியும்",
+        "குரல் கட்டளைகள்",
+        "இது எப்படி வேலை செய்கிறது",
+        "உதவி வழிகாட்டி",
+        "help",
+        "what can i say"
+      ],
+      "CLOSE": [
+        "மூடு",
+        "வெளியேறு",
+        "விட்டுவிடு",
+        "பணிநீக்கு",
+        "நிறுத்து",
+        "ரத்து செய்",
+        "close",
+        "exit"
+      ]
+    },
+    "games": {
+      "WATER_JUGS": [
+        "தண்ணீர் குடங்கள்",
+        "தண்ணீர் குடம்",
+        "குடம் புதிர்",
+        "அளக்கும் குடங்கள்"
+      ],
+      "TOWER_OF_HANOI": [
+        "ஹனோய் கோபுரம்",
+        "ஹனோய் கோபுரங்கள்",
+        "ஹனோய் புதிர்",
+        "குண்டூசி வட்டுக்கள்"
+      ],
+      "BALL_SORT": [
+        "பந்து வரிசை",
+        "பந்து புதிர்",
+        "பந்துகளை வரிசைப்படுத்து",
+        "வண்ண பந்துகள்"
+      ],
+      "N_BACK": [
+        "n பின்",
+        "n-பின்",
+        "நினைவு n பின்",
+        "இரட்டை n பின்"
+      ],
+      "LOGIC_PUZZLES": [
+        "தர்க்க புதிர்கள்",
+        "தர்க்க புதிர்",
+        "கணித தர்க்கம்",
+        "புதிர்கள்"
+      ],
+      "STROOP": [
+        "ஸ்ட்ரூப் சோதனை",
+        "ஸ்ட்ரூப் நிறம்",
+        "நிற சோதனை",
+        "ஸ்ட்ரூப் விளைவு"
+      ],
+      "MENTAL_ROTATION": [
+        "மன சுழற்சி",
+        "வடிவத்தை சுழற்று",
+        "3D சுழற்சி",
+        "வடிவ பொருத்தம்"
+      ],
+      "SCHULTE_TABLE": [
+        "ஷுல்ட் அட்டவணை",
+        "எண் கட்டம்",
+        "ஷுல்ட் கட்டம்",
+        "எண்களைக் கண்டுபிடி"
+      ],
+      "MAZE": [
+        "பாதையியல் பிரமை",
+        "பிரமை",
+        "சிக்கலான பாதை",
+        "பாதையைக் கண்டுபிடி"
+      ],
+      "CARD_MATCHING": [
+        "அட்டை பொருத்தம்",
+        "memory match",
+        "flip cards",
+        "match pairs",
+        "memory cards"
+      ],
+      "NUMBER_SEQUENCE": [
+        "number sequence",
+        "number puzzle",
+        "missing number",
+        "number series"
+      ],
+      "WORD_SCRAMBLE": [
+        "word scramble",
+        "word puzzle",
+        "unscramble words",
+        "jumbled words"
+      ],
+      "QUICK_MATH": [
+        "quick math",
+        "speed math",
+        "mental math",
+        "arithmetic game"
+      ],
+      "VISUAL_SEARCH": [
+        "காட்சித் தேடல்",
+        "பொருளைக் கண்டுபிடி",
+        "மறைக்கப்பட்ட பொருள்",
+        "வேறுபாட்டைக் கண்டுபிடி"
+      ],
+      "REACTION_TIME": [
+        "எதிர்வினை நேரம்",
+        "வேகப் பரிசோதனை",
+        "பார்வை பரிசோதனை",
+        "தட்டு வேகம்"
+      ],
+      "SIMON_SAYS": [
+        "சைமன் சொல்கிறார்",
+        "வடிவத்தைப் பின்பற்று",
+        "ஒளி வரிசை",
+        "சைமன் வரிசை"
+      ],
+      "TRAIL_MAKING": [
+        "பாதம் அமைத்தல்",
+        "புள்ளிகளை இணைக்கவும்",
+        "பாதம் சோதனை",
+        "எண்களை இணைக்கவும்"
+      ],
+      "ANAGRAM_SOLVER": [
+        "சீரமைப்பு சொற்கள் தீர்க்கும் கருவி",
+        "சீரமைப்புகள்",
+        "சொல் மறுசீரமைப்பு",
+        "எழுத்து புதிர்"
+      ],
+      "DELAYED_RECALL": [
+        "தாமதமான நினைவு",
+        "சொல் நினைவகம்",
+        "நினைவுப் பட்டியல்",
+        "நினைவில் வைத்திருக்கும் வார்த்தைகள்"
+      ],
+      "PATTERN_MATRIX": [
+        "முறை அணி",
+        "அணி புதிர்",
+        "வடிவ முறை",
+        "ரேவன் அணி"
+      ],
+      "DUAL_TASK": [
+        "இரட்டை பணி",
+        "பல் பணி விளையாட்டு",
+        "பிரிந்த கவனம்",
+        "இரண்டு பணிகள்"
+      ],
+      "WORKING_MEMORY_GRID": [
+        "சாதக நினைவக கட்டம்",
+        "நினைவக கட்டம்",
+        "இடஞ்சார்ந்த கட்டம்",
+        "கட்ட நினைவு"
+      ],
+      "CULTURAL_OBJECT_RECOGNITION": [
+        "கலாச்சார பொருள் அங்கீகாரம்",
+        "பொருள் அங்கீகாரம்",
+        "பாரம்பரிய பொருட்கள்",
+        "பழங்கால பொருட்கள்"
+      ],
+      "DAILY_ROUTINE_RECALL": [
+        "தினசரி வழக்க நினைவு",
+        "வழக்கமான நினைவகம்",
+        "நாள் நினைவு",
+        "செயல்பாடு நினைவகம்"
+      ]
+    },
+    "gameTitles": {
+      "WATER_JUGS": "தண்ணீர் குடங்கள்",
+      "TOWER_OF_HANOI": "ஹனோய் கோபுரம்",
+      "BALL_SORT": "பந்து வரிசை புதிர்",
+      "N_BACK": "N-Back",
+      "LOGIC_PUZZLES": "தர்க்க புதிர்கள்",
+      "STROOP": "ஸ்ட்ரூப் சோதனை",
+      "MENTAL_ROTATION": "மன சுழற்சி",
+      "SCHULTE_TABLE": "ஷுல்ட் அட்டவணை",
+      "MAZE": "பாதையியல் பிரமை",
+      "CARD_MATCHING": "அட்டை பொருத்தம் நினைவகம்",
+      "NUMBER_SEQUENCE": "Number Sequence",
+      "WORD_SCRAMBLE": "Word Scramble",
+      "QUICK_MATH": "Quick Math",
+      "VISUAL_SEARCH": "Visual Search",
+      "REACTION_TIME": "எதிர்வினை நேரம்",
+      "SIMON_SAYS": "சைமன் சொல்கிறார்",
+      "TRAIL_MAKING": "பாதம் அமைத்தல்",
+      "ANAGRAM_SOLVER": "அனகிராம் தீர்க்கும் கருவி",
+      "DELAYED_RECALL": "தாமதமான நினைவு",
+      "PATTERN_MATRIX": "முறை அணி",
+      "DUAL_TASK": "இரட்டை பணி",
+      "WORKING_MEMORY_GRID": "செயல் நினைவகம் கட்டம்",
+      "CULTURAL_OBJECT_RECOGNITION": "கலாச்சார பொருள் அங்கீகாரம்",
+      "DAILY_ROUTINE_RECALL": "தினசரி வழக்க நினைவு"
+    },
+    "responses": {
+      "OPEN_GAMES": "மூளை பயிற்சி விளையாட்டு மையம் திறக்கப்படுகிறது.",
+      "NEXT_GAME": "மற்றொரு மூளை பயிற்சி பயிற்சி திறக்கப்படுகிறது.",
+      "OPEN_GAME": "{{name}} விளையாட்டு திறக்கப்படுகிறது.",
+      "OPEN_REMINDERS": "உங்கள் தினசரி வழக்கத்தையும் நினைவூட்டல்களையும் திறக்கிறது.",
+      "TODAY_REMINDERS": "இன்று உங்களுக்கான வழக்கமான அட்டவணை இங்கே.",
+      "NEXT_REMINDER": "உங்களின் அடுத்த வரவிருக்கும் நினைவூட்டலைச் சரிபார்க்கிறது.",
+      "ADD_ROUTINE": "சரியான புதிய வழக்கமான விவரங்களை உள்ளிடவும் அல்லது உறுதிப்படுத்தவும்.",
+      "COMPLETE_ROUTINE": "நல்ல வேலை! உங்கள் பணி முடிவடைந்ததாகக் குறிக்கப்படுகிறது.",
+      "REMOVE_ROUTINE": "குறிப்பிட்ட வழக்கமான உருப்படியை நீக்குகிறது.",
+      "UPDATE_ROUTINE": "உங்கள் அட்டவணையைப் புதுப்பிக்க வழக்கமான எடிட்டரைத் திறக்கிறது.",
+      "OPEN_MEDICATIONS": "உங்கள் மருந்து அட்டவணையைத் திறக்கிறது.",
+      "TODAY_MEDICATIONS": "இன்று நீங்கள் திட்டமிடப்பட்ட மருந்துகள் இங்கே.",
+      "NEXT_MEDICATION": "உங்கள் அடுத்த திட்டமிடப்பட்ட மருந்து அளவைச் சரிபார்க்கிறது.",
+      "MEDICATION_TAKEN": "நீங்கள் உங்கள் மருந்தை எடுத்துக்கொண்டதை உறுதிப்படுத்த விரும்புகிறீர்களா?",
+      "MEDICATION_SKIPPED": "மருந்து அளவைத் தவிர்த்ததாகக் குறிக்கிறது.",
+      "OPEN_ANALYTICS": "உங்கள் அறிவாற்றல் செயல்திறன் பகுப்பாய்வு மற்றும் அறிக்கையைத் திறக்கிறது.",
+      "OPEN_MEMORIES": "உங்களின் பொன்னான நினைவுகள் ஆல்பத்தைத் திறக்கிறது.",
+      "OPEN_CAREGIVER": "பராமரிப்பாளர் கண்காணிப்பு போர்ட்டலைத் திறக்கிறது.",
+      "GO_HOME": "வீட்டு டாஷ்போர்டுக்குத் திரும்புகிறது.",
+      "HELP": "நீங்கள் பயன்படுத்தக்கூடிய குரல் கட்டளைகள் இங்கே.",
+      "CLOSE": "குரல் உதவியாளரை மூடுகிறது.",
+      "UNKNOWN": "எனக்குப் புரியவில்லை. மீண்டும் முயற்சிக்கவும் அல்லது ஒரு ஆலோசனையைத் தட்டவும்.",
+      "CARETAKER_ONLY": "அங்கீகரிக்கப்பட்ட பராமரிப்பாளர்களுக்கு மட்டுமே பராமரிப்பாளர் டாஷ்போர்டை அணுக முடியும்."
+    },
+    "shortPhrases": {
+      "OPEN_GAMES": "விளையாட்டுகளைத் திறக்கிறது",
+      "NEXT_GAME": "அடுத்த விளையாட்டு",
+      "OPEN_GAME": "விளையாட்டைத் திறக்கிறது",
+      "OPEN_REMINDERS": "திறக்கும் நினைவூட்டல்கள்",
+      "TODAY_REMINDERS": "இன்றைய நினைவூட்டல்களைக் காட்டுகிறது",
+      "NEXT_REMINDER": "அடுத்த நினைவூட்டலைக் காட்டுகிறது",
+      "ADD_ROUTINE": "வழக்கத்தைச் சேர்",
+      "COMPLETE_ROUTINE": "பணி முடிந்தது எனக் குறிக்கப்பட்டது",
+      "REMOVE_ROUTINE": "பணி நீக்கப்பட்டது",
+      "UPDATE_ROUTINE": "வழக்கத்தைப் புதுப்பிக்கவும்",
+      "OPEN_MEDICATIONS": "திறக்கும் மருந்துகள்",
+      "TODAY_MEDICATIONS": "இன்றைய மருந்துகளைக் காட்டுகிறது",
+      "NEXT_MEDICATION": "அடுத்த மருந்தை காட்டுகிறது",
+      "MEDICATION_TAKEN": "மருந்து பதிவு செய்யப்பட்டது",
+      "MEDICATION_SKIPPED": "மருந்து தவிர்க்கப்பட்டது",
+      "OPEN_ANALYTICS": "திறக்கும் முன்னேற்ற அறிக்கை",
+      "OPEN_MEMORIES": "திறக்கும் நினைவுகள்",
+      "OPEN_CAREGIVER": "திறக்கும் பராமரிப்பாளர் காட்சி",
+      "GO_HOME": "வீட்டுக்குச் செல்கிறது",
+      "HELP": "திறக்கும் உதவி",
+      "CLOSE": "மூடும் உதவியாளர்",
+      "UNKNOWN": "தயவுசெய்து மீண்டும் செய்யவும்",
+      "CONFIRM_DOSE": "எடுத்துக்கொண்ட அளவை உறுதிப்படுத்தவா?",
+      "VOICE_NOT_AVAILABLE": "குரல் வாசிப்பு கிடைக்கவில்லை"
+    },
+    "status": {
+      "listening": "கேட்கப்படுகிறது... ஒலிவாங்கியில் தெளிவாகப் பேசுங்கள்",
+      "processing": "உங்கள் குரல் கட்டளையைச் செயலாக்கிக் கொண்டிருக்கிறோம்...",
+      "speaking": "பதிலளிக்க தயாராக உள்ளேன்...",
+      "ready": "பேச தயாராக இருக்கிறேன். பேச ஒலிவாங்கியைத் தட்டவும்.",
+      "micDenied": "ஒலிவாங்கி அணுகல் மறுக்கப்பட்டது. அனுமதிகளைச் சரிபார்க்கவும்.",
+      "error": "குரல் உதவியாளருக்கு பிழை ஏற்பட்டது.",
+      "notUnderstood": "புரியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+      "wakeWordActive": "ஹே சேது விழித்திருக்கும் சொல் கேட்பவர் செயல்படுகிறார்"
+    },
+    "ui": {
+      "youSaid": "நீங்கள் சொன்னது:",
+      "action": "செயல்:",
+      "intent": "நோக்கம்:",
+      "match": "பொருத்தம்:",
+      "listeningPrompt": "கேட்கப்படுகிறது... முடிந்ததும் மைக் ஐ தட்டவும்",
+      "tapToSpeak": "பேச தட்டவும்",
+      "tapToStop": "நிறுத்த தட்டவும்",
+      "spokenSummary": "குரல் சுருக்கம்",
+      "voiceReadingUnavailable": "{{மொழி}} இல் குரல் வாசிப்பு இன்னும் கிடைக்கவில்லை",
+      "confirmMarkTaken": "எடுத்துக்கொண்டதாக உறுதிப்படுத்தப்பட்டதா?",
+      "confirmYes": "ஆம், எடுக்கப்பட்டது",
+      "confirmNo": "வேண்டாம், ரத்து செய்",
+      "undo": "செய்ததை ரத்து செய்",
+      "markedAsTaken": "எடுத்துக்கொண்டதாக டோஸ் குறிக்கப்பட்டுள்ளது"
+    }
+  },
+  "mr-IN": {
+    "phrases": {
+      "OPEN_GAMES": [
+        "ओपन गेम्स",
+        "प्ले गेम्स",
+        "शो गेम्स",
+        "ब्रेन गेम्स",
+        "कॉग्निटिव्ह एक्सरसाइज",
+        "मला गेम्स खेळायचे आहेत.",
+        "स्टार्ट गेम्स",
+        "मला गेम्सवर घेऊन चला.",
+        "open games",
+        "play games"
+      ],
+      "NEXT_GAME": [
+        "नेक्स्ट गेम",
+        "आणखी एक गेम",
+        "नवीन गेम",
+        "शो नेक्स्ट गेम",
+        "मला आणखी एक गेम द्या.",
+        "स्विच गेम",
+        "next game",
+        "another game"
+      ],
+      "OPEN_GAME": [
+        "प्ले",
+        "ओपन",
+        "स्टार्ट",
+        "लाँच",
+        "play",
+        "open"
+      ],
+      "OPEN_REMINDERS": [
+        "ओपन रिमाइंडर्स",
+        "शो रिमाइंडर्स",
+        "माझ्या आठवणी",
+        "नित्यक्रम",
+        "दैनंदिन नित्यक्रम",
+        "नित्यक्रम उघडा",
+        "वेळापत्रक दाखवा",
+        "वेळापत्रक पहा",
+        "open reminders",
+        "show reminders"
+      ],
+      "TODAY_REMINDERS": [
+        "आज माझ्याकडे काय आहे?",
+        "आजच्या आठवणी",
+        "आज कोणती कामे आहेत?",
+        "आज काय आहे?",
+        "आजचे वेळापत्रक",
+        "आज मी काय करावे?",
+        "आजचे वेळापत्रक",
+        "what do i have today",
+        "today reminders"
+      ],
+      "NEXT_REMINDER": [
+        "माझे पुढील काम काय आहे?",
+        "पुढील आठवण",
+        "पुढील काम",
+        "पुढे काय आहे?",
+        "मी पुढे काय करावे?",
+        "आगामी आठवण",
+        "what is my next task",
+        "next reminder"
+      ],
+      "ADD_ROUTINE": [
+        "एक काम जोडा",
+        "नियमितता जोडा",
+        "कार्य तयार करा",
+        "नवीन नियमितता",
+        "नवीन कार्य",
+        "चालण्याची वेळ निश्चित करा",
+        "कृती निश्चित करा",
+        "आठवण जोडा",
+        "आठवण सेट करा",
+        "add a task",
+        "add routine"
+      ],
+      "COMPLETE_ROUTINE": [
+        "कार्य पूर्ण झाले असे चिन्हांकित करा",
+        "कार्य पूर्ण झाले",
+        "नियमितता पूर्ण झाली",
+        "पूर्ण झालेले कार्य",
+        "संपूर्ण झालेले कार्य",
+        "मी माझे कार्य पूर्ण केले",
+        "नियमितता पूर्ण झाले असे चिन्हांकित करा",
+        "mark task done",
+        "task completed"
+      ],
+      "REMOVE_ROUTINE": [
+        "कार्य हटवा",
+        "कार्य काढा",
+        "नियमितता हटवा",
+        "नियमितता काढा",
+        "कार्य रद्द करा",
+        "clear task",
+        "delete task",
+        "remove task"
+      ],
+      "UPDATE_ROUTINE": [
+        "change the time",
+        "update routine",
+        "change routine time",
+        "reschedule task",
+        "reschedule routine",
+        "modify task time"
+      ],
+      "OPEN_MEDICATIONS": [
+        "show my medicines",
+        "open medications",
+        "my medicines",
+        "show medicines",
+        "medicine list",
+        "prescriptions",
+        "open medicine schedule"
+      ],
+      "TODAY_MEDICATIONS": [
+        "what medicine do i take today",
+        "today's medicines",
+        "medicines for today",
+        "what pills today",
+        "what medicines should i take today",
+        "daily medication"
+      ],
+      "NEXT_MEDICATION": [
+        "माझा पुढचा डोस कधी आहे?",
+        "पुढील औषध",
+        "पुढील गोळी",
+        "माझा पुढचा डोस कधी आहे?",
+        "पुढील औषध काय आहे?",
+        "येणारे औषध",
+        "what is my next dose",
+        "next medicine"
+      ],
+      "MEDICATION_TAKEN": [
+        "मी माझे औषध घेतले.",
+        "औषध घेतले.",
+        "गोळी घेतली.",
+        "टॅबलेट घेतली.",
+        "मी आधीच औषध घेतले आहे.",
+        "मी माझे औषध घेतले आहे.",
+        "औषध घेतले, नोंद करा.",
+        "i took my medicine",
+        "medicine taken"
+      ],
+      "MEDICATION_SKIPPED": [
+        "औषध वगळा.",
+        "डोस वगळा.",
+        "औषध वगळले.",
+        "मी औषध घेतले नाही.",
+        "औषध चुकले.",
+        "skip medicine",
+        "skip dose"
+      ],
+      "OPEN_ANALYTICS": [
+        "माझी प्रगती दाखवा.",
+        "ॲनालिटिक्स उघडा.",
+        "माझी प्रगती",
+        "संज्ञानात्मक गुण",
+        "कामगिरी अहवाल",
+        "मी कशी आहे?",
+        "अहवाल दाखवा",
+        "show my progress",
+        "open analytics"
+      ],
+      "OPEN_MEMORIES": [
+        "माझ्या आठवणी दाखवा",
+        "आठवणी उघडा",
+        "माझे फोटो",
+        "कुटुंबाचे फोटो",
+        "फोटो अल्बम",
+        "आठवणी पहा",
+        "show my memories",
+        "open memories"
+      ],
+      "OPEN_CAREGIVER": [
+        "काळजी घेणारी",
+        "काळजी घेणारी",
+        "काळजी घेणाऱ्यांसाठी डॅशबोर्ड",
+        "काळजी घेणाऱ्यांसाठी पोर्टल",
+        "काळजी घेणारी उघडा",
+        "caregiver",
+        "caretaker"
+      ],
+      "GO_HOME": [
+        "घरी जा",
+        "होम पेज",
+        "डॅशबोर्डवर परत जा",
+        "मुख्य स्क्रीन",
+        "घरी परत जा",
+        "घराकडे जा",
+        "go home",
+        "home page"
+      ],
+      "HELP": [
+        "मदत",
+        "मी काय बोलू?",
+        "आवाज आदेश",
+        "हे कसे काम करते?",
+        "सहाय्यक मार्गदर्शक",
+        "help",
+        "what can i say"
+      ],
+      "CLOSE": [
+        "बंद करा",
+        "बाहेर पडा",
+        "सोडा",
+        "निकाला",
+        "थांबा",
+        "रद्द करा",
+        "close",
+        "exit"
+      ]
+    },
+    "games": {
+      "WATER_JUGS": [
+        "पाण्याचे जग",
+        "पाण्याचे जग",
+        "जगांचे कोडे",
+        "मापन जग"
+      ],
+      "TOWER_OF_HANOI": [
+        "हनोईचा मनोरा",
+        "हनोई टॉवर्स",
+        "हनोई पझल",
+        "पेग डिस्क"
+      ],
+      "BALL_SORT": [
+        "बॉल सॉर्ट",
+        "बॉल पझल",
+        "सॉर्ट बॉल्स",
+        "कलर बॉल्स"
+      ],
+      "N_BACK": [
+        "एन बॅक",
+        "एन-बॅक",
+        "मेमरी एन बॅक",
+        "ड्यूल एन बॅक"
+      ],
+      "LOGIC_PUZZLES": [
+        "लॉजिक पझल्स",
+        "लॉजिक पझल",
+        "मॅथ लॉजिक",
+        "कोडी"
+      ],
+      "STROOP": [
+        "स्ट्रूप टेस्ट",
+        "स्ट्रूप रंग",
+        "रंग चाचणी",
+        "स्ट्रूप इफेक्ट"
+      ],
+      "MENTAL_ROTATION": [
+        "मानसिक रोटेशन",
+        "आकार फिरवा",
+        "3D रोटेशन",
+        "आकार जुळवा"
+      ],
+      "SCHULTE_TABLE": [
+        "शुल्टे टेबल",
+        "नंबर ग्रीड",
+        "शुल्टे ग्रीड",
+        "नंबर शोधा"
+      ],
+      "MAZE": [
+        "पाथवे मेझ",
+        "मेझ",
+        "लॅबिरिंथ",
+        "मार्ग शोधा"
+      ],
+      "CARD_MATCHING": [
+        "कार्ड मॅचिंग",
+        "मेमरी जुळवा",
+        "कार्ड्स फ्लिप करा",
+        "जोड्या जुळवा",
+        "मेमरी कार्ड्स"
+      ],
+      "NUMBER_SEQUENCE": [
+        "संख्या क्रम",
+        "संख्या कोडे",
+        "गहाळ संख्या",
+        "संख्या मालिका"
+      ],
+      "WORD_SCRAMBLE": [
+        "शब्द घोटाळा",
+        "शब्द कोडे",
+        "शब्द उलगडा",
+        "गोंधळलेले शब्द"
+      ],
+      "QUICK_MATH": [
+        "जलद गणित",
+        "वेगवान गणित",
+        "मानसिक गणित",
+        "अंकगणित खेळ"
+      ],
+      "VISUAL_SEARCH": [
+        "दृश्य शोध",
+        "वस्तू शोधा",
+        "लपलेली वस्तू",
+        "फरक ओळखा"
+      ],
+      "REACTION_TIME": [
+        "प्रतिक्रिया वेळ",
+        "गती चाचणी",
+        "प्रतिसाद चाचणी",
+        "टॅप गती"
+      ],
+      "SIMON_SAYS": [
+        "सायमन सांगा",
+        "पॅटर्न फॉलो करा",
+        "प्रकाश क्रम",
+        "सायमन क्रम"
+      ],
+      "TRAIL_MAKING": [
+        "ट्रेल मेकिंग",
+        "कनेक्ट डॉट्स",
+        "ट्रेल चाचणी",
+        "कनेक्ट नंबर्स"
+      ],
+      "ANAGRAM_SOLVER": [
+        "अक्षर क्रम बदलण्याचे कोडे",
+        "अक्षर क्रम बदलणे",
+        "शब्द पुनर्रचना",
+        "अक्षरांचे कोडे"
+      ],
+      "DELAYED_RECALL": [
+        "विलंबित स्मरण",
+        "शब्द स्मृती",
+        "स्मरण सूची",
+        "शब्द लक्षात ठेवा"
+      ],
+      "PATTERN_MATRIX": [
+        "पॅटर्न मॅट्रिक्स",
+        "मॅट्रिक्स कोडे",
+        "आकार पॅटर्न",
+        "रेव्हन मॅट्रिक्स"
+      ],
+      "DUAL_TASK": [
+        "दुहेरी कार्य",
+        "मल्टीटास्किंग गेम",
+        "एकाग्रता विभागणे",
+        "दोन कार्ये"
+      ],
+      "WORKING_MEMORY_GRID": [
+        "स्मरणशक्तीचा आराखडा",
+        "स्मरणशक्तीचा आराखडा",
+        "स्थानिक आराखडा",
+        "आराखडा आठवण"
+      ],
+      "CULTURAL_OBJECT_RECOGNITION": [
+        "सांस्कृतिक वस्तू ओळख",
+        "वस्तू ओळख",
+        "वारसा वस्तू",
+        "विंटेज वस्तू"
+      ],
+      "DAILY_ROUTINE_RECALL": [
+        "दैनंदिन दिनचर्या आठवण",
+        "नित्य स्मृती",
+        "दिवस आठवण",
+        "कृती स्मृती"
+      ]
+    },
+    "gameTitles": {
+      "WATER_JUGS": "पाण्याचे जग",
+      "TOWER_OF_HANOI": "हनोईचा मनोरा",
+      "BALL_SORT": "बॉल सॉर्ट पझल",
+      "N_BACK": "एन-बॅक",
+      "LOGIC_PUZZLES": "लॉजिक पझल्स",
+      "STROOP": "स्ट्रूप टेस्ट",
+      "MENTAL_ROTATION": "मानसिक रोटेशन",
+      "SCHULTE_TABLE": "शुल्टे टेबल",
+      "MAZE": "पाथवे मेझ",
+      "CARD_MATCHING": "कार्ड मॅचिंग मेमरी",
+      "NUMBER_SEQUENCE": "संख्या क्रम",
+      "WORD_SCRAMBLE": "शब्द घोटाळा",
+      "QUICK_MATH": "जलद गणित",
+      "VISUAL_SEARCH": "दृश्य शोध",
+      "REACTION_TIME": "प्रतिक्रिया वेळ",
+      "SIMON_SAYS": "सायमन सांगा",
+      "TRAIL_MAKING": "ट्रेल मेकिंग",
+      "ANAGRAM_SOLVER": "अ‍ॅनॅग्राम सॉल्वर",
+      "DELAYED_RECALL": "विलंबित स्मरण",
+      "PATTERN_MATRIX": "पॅटर्न मॅट्रिक्स",
+      "DUAL_TASK": "दुहेरी कार्य",
+      "WORKING_MEMORY_GRID": "कार्यशील स्मृती ग्रीड",
+      "CULTURAL_OBJECT_RECOGNITION": "सांस्कृतिक वस्तू ओळख",
+      "DAILY_ROUTINE_RECALL": "दैनंदिन दिनचर्या आठवण"
+    },
+    "responses": {
+      "OPEN_GAMES": "मेंदू प्रशिक्षण खेळ केंद्र सुरू करत आहे.",
+      "NEXT_GAME": "आणखी एक मेंदू प्रशिक्षण व्यायाम सुरू करत आहे.",
+      "OPEN_GAME": "{{नाव}} गेम सुरू करत आहे.",
+      "OPEN_REMINDERS": "तुमची दैनंदिन दिनचर्या आणि स्मरणपत्रे उघडत आहे.",
+      "TODAY_REMINDERS": "आजसाठी तुमचे दिनचर्या वेळापत्रक येथे आहे.",
+      "NEXT_REMINDER": "तुमचे पुढील आगामी स्मरणपत्र तपासत आहे.",
+      "ADD_ROUTINE": "कृपया नवीन दिनचर्या तपशील प्रविष्ट करा किंवा निश्चित करा.",
+      "COMPLETE_ROUTINE": "उत्कृष्ट काम! तुमचे कार्य पूर्ण झाले म्हणून चिन्हांकित केले.",
+      "REMOVE_ROUTINE": "दिलेली दिनचर्या वस्तू काढली जात आहे.",
+      "UPDATE_ROUTINE": "तुमचे वेळापत्रक अद्यतनित करण्यासाठी दिनचर्या संपादक उघडत आहे.",
+      "OPEN_MEDICATIONS": "तुमचे औषध वेळापत्रक उघडत आहे.",
+      "TODAY_MEDICATIONS": "आज तुमच्या नियोजित औषधांची यादी येथे आहे.",
+      "NEXT_MEDICATION": "तुमच्या पुढील नियोजित औषधाची मात्रा तपासत आहे.",
+      "MEDICATION_TAKEN": "तुम्ही तुमची औषधे घेतली आहेत याची तुम्हाला खात्री करायची आहे का?",
+      "MEDICATION_SKIPPED": "औषधाची मात्रा वगळली म्हणून चिन्हांकित केले.",
+      "OPEN_ANALYTICS": "तुमचे संज्ञानात्मक कार्यप्रदर्शन विश्लेषण आणि अहवाल उघडत आहे.",
+      "OPEN_MEMORIES": "तुमचे प्रिय आठवणींचे अल्बम उघडत आहे.",
+      "OPEN_CAREGIVER": "काळजीवाहू देखरेख पोर्टल उघडत आहे.",
+      "GO_HOME": "होम डॅशबोर्डवर परत येत आहे.",
+      "HELP": "तुम्ही वापरू शकता ते व्हॉइस कमांड येथे आहेत.",
+      "CLOSE": "व्हॉइस असिस्टंट बंद करत आहे.",
+      "UNKNOWN": "मला ते समजले नाही. कृपया पुन्हा प्रयत्न करा किंवा सूचना टॅप करा.",
+      "CARETAKER_ONLY": "काळजीवाहू डॅशबोर्ड केवळ अधिकृत काळजीवाहूंसाठी उपलब्ध आहे."
+    },
+    "shortPhrases": {
+      "OPEN_GAMES": "गेम उघडत आहे",
+      "NEXT_GAME": "पुढील गेम",
+      "OPEN_GAME": "गेम उघडत आहे",
+      "OPEN_REMINDERS": "Opening reminders",
+      "TODAY_REMINDERS": "Showing today's reminders",
+      "NEXT_REMINDER": "Showing next reminder",
+      "ADD_ROUTINE": "Add routine",
+      "COMPLETE_ROUTINE": "Task marked done",
+      "REMOVE_ROUTINE": "Task removed",
+      "UPDATE_ROUTINE": "Update routine",
+      "OPEN_MEDICATIONS": "Opening medicines",
+      "TODAY_MEDICATIONS": "Showing today's medicines",
+      "NEXT_MEDICATION": "Showing next medicine",
+      "MEDICATION_TAKEN": "Medicine recorded",
+      "MEDICATION_SKIPPED": "Medicine skipped",
+      "OPEN_ANALYTICS": "Opening progress report",
+      "OPEN_MEMORIES": "Opening memories",
+      "OPEN_CAREGIVER": "Opening caregiver view",
+      "GO_HOME": "Going home",
+      "HELP": "Opening help",
+      "CLOSE": "Closing assistant",
+      "UNKNOWN": "Please repeat",
+      "CONFIRM_DOSE": "Confirm dose taken?",
+      "VOICE_NOT_AVAILABLE": "आवाज वाचन अनुपलब्ध आहे"
+    },
+    "status": {
+      "listening": "ऐकत आहे... मायक्रोफोनमध्ये स्पष्टपणे बोला",
+      "processing": "तुमच्या व्हॉइस कमांडवर प्रक्रिया करत आहे...",
+      "speaking": "उत्तर बोलत आहे...",
+      "ready": "तयार आहे. बोलण्यासाठी मायक्रोफोन टॅप करा.",
+      "micDenied": "मायक्रोफोन ॲक्सेस नाकारला. कृपया परवानग्या तपासा.",
+      "error": "व्हॉइस असिस्टंटला त्रुटी आढळली.",
+      "notUnderstood": "समजले नाही. कृपया पुन्हा प्रयत्न करा.",
+      "wakeWordActive": "हे सेतु वेक-वर्ड लिसनर सक्रिय आहे"
+    },
+    "ui": {
+      "youSaid": "तुम्ही म्हणाला:",
+      "action": "कृती:",
+      "intent": "हेतू:",
+      "match": "जुळणारे:",
+      "listeningPrompt": "ऐकत आहे... पूर्ण झाल्यावर माइक टॅप करा",
+      "tapToSpeak": "बोलण्यासाठी टॅप करा",
+      "tapToStop": "थांबवण्यासाठी टॅप करा",
+      "spokenSummary": "व्हॉइस सारांश",
+      "voiceReadingUnavailable": "{{भाषा}} मध्ये व्हॉइस वाचन अद्याप उपलब्ध नाही",
+      "confirmMarkTaken": "घ्याला गेले म्हणून निश्चित केले आहे का?",
+      "confirmYes": "होय, घेतले आहे",
+      "confirmNo": "नाही, रद्द करा",
+      "undo": "पूर्ववत करा",
+      "markedAsTaken": "घेतला गेला म्हणून डोस चिन्हांकित केला आहे"
+    }
+  },
+  "gu-IN": {
+    "phrases": {
+      "OPEN_GAMES": [
+        "ઓપન ગેમ્સ",
+        "પ્લે ગેમ્સ",
+        "શો ગેમ્સ",
+        "બ્રેઈન ગેમ્સ",
+        "કોગ્નિટિવ એક્સરસાઈઝ",
+        "મારે ગેમ્સ રમવી છે",
+        "સ્ટાર્ટ ગેમ્સ",
+        "ટેક મી ટુ ગેમ્સ",
+        "open games",
+        "play games"
+      ],
+      "NEXT_GAME": [
+        "નેક્સ્ટ ગેમ",
+        "અનધર ગેમ",
+        "ન્યૂ ગેમ",
+        "શો નેક્સ્ટ ગેમ",
+        "ગીવ મી અનધર ગેમ",
+        "સ્વિચ ગેમ",
+        "next game",
+        "another game"
+      ],
+      "OPEN_GAME": [
+        "પ્લે",
+        "ઓપન",
+        "સ્ટાર્ટ",
+        "લોન્ચ",
+        "play",
+        "open"
+      ],
+      "OPEN_REMINDERS": [
+        "ઓપન રિમાઇન્ડર્સ",
+        "શો રિમાઇન્ડર્સ",
+        "મારી યાદીઓ",
+        "નિત્યક્રમ",
+        "દૈનિક નિત્યક્રમ",
+        "ખુલ્લો નિત્યક્રમ",
+        "સમયપત્રક બતાવો",
+        "સમયપત્રક જુઓ",
+        "open reminders",
+        "show reminders"
+      ],
+      "TODAY_REMINDERS": [
+        "આજે મારી પાસે શું છે",
+        "આજના રીમાઇન્ડર્સ",
+        "આજે કયા કાર્યો છે",
+        "આજે શું છે",
+        "આજનો સમયપત્રક",
+        "આજે મારે શું કરવું જોઈએ",
+        "આજનો સમયપત્રક",
+        "what do i have today",
+        "today reminders"
+      ],
+      "NEXT_REMINDER": [
+        "મારું આગામી કાર્ય શું છે",
+        "આગામી રીમાઇન્ડર",
+        "આગામી કાર્ય",
+        "આગળ શું છે",
+        "મારે આગળ શું કરવું જોઈએ",
+        "આગામી રીમાઇન્ડર",
+        "what is my next task",
+        "next reminder"
+      ],
+      "ADD_ROUTINE": [
+        "કાર્ય ઉમેરો",
+        "રૂટીન ઉમેરો",
+        "ટાસ્ક બનાવો",
+        "નવી રૂટીન",
+        "નવું ટાસ્ક",
+        "ચાલવાનું શેડ્યૂલ કરો",
+        "પ્રવૃત્તિનું શેડ્યૂલ કરો",
+        "રિમાઇન્ડર ઉમેરો",
+        "રિમાઇન્ડર સેટ કરો",
+        "add a task",
+        "add routine"
+      ],
+      "COMPLETE_ROUTINE": [
+        "ટાસ્ક પૂર્ણ થયું એમ માર્ક કરો",
+        "ટાસ્ક પૂર્ણ થયું",
+        "રૂટીન પૂર્ણ થયું",
+        "પૂર્ણ થયેલું ટાસ્ક",
+        "પૂર્ણ થયેલું કાર્ય",
+        "મેં મારું કાર્ય પૂર્ણ કર્યું",
+        "રૂટીન પૂર્ણ થયું એમ માર્ક કરો",
+        "mark task done",
+        "task completed"
+      ],
+      "REMOVE_ROUTINE": [
+        "ટાસ્ક કાઢી નાખો",
+        "ટાસ્ક દૂર કરો",
+        "રૂટીન કાઢી નાખો",
+        "રૂટીન દૂર કરો",
+        "ટાસ્ક રદ કરો",
+        "કામ સાફ કરો",
+        "delete task",
+        "remove task"
+      ],
+      "UPDATE_ROUTINE": [
+        "સમય બદલો",
+        "રૂટિન અપડેટ કરો",
+        "રૂટિનનો સમય બદલો",
+        "કામ ફરીથી શેડ્યૂલ કરો",
+        "રૂટિન ફરીથી શેડ્યૂલ કરો",
+        "કામના સમયમાં ફેરફાર કરો",
+        "change the time",
+        "update routine"
+      ],
+      "OPEN_MEDICATIONS": [
+        "મારી દવાઓ બતાવો",
+        "દવાઓ ખોલો",
+        "મારી દવાઓ",
+        "દવાઓ બતાવો",
+        "દવાની યાદી",
+        "પ્રિસ્ક્રિપ્શન્સ",
+        "દવાનું શેડ્યૂલ ખોલો",
+        "show my medicines",
+        "open medications"
+      ],
+      "TODAY_MEDICATIONS": [
+        "આજે હું કઈ દવા લઉં છું?",
+        "આજની દવાઓ",
+        "આજ માટે દવાઓ",
+        "આજે કઈ ગોળીઓ",
+        "આજે મારે કઈ દવાઓ લેવી જોઈએ?",
+        "દૈનિક દવા",
+        "what medicine do i take today",
+        "today's medicines"
+      ],
+      "NEXT_MEDICATION": [
+        "મારી આગામી ડોઝ ક્યારે છે?",
+        "આગામી દવા",
+        "આગામી ગોળી",
+        "મારી આગામી ડોઝ ક્યારે છે?",
+        "આગામી દવા કઈ છે?",
+        "આગામી દવા",
+        "what is my next dose",
+        "next medicine"
+      ],
+      "MEDICATION_TAKEN": [
+        "મેં મારી દવા લીધી.",
+        "દવા લીધી.",
+        "ગોળી લીધી.",
+        "ટેબ્લેટ લીધી.",
+        "પહેલાંથી જ દવા લીધી.",
+        "મેં મારી દવા લીધી છે.",
+        "દવા લીધી હોવાનું માર્ક કરો.",
+        "i took my medicine",
+        "medicine taken"
+      ],
+      "MEDICATION_SKIPPED": [
+        "દવા છોડો.",
+        "ડોઝ છોડો.",
+        "દવા છોડી દીધી.",
+        "દવા લીધી નથી.",
+        "દવા ચૂકી ગઈ.",
+        "skip medicine",
+        "skip dose"
+      ],
+      "OPEN_ANALYTICS": [
+        "મારી પ્રગતિ બતાવો.",
+        "એનાલિટિક્સ ખોલો.",
+        "મારી પ્રગતિ",
+        "જ્ઞાનાત્મક સ્કોર",
+        "કામગીરી અહેવાલ",
+        "હું કેવું કરી રહી છું",
+        "અહેવાલ બતાવો",
+        "show my progress",
+        "open analytics"
+      ],
+      "OPEN_MEMORIES": [
+        "મારી યાદો બતાવો",
+        "યાદો ખોલો",
+        "મારા ફોટા",
+        "કુટુંબના ફોટા",
+        "ફોટો આલ્બમ",
+        "યાદો જુઓ",
+        "show my memories",
+        "open memories"
+      ],
+      "OPEN_CAREGIVER": [
+        "કેરગીવર",
+        "કેરટેકર",
+        "કેરગીવર ડેશબોર્ડ",
+        "કેરટેકર પોર્ટલ",
+        "કેરગીવર ખોલો",
+        "caregiver",
+        "caretaker"
+      ],
+      "GO_HOME": [
+        "ઘરે જાઓ",
+        "હોમ પેજ",
+        "ડેશબોર્ડ પર પાછા જાઓ",
+        "મુખ્ય સ્ક્રીન",
+        "ઘરે પાછા ફરો",
+        "ઘર તરફથી બહાર નીકળો",
+        "go home",
+        "home page"
+      ],
+      "HELP": [
+        "મદદ",
+        "હું શું કહી શકું",
+        "અવાજ આદેશો",
+        "આ કેવી રીતે કામ કરે છે",
+        "સહાયક માર્ગદર્શિકા",
+        "help",
+        "what can i say"
+      ],
+      "CLOSE": [
+        "બંધ કરો",
+        "બહાર નીકળો",
+        "છોડો",
+        "બરતરફ કરો",
+        "રોકો",
+        "રદ કરો",
+        "close",
+        "exit"
+      ]
+    },
+    "games": {
+      "WATER_JUGS": [
+        "પાણીના જગ",
+        "પાણીનો જગ",
+        "જગ પઝલ",
+        "માપવાના જગ"
+      ],
+      "TOWER_OF_HANOI": [
+        "હનોઈનો ટાવર",
+        "હનોઈ ટાવર્સ",
+        "હનોઈ પઝલ",
+        "પેગ ડિસ્ક"
+      ],
+      "BALL_SORT": [
+        "બોલ સોર્ટ",
+        "બોલ પઝલ",
+        "સોર્ટ બોલ્સ",
+        "કલર બોલ્સ"
+      ],
+      "N_BACK": [
+        "એન બેક",
+        "એન-બેક",
+        "મેમરી એન બેક",
+        "ડ્યુઅલ એન બેક"
+      ],
+      "LOGIC_PUZZLES": [
+        "લોજિક પઝલ્સ",
+        "લોજિક પઝલ",
+        "મેથ લોજિક",
+        "રિડલ્સ"
+      ],
+      "STROOP": [
+        "સ્ટ્રૂપ ટેસ્ટ",
+        "સ્ટ્રૂપ રંગ",
+        "રંગ પરીક્ષણ",
+        "સ્ટ્રૂપ અસર"
+      ],
+      "MENTAL_ROTATION": [
+        "માનસિક પરિભ્રમણ",
+        "આકાર ફેરવો",
+        "3D પરિભ્રમણ",
+        "આકાર મેચિંગ"
+      ],
+      "SCHULTE_TABLE": [
+        "શુલ્ટે ટેબલ",
+        "નંબર ગ્રીડ",
+        "શુલ્ટે ગ્રીડ",
+        "નંબર શોધો"
+      ],
+      "MAZE": [
+        "પાથવે મેઝ",
+        "મેઝ",
+        "ભુલભુલામણી",
+        "પાથ શોધો"
+      ],
+      "CARD_MATCHING": [
+        "કાર્ડ મેચિંગ",
+        "મેમરી મેચ",
+        "ફ્લિપ કાર્ડ્સ",
+        "મેચ જોડીઓ",
+        "મેમરી કાર્ડ્સ"
+      ],
+      "NUMBER_SEQUENCE": [
+        "નંબર સિક્વન્સ",
+        "નંબર પઝલ",
+        "મિસિંગ નંબર",
+        "નંબર સિરીઝ"
+      ],
+      "WORD_SCRAMBLE": [
+        "વર્ડ સ્ક્રેમ્બલ",
+        "વર્ડ પઝલ",
+        "અનસ્ક્રેમ્બલ વર્ડ્સ",
+        "જમ્બલ્ડ વર્ડ્સ"
+      ],
+      "QUICK_MATH": [
+        "ક્વિક મેથ",
+        "સ્પીડ મેથ",
+        "મેન્ટલ મેથ",
+        "અરિથમેટિક ગેમ"
+      ],
+      "VISUAL_SEARCH": [
+        "વિઝ્યુઅલ સર્ચ",
+        "ઑબ્જેક્ટ શોધો",
+        "છુપાયેલ ઑબ્જેક્ટ",
+        "તફાવત શોધો"
+      ],
+      "REACTION_TIME": [
+        "પ્રતિક્રિયા સમય",
+        "સ્પીડ ટેસ્ટ",
+        "રિફ્લેક્સ ટેસ્ટ",
+        "ટેપ સ્પીડ"
+      ],
+      "SIMON_SAYS": [
+        "સાયમન સેઝ",
+        "ફોલો પેટર્ન",
+        "લાઇટ સિક્વન્સ",
+        "સાયમન સિક્વન્સ"
+      ],
+      "TRAIL_MAKING": [
+        "ટ્રેઇલ મેકિંગ",
+        "કનેક્ટ ડોટ્સ",
+        "ટ્રેઇલ ટેસ્ટ",
+        "કનેક્ટ નંબર્સ"
+      ],
+      "ANAGRAM_SOLVER": [
+        "અનાગ્રામ સોલ્વર",
+        "અનાગ્રામ્સ",
+        "શબ્દ પુન: ગોઠવણી",
+        "અક્ષર કોયડો"
+      ],
+      "DELAYED_RECALL": [
+        "વિલંબિત યાદશક્તિ",
+        "શબ્દ મેમરી",
+        "યાદશક્તિ યાદી",
+        "યાદ રાખવા માટેના શબ્દો"
+      ],
+      "PATTERN_MATRIX": [
+        "પેટર્ન મેટ્રિક્સ",
+        "મેટ્રિક્સ કોયડો",
+        "આકાર પેટર્ન",
+        "રેવેન મેટ્રિક્સ"
+      ],
+      "DUAL_TASK": [
+        "ડ્યુઅલ ટાસ્ક",
+        "મલ્ટીટાસ્કિંગ ગેમ",
+        "વિભાજિત ધ્યાન",
+        "બે કાર્યો"
+      ],
+      "WORKING_MEMORY_GRID": [
+        "કામ કરવાની મેમરી ગ્રીડ",
+        "મેમરી ગ્રીડ",
+        "સ્થાનિક ગ્રીડ",
+        "ગ્રીડ રીકોલ"
+      ],
+      "CULTURAL_OBJECT_RECOGNITION": [
+        "સાંસ્કૃતિક વસ્તુ ઓળખ",
+        "વસ્તુ ઓળખ",
+        "વારસાની વસ્તુઓ",
+        "વિન્ટેજ વસ્તુઓ"
+      ],
+      "DAILY_ROUTINE_RECALL": [
+        "દૈનિક દિનચર્યા રીકોલ",
+        "દિનચર્યા મેમરી",
+        "દિવસ રીકોલ",
+        "પ્રવૃત્તિ મેમરી"
+      ]
+    },
+    "gameTitles": {
+      "WATER_JUGS": "પાણીના જગ",
+      "TOWER_OF_HANOI": "હનોઈનો ટાવર",
+      "BALL_SORT": "બોલ સોર્ટ પઝલ",
+      "N_BACK": "એન-બેક",
+      "LOGIC_PUZZLES": "લોજિક પઝલ્સ",
+      "STROOP": "સ્ટ્રૂપ ટેસ્ટ",
+      "MENTAL_ROTATION": "માનસિક પરિભ્રમણ",
+      "SCHULTE_TABLE": "શુલ્ટે ટેબલ",
+      "MAZE": "પાથવે મેઝ",
+      "CARD_MATCHING": "કાર્ડ મેચિંગ મેમરી",
+      "NUMBER_SEQUENCE": "નંબર સિક્વન્સ",
+      "WORD_SCRAMBLE": "વર્ડ સ્ક્રેમ્બલ",
+      "QUICK_MATH": "ક્વિક મેથ",
+      "VISUAL_SEARCH": "વિઝ્યુઅલ સર્ચ",
+      "REACTION_TIME": "પ્રતિક્રિયા સમય",
+      "SIMON_SAYS": "સાયમન સેઝ",
+      "TRAIL_MAKING": "ટ્રેઇલ મેકિંગ",
+      "ANAGRAM_SOLVER": "એનાગ્રામ સોલ્વર",
+      "DELAYED_RECALL": "વિલંબિત યાદશક્તિ",
+      "PATTERN_MATRIX": "પેટર્ન મેટ્રિક્સ",
+      "DUAL_TASK": "ડ્યુઅલ ટાસ્ક",
+      "WORKING_MEMORY_GRID": "વર્કિંગ મેમરી ગ્રીડ",
+      "CULTURAL_OBJECT_RECOGNITION": "સાંસ્કૃતિક વસ્તુ ઓળખ",
+      "DAILY_ROUTINE_RECALL": "દૈનિક દિનચર્યા રીકોલ"
+    },
+    "responses": {
+      "OPEN_GAMES": "બ્રેઇન ટ્રેનિંગ ગેમ્સ સેન્ટર ખોલી રહ્યા છીએ.",
+      "NEXT_GAME": "બીજી બ્રેઇન ટ્રેનિંગ કસરત શરૂ કરી રહ્યા છીએ.",
+      "OPEN_GAME": "{{name}} ગેમ ખોલી રહ્યા છીએ.",
+      "OPEN_REMINDERS": "તમારી દૈનિક દિનચર્યા અને રીમાઇન્ડર્સ ખોલી રહ્યા છીએ.",
+      "TODAY_REMINDERS": "આજે માટે તમારું દિનચર્યાનું સમયપત્રક અહીં છે.",
+      "NEXT_REMINDER": "તમારું આગામી આગામી રીમાઇન્ડર તપાસી રહ્યા છીએ.",
+      "ADD_ROUTINE": "કૃપા કરીને નવી દિનચર્યાની વિગતો દાખલ કરો અથવા પુષ્ટિ કરો.",
+      "COMPLETE_ROUTINE": "શાબાશ! તમારા કાર્યને પૂર્ણ થયેલ તરીકે ચિહ્નિત કરો.",
+      "REMOVE_ROUTINE": "નિર્દિષ્ટ દિનચર્યા આઇટમ દૂર કરી રહ્યા છીએ.",
+      "UPDATE_ROUTINE": "તમારા સમયપત્રકને અપડેટ કરવા માટે દિનચર્યા સંપાદક ખોલી રહ્યા છીએ.",
+      "OPEN_MEDICATIONS": "તમારી દવાઓનું સમયપત્રક ખોલી રહ્યા છીએ.",
+      "TODAY_MEDICATIONS": "આજે તમારી સુનિશ્ચિત દવાઓ અહીં છે.",
+      "NEXT_MEDICATION": "તમારી આગામી સુનિશ્ચિત દવા ડોઝ તપાસી રહ્યા છીએ.",
+      "MEDICATION_TAKEN": "શું તમે ખાતરી કરવા માંગો છો કે તમે તમારી દવા લીધી છે?",
+      "MEDICATION_SKIPPED": "દવા ડોઝને છોડી દેવા તરીકે ચિહ્નિત કરો.",
+      "OPEN_ANALYTICS": "તમારા જ્ઞાનાત્મક કામગીરી વિશ્લેષણ અને અહેવાલ ખોલી રહ્યા છીએ.",
+      "OPEN_MEMORIES": "તમારી પ્રિય યાદો આલ્બમ ખોલી રહ્યા છીએ.",
+      "OPEN_CAREGIVER": "કેરગીવર મોનિટરિંગ પોર્ટલ ખોલી રહ્યા છીએ.",
+      "GO_HOME": "હોમ ડેશબોર્ડ પર પાછા આવી રહ્યા છીએ.",
+      "HELP": "અહીં તમે ઉપયોગ કરી શકો તેવા વૉઇસ આદેશો છે.",
+      "CLOSE": "વૉઇસ સહાયક બંધ કરી રહ્યા છીએ.",
+      "UNKNOWN": "મને તે સમજાયું નહીં. કૃપા કરીને ફરી પ્રયાસ કરો અથવા સૂચન પર ટેપ કરો.",
+      "CARETAKER_ONLY": "કેરગીવર ડેશબોર્ડ ફક્ત અધિકૃત કેરગીવર્સ માટે જ સુલભ છે."
+    },
+    "shortPhrases": {
+      "OPEN_GAMES": "રમતો ખોલી રહ્યા છીએ",
+      "NEXT_GAME": "આગામી રમત",
+      "OPEN_GAME": "રમતો ખોલી રહ્યા છીએ",
+      "OPEN_REMINDERS": "રીમાઇન્ડર્સ ખોલી રહ્યા છીએ",
+      "TODAY_REMINDERS": "આજના રીમાઇન્ડર્સ બતાવી રહ્યા છીએ",
+      "NEXT_REMINDER": "આગામી રીમાઇન્ડર બતાવી રહ્યા છીએ",
+      "ADD_ROUTINE": "રૂટીન ઉમેરો",
+      "COMPLETE_ROUTINE": "ટાસ્ક પૂર્ણ થયું",
+      "REMOVE_ROUTINE": "ટાસ્ક દૂર કરાયું",
+      "UPDATE_ROUTINE": "રૂટીન અપડેટ કરો",
+      "OPEN_MEDICATIONS": "દવાઓ ખોલી રહ્યા છીએ",
+      "TODAY_MEDICATIONS": "આજની દવાઓ બતાવી રહ્યા છીએ",
+      "NEXT_MEDICATION": "આગામી દવા બતાવી રહ્યા છીએ",
+      "MEDICATION_TAKEN": "દવા રેકોર્ડ થઈ",
+      "MEDICATION_SKIPPED": "દવા છોડી દેવામાં આવી",
+      "OPEN_ANALYTICS": "પ્રોગ્રેસ રિપોર્ટ ખોલી રહ્યા છીએ",
+      "OPEN_MEMORIES": "યાદો ખોલી રહ્યા છીએ",
+      "OPEN_CAREGIVER": "કેરગીવર વ્યૂ ખોલી રહ્યા છીએ",
+      "GO_HOME": "ઘરે જઈ રહ્યા છીએ",
+      "HELP": "મદદ ખોલી રહ્યા છીએ",
+      "CLOSE": "સહાયક બંધ કરી રહ્યા છીએ",
+      "UNKNOWN": "કૃપા કરીને પુનરાવર્તન કરો",
+      "CONFIRM_DOSE": "લેવાયેલ ડોઝની પુષ્ટિ કરો?",
+      "VOICE_NOT_AVAILABLE": "અવાજ વાંચન ઉપલબ્ધ નથી"
+    },
+    "status": {
+      "listening": "સાંભળવું... માઇક્રોફોનમાં સ્પષ્ટ રીતે બોલો",
+      "processing": "તમારા વૉઇસ કમાન્ડ પર પ્રક્રિયા થઈ રહી છે...",
+      "speaking": "જવાબ બોલવામાં આવી રહ્યો છે...",
+      "ready": "તૈયાર. બોલવા માટે માઇક્રોફોન પર ટેપ કરો.",
+      "micDenied": "માઇક્રોફોન ઍક્સેસ નકારવામાં આવી. કૃપા કરીને પરવાનગીઓ તપાસો.",
+      "error": "વૉઇસ સહાયકને ભૂલ આવી.",
+      "notUnderstood": "સમજી શકાયું નહીં. કૃપા કરીને ફરી પ્રયાસ કરો.",
+      "wakeWordActive": "હેય સેતુ વેક-વર્ડ લિસ્ટનર સક્રિય છે"
+    },
+    "ui": {
+      "youSaid": "તમે કહ્યું:",
+      "action": "ક્રિયા:",
+      "intent": "ઇરાદો:",
+      "match": "મેચ:",
+      "listeningPrompt": "સાંભળવું... થઈ ગયા પછી માઇક પર ટેપ કરો",
+      "tapToSpeak": "બોલવા માટે ટેપ કરો",
+      "tapToStop": "રોકવા માટે ટેપ કરો",
+      "spokenSummary": "વૉઇસ સારાંશ",
+      "voiceReadingUnavailable": "{{language}} માં વૉઇસ વાંચન હજી ઉપલબ્ધ નથી",
+      "confirmMarkTaken": "શું લેવામાં આવ્યું છે તેવું ચિહ્નિત કર્યું છે?",
+      "confirmYes": "હા, લેવામાં આવ્યું છે",
+      "confirmNo": "ના, રદ કરો",
+      "undo": "પૂર્વવત્ કરો",
+      "markedAsTaken": "ડોઝ લેવામાં આવ્યો તરીકે ચિહ્નિત થયેલ"
+    }
+  },
+  "bn-IN": {
+    "phrases": {
+      "OPEN_GAMES": [
+        "গেম খুলুন",
+        "গেম খেলুন",
+        "গেম দেখান",
+        "মস্তিষ্কের গেম",
+        "জ্ঞানীয় ব্যায়াম",
+        "আমি গেম খেলতে চাই",
+        "গেম শুরু করুন",
+        "আমাকে গেমে নিয়ে যান",
+        "open games",
+        "play games"
+      ],
+      "NEXT_GAME": [
+        "পরের গেম",
+        "আরেকটা গেম",
+        "নতুন গেম",
+        "পরের গেম দেখান",
+        "আমাকে অন্য একটা গেম দিন",
+        "গেম পরিবর্তন করুন",
+        "next game",
+        "another game"
+      ],
+      "OPEN_GAME": [
+        "খেলুন",
+        "খুলুন",
+        "শুরু করুন",
+        "চালু করুন",
+        "play",
+        "open"
+      ],
+      "OPEN_REMINDERS": [
+        "রিমাইন্ডার খুলুন",
+        "রিমাইন্ডার দেখান",
+        "আমার রিমাইন্ডারগুলো",
+        "রুটিন",
+        "দৈনিক রুটিন",
+        "ওপেন রুটিন",
+        "সময়সূচী দেখান",
+        "সময়সূচী দেখুন",
+        "open reminders",
+        "show reminders"
+      ],
+      "TODAY_REMINDERS": [
+        "আজ আমার কী কী কাজ আছে",
+        "আজকের রিমাইন্ডার",
+        "আজ কী কী কাজ আছে",
+        "আজ কী আছে",
+        "আজকের সময়সূচী",
+        "আজ আমার কী করা উচিত",
+        "আজকের সময়সূচী",
+        "what do i have today",
+        "today reminders"
+      ],
+      "NEXT_REMINDER": [
+        "আমার পরবর্তী কাজ কী",
+        "পরবর্তী রিমাইন্ডার",
+        "পরবর্তী কাজ",
+        "পরবর্তী কী আছে",
+        "পরবর্তী আমার কী করা উচিত",
+        "আসন্ন রিমাইন্ডার",
+        "what is my next task",
+        "next reminder"
+      ],
+      "ADD_ROUTINE": [
+        "একটি কাজ যোগ করুন",
+        "রুটিন যোগ করুন",
+        "কাজ তৈরি করুন",
+        "নতুন রুটিন",
+        "নতুন কাজ",
+        "হাঁটার সময়সূচী",
+        "ক্রিয়াকলাপের সময়সূচী",
+        "রিমাইন্ডার যোগ করুন",
+        "রিমাইন্ডার সেট করুন",
+        "add a task",
+        "add routine"
+      ],
+      "COMPLETE_ROUTINE": [
+        "কাজটি সম্পন্ন হয়েছে চিহ্নিত করুন",
+        "কাজ সম্পন্ন হয়েছে",
+        "রুটিন সম্পন্ন হয়েছে",
+        "সম্পন্ন কাজ",
+        "কাজ শেষ হয়েছে",
+        "আমি আমার কাজ শেষ করেছি",
+        "রুটিন সম্পন্ন হয়েছে চিহ্নিত করুন",
+        "mark task done",
+        "task completed"
+      ],
+      "REMOVE_ROUTINE": [
+        "কাজ মুছুন",
+        "কাজ সরান",
+        "রুটিন মুছুন",
+        "রুটিন সরান",
+        "কাজ বাতিল করুন",
+        "clear task",
+        "delete task",
+        "remove task"
+      ],
+      "UPDATE_ROUTINE": [
+        "change the time",
+        "update routine",
+        "change routine time",
+        "reschedule task",
+        "reschedule routine",
+        "modify task time"
+      ],
+      "OPEN_MEDICATIONS": [
+        "show my medicines",
+        "open medications",
+        "my medicines",
+        "show medicines",
+        "medicine list",
+        "prescriptions",
+        "open medicine schedule"
+      ],
+      "TODAY_MEDICATIONS": [
+        "what medicine do i take today",
+        "today's medicines",
+        "medicines for today",
+        "what pills today",
+        "what medicines should i take today",
+        "daily medication"
+      ],
+      "NEXT_MEDICATION": [
+        "আমার পরবর্তী ডোজ কি?",
+        "পরবর্তী ওষুধ",
+        "পরবর্তী পিল",
+        "আমার পরবর্তী ডোজ কখন?",
+        "পরবর্তী ওষুধ কি?",
+        "আসন্ন ওষুধ",
+        "what is my next dose",
+        "next medicine"
+      ],
+      "MEDICATION_TAKEN": [
+        "আমি আমার ওষুধ নিয়েছি",
+        "ওষুধ নেওয়া হয়েছে",
+        "পিল নিয়েছি",
+        "ট্যাবলেট নিয়েছি",
+        "ইতিমধ্যে ওষুধ নেওয়া হয়েছে",
+        "আমি আমার ওষুধ নিয়েছি",
+        "ওষুধ নেওয়া হয়েছে চিহ্নিত করুন",
+        "i took my medicine",
+        "medicine taken"
+      ],
+      "MEDICATION_SKIPPED": [
+        "ওষুধ বাদ দিন",
+        "ডোজ বাদ দিন",
+        "ওষুধ বাদ দেওয়া হয়েছে",
+        "ওষুধ নেই",
+        "ওষুধ মিস হয়েছে",
+        "skip medicine",
+        "skip dose"
+      ],
+      "OPEN_ANALYTICS": [
+        "আমার অগ্রগতি দেখান",
+        "বিশ্লেষণ খুলুন",
+        "আমার অগ্রগতি",
+        "জ্ঞানীয় স্কোর",
+        "কর্মক্ষমতা প্রতিবেদন",
+        "আমি কেমন করছি",
+        "রিপোর্ট দেখান",
+        "show my progress",
+        "open analytics"
+      ],
+      "OPEN_MEMORIES": [
+        "আমার স্মৃতিগুলো দেখান",
+        "স্মৃতিগুলো খুলুন",
+        "আমার ছবিগুলো",
+        "পারিবারিক ছবি",
+        "ছবির অ্যালবাম",
+        "স্মৃতিগুলো দেখুন",
+        "show my memories",
+        "open memories"
+      ],
+      "OPEN_CAREGIVER": [
+        "পরিচর্যাদানকারী",
+        "যত্নশীল",
+        "যত্নদানকারীর ড্যাশবোর্ড",
+        "যত্নশীলদের পোর্টাল",
+        "যত্নদানকারী খুলুন",
+        "caregiver",
+        "caretaker"
+      ],
+      "GO_HOME": [
+        "বাড়ি যান",
+        "হোম পেজ",
+        "ড্যাশবোর্ডে ফিরে যান",
+        "প্রধান পর্দা",
+        "return home",
+        "exit to home",
+        "go home",
+        "home page"
+      ],
+      "HELP": [
+        "help",
+        "what can i say",
+        "voice commands",
+        "how does this work",
+        "assistant guide"
+      ],
+      "CLOSE": [
+        "close",
+        "exit",
+        "quit",
+        "dismiss",
+        "stop",
+        "cancel"
+      ]
+    },
+    "games": {
+      "WATER_JUGS": [
+        "water jugs",
+        "water jug",
+        "jugs puzzle",
+        "measuring jugs"
+      ],
+      "TOWER_OF_HANOI": [
+        "tower of hanoi",
+        "হ্যানয় টাওয়ার্স",
+        "হ্যানয় পাজল",
+        "পেগ ডিস্ক"
+      ],
+      "BALL_SORT": [
+        "বল সর্ট",
+        "বল পাজল",
+        "সর্ট বল",
+        "কালার বল"
+      ],
+      "N_BACK": [
+        "এন ব্যাক",
+        "এন-ব্যাক",
+        "মেমরি এন ব্যাক",
+        "ডুয়াল এন ব্যাক"
+      ],
+      "LOGIC_PUZZLES": [
+        "লজিক পাজল",
+        "লজিক পাজল",
+        "ম্যাথ লজিক",
+        "রিডলস"
+      ],
+      "STROOP": [
+        "স্ট্রুপ টেস্ট",
+        "স্ট্রুপ রং",
+        "রং পরীক্ষা",
+        "স্ট্রুপ এফেক্ট"
+      ],
+      "MENTAL_ROTATION": [
+        "মানসিক ঘূর্ণন",
+        "আকৃতি ঘোরানো",
+        "ত্রিমাত্রিক ঘূর্ণন",
+        "আকৃতি মেলানো"
+      ],
+      "SCHULTE_TABLE": [
+        "শুল্টে টেবিল",
+        "সংখ্যা গ্রিড",
+        "শুল্টে গ্রিড",
+        "সংখ্যা খুঁজে বের করা"
+      ],
+      "MAZE": [
+        "পথের গোলকধাঁধা",
+        "গোলকধাঁধা",
+        "ল্যাবিরিন্থ",
+        "পথ খুঁজে বের করা"
+      ],
+      "CARD_MATCHING": [
+        "কার্ড মেলানো",
+        "স্মৃতি মেলানো",
+        "তাস উল্টানো",
+        "জোড়া মেলানো",
+        "স্মৃতি কার্ড"
+      ],
+      "NUMBER_SEQUENCE": [
+        "সংখ্যা ক্রম",
+        "সংখ্যা ধাঁধা",
+        "হারানো সংখ্যা",
+        "সংখ্যা সারি"
+      ],
+      "WORD_SCRAMBLE": [
+        "শব্দ এলোমেলো",
+        "শব্দ ধাঁধা",
+        "শব্দ ঠিক করা",
+        "গোলমাল শব্দ"
+      ],
+      "QUICK_MATH": [
+        "দ্রুত অঙ্ক",
+        "গতি অঙ্ক",
+        "মানসিক অঙ্ক",
+        "গাণিতিক খেলা"
+      ],
+      "VISUAL_SEARCH": [
+        "দৃষ্টি অনুসন্ধান",
+        "বস্তু খুঁজে বের করো",
+        "লুকানো বস্তু",
+        "পার্থক্য খুঁজে বের করো"
+      ],
+      "REACTION_TIME": [
+        "প্রতিক্রিয়া সময়",
+        "গতি পরীক্ষা",
+        "প্রতিবর্তিত পরীক্ষা",
+        "ট্যাপের গতি"
+      ],
+      "SIMON_SAYS": [
+        "সাইমন বলছে",
+        "নকশা অনুসরণ করো",
+        "আলোর ক্রম",
+        "সাইমনের ক্রম"
+      ],
+      "TRAIL_MAKING": [
+        "পথ তৈরি",
+        "ডট সংযোগ করো",
+        "পথ পরীক্ষা",
+        "সংখ্যা সংযোগ করো"
+      ],
+      "ANAGRAM_SOLVER": [
+        "অ্যানাগ্রাম সমাধানকারী",
+        "অ্যানাগ্রাম",
+        "শব্দ পুনর্বিন্যাস",
+        "অক্ষর ধাঁধা"
+      ],
+      "DELAYED_RECALL": [
+        "বিলম্বিত স্মরণ",
+        "শব্দ স্মৃতি",
+        "স্মরণ তালিকা",
+        "শব্দ মনে রাখা"
+      ],
+      "PATTERN_MATRIX": [
+        "প্যাটার্ন ম্যাট্রিক্স",
+        "ম্যাট্রিক্স ধাঁধা",
+        "আকৃতি প্যাটার্ন",
+        "রেভেন ম্যাট্রিক্স"
+      ],
+      "DUAL_TASK": [
+        "দ্বৈত কাজ",
+        "মাল্টিটাস্কিং গেম",
+        "বিভক্ত মনোযোগ",
+        "দুটি কাজ"
+      ],
+      "WORKING_MEMORY_GRID": [
+        "কর্মক্ষম স্মৃতি গ্রিড",
+        "স্মৃতি গ্রিড",
+        "স্থানিক গ্রিড",
+        "গ্রিড স্মরণ"
+      ],
+      "CULTURAL_OBJECT_RECOGNITION": [
+        "সাংস্কৃতিক বস্তু স্বীকৃতি",
+        "বস্তু স্বীকৃতি",
+        "ঐতিহ্যবাহী বস্তু",
+        "পুরোনো দিনের বস্তু"
+      ],
+      "DAILY_ROUTINE_RECALL": [
+        "দৈনিক রুটিন স্মরণ",
+        "রুটিন স্মৃতি",
+        "দিনের স্মরণ",
+        "কার্যকলাপ স্মৃতি"
+      ]
+    },
+    "gameTitles": {
+      "WATER_JUGS": "Water Jugs",
+      "TOWER_OF_HANOI": "Tower of Hanoi",
+      "BALL_SORT": "বল সর্ট পাজল",
+      "N_BACK": "এন-ব্যাক",
+      "LOGIC_PUZZLES": "লজিক পাজল",
+      "STROOP": "স্ট্রুপ টেস্ট",
+      "MENTAL_ROTATION": "মানসিক ঘূর্ণন",
+      "SCHULTE_TABLE": "শুল্টে টেবিল",
+      "MAZE": "পথের গোলকধাঁধা",
+      "CARD_MATCHING": "কার্ড মেলানো স্মৃতি",
+      "NUMBER_SEQUENCE": "সংখ্যা ক্রম",
+      "WORD_SCRAMBLE": "শব্দ এলোমেলো",
+      "QUICK_MATH": "দ্রুত অঙ্ক",
+      "VISUAL_SEARCH": "দৃষ্টি অনুসন্ধান",
+      "REACTION_TIME": "প্রতিক্রিয়া সময়",
+      "SIMON_SAYS": "সাইমন বলছে",
+      "TRAIL_MAKING": "পথ তৈরি",
+      "ANAGRAM_SOLVER": "অ্যানাগ্রাম সমাধানকারী",
+      "DELAYED_RECALL": "বিলম্বিত স্মরণ",
+      "PATTERN_MATRIX": "প্যাটার্ন ম্যাট্রিক্স",
+      "DUAL_TASK": "দ্বৈত কাজ",
+      "WORKING_MEMORY_GRID": "কার্যকরী স্মৃতি গ্রিড",
+      "CULTURAL_OBJECT_RECOGNITION": "সাংস্কৃতিক বস্তু স্বীকৃতি",
+      "DAILY_ROUTINE_RECALL": "দৈনিক রুটিন স্মরণ"
+    },
+    "responses": {
+      "OPEN_GAMES": "মস্তিষ্কের প্রশিক্ষণ গেমস সেন্টার খোলা হচ্ছে।",
+      "NEXT_GAME": "আরেকটি মস্তিষ্কের প্রশিক্ষণ অনুশীলন খোলা হচ্ছে।",
+      "OPEN_GAME": "{{name}} গেম খোলা হচ্ছে।",
+      "OPEN_REMINDERS": "আপনার দৈনিক রুটিন এবং অনুস্মারক খোলা হচ্ছে।",
+      "TODAY_REMINDERS": "আজকের জন্য আপনার রুটিন সময়সূচী এখানে।",
+      "NEXT_REMINDER": "আপনার পরবর্তী আসন্ন অনুস্মারক পরীক্ষা করা হচ্ছে।",
+      "ADD_ROUTINE": "অনুগ্রহ করে নতুন রুটিনের বিবরণ লিখুন অথবা নিশ্চিত করুন।",
+      "COMPLETE_ROUTINE": "চমৎকার কাজ! আপনার কাজটি সম্পন্ন হয়েছে হিসেবে চিহ্নিত করা হলো।",
+      "REMOVE_ROUTINE": "নির্দিষ্ট রুটিন আইটেমটি সরানো হচ্ছে।",
+      "UPDATE_ROUTINE": "আপনার সময়সূচী আপডেট করার জন্য রুটিন সম্পাদক খোলা হচ্ছে।",
+      "OPEN_MEDICATIONS": "আপনার ওষুধের সময়সূচী খোলা হচ্ছে।",
+      "TODAY_MEDICATIONS": "আজকের জন্য আপনার নির্ধারিত ওষুধগুলো এখানে দেওয়া হলো।",
+      "NEXT_MEDICATION": "আপনার পরবর্তী নির্ধারিত ওষুধের ডোজ পরীক্ষা করা হচ্ছে।",
+      "MEDICATION_TAKEN": "আপনি কি নিশ্চিত করতে চান যে আপনি আপনার ওষুধটি গ্রহণ করেছেন?",
+      "MEDICATION_SKIPPED": "ওষুধের ডোজটি বাদ দেওয়া হয়েছে হিসেবে চিহ্নিত করা হলো।",
+      "OPEN_ANALYTICS": "আপনার কগনিটিভ পারফরম্যান্স অ্যানালিটিক্স এবং রিপোর্ট খোলা হচ্ছে।",
+      "OPEN_MEMORIES": "আপনার মূল্যবান স্মৃতি অ্যালবামের অ্যালবাম খোলা হচ্ছে।",
+      "OPEN_CAREGIVER": "কেয়ারগিভার মনিটরিং পোর্টাল খোলা হচ্ছে।",
+      "GO_HOME": "হোম ড্যাশবোর্ডে ফিরে যাওয়া হচ্ছে।",
+      "HELP": "এখানে কিছু ভয়েস কমান্ড আছে যা আপনি ব্যবহার করতে পারেন।",
+      "CLOSE": "ভয়েস অ্যাসিস্ট্যান্ট বন্ধ করা হচ্ছে।",
+      "UNKNOWN": "আমি এটা বুঝতে পারিনি। অনুগ্রহ করে আবার চেষ্টা করুন অথবা একটি পরামর্শে ট্যাপ করুন।",
+      "CARETAKER_ONLY": "কেয়ারগিভার ড্যাশবোর্ড শুধুমাত্র অনুমোদিত কেয়ারগিভারদের জন্য অ্যাক্সেসযোগ্য।"
+    },
+    "shortPhrases": {
+      "OPEN_GAMES": "গেমস খোলা হচ্ছে",
+      "NEXT_GAME": "পরবর্তী গেম",
+      "OPEN_GAME": "গেম খোলা হচ্ছে",
+      "OPEN_REMINDERS": "অনুস্মারক খোলা হচ্ছে",
+      "TODAY_REMINDERS": "আজকের অনুস্মারক দেখানো হচ্ছে",
+      "NEXT_REMINDER": "পরবর্তী অনুস্মারক দেখানো হচ্ছে",
+      "ADD_ROUTINE": "রুটিন যোগ করুন",
+      "COMPLETE_ROUTINE": "কাজটি সম্পন্ন হয়েছে",
+      "REMOVE_ROUTINE": "কাজটি সরানো হয়েছে",
+      "UPDATE_ROUTINE": "রুটিন আপডেট করুন",
+      "OPEN_MEDICATIONS": "ওষুধ খোলা হচ্ছে",
+      "TODAY_MEDICATIONS": "আজকের ওষুধ দেখানো হচ্ছে",
+      "NEXT_MEDICATION": "পরবর্তী ওষুধ দেখানো হচ্ছে",
+      "MEDICATION_TAKEN": "ওষুধের রেকর্ড করা হয়েছে",
+      "MEDICATION_SKIPPED": "ওষুধ বাদ দেওয়া হয়েছে",
+      "OPEN_ANALYTICS": "অগ্রগতি প্রতিবেদন খোলা হচ্ছে",
+      "OPEN_MEMORIES": "স্মৃতি খোলা হচ্ছে",
+      "OPEN_CAREGIVER": "যত্নদাতার দৃশ্য খোলা হচ্ছে",
+      "GO_HOME": "বাড়ি যাচ্ছি",
+      "HELP": "সাহায্য খোলা হচ্ছে",
+      "CLOSE": "সহকারী বন্ধ হচ্ছে",
+      "UNKNOWN": "অনুগ্রহ করে পুনরাবৃত্তি করুন",
+      "CONFIRM_DOSE": "ডোজ গ্রহণ নিশ্চিত করেছেন?",
+      "VOICE_NOT_AVAILABLE": "কণ্ঠ পাঠ উপলব্ধ নয়"
+    },
+    "status": {
+      "listening": "শোনা হচ্ছে... মাইক্রোফোনে স্পষ্টভাবে বলুন",
+      "processing": "আপনার ভয়েস কমান্ড প্রক্রিয়া করা হচ্ছে...",
+      "speaking": "উত্তর বলার জন্য...",
+      "ready": "প্রস্তুত। কথা বলার জন্য মাইক্রোফোন টিপুন।",
+      "micDenied": "মাইক্রোফোন অ্যাক্সেস অস্বীকার করা হয়েছে। অনুগ্রহ করে অনুমতিগুলি পরীক্ষা করুন।",
+      "error": "ভয়েস সহকারীর একটি ত্রুটি হয়েছে।",
+      "notUnderstood": "বুঝতে পারা যায়নি। আবার চেষ্টা করুন।",
+      "wakeWordActive": "হে সেতু, ওয়াক-ওয়ার্ড লিসেনার সক্রিয় করা হলো।"
+    },
+    "ui": {
+      "youSaid": "আপনি বলেছিলেন:",
+      "action": "কার্য:",
+      "intent": "অভিপ্রায়:",
+      "match": "মিল:",
+      "listeningPrompt": "শোনা হচ্ছে... হয়ে গেলে মাইক টিপুন",
+      "tapToSpeak": "কথা বলার জন্য ট্যাপ করুন",
+      "tapToStop": "থামানোর জন্য ট্যাপ করুন",
+      "spokenSummary": "কণ্ঠের সারসংক্ষেপ",
+      "voiceReadingUnavailable": "{{ভাষা}}-এ কণ্ঠ পাঠ এখনও উপলব্ধ নয়",
+      "confirmMarkTaken": "নেওয়া হয়েছে বলে নিশ্চিত করেছেন?",
+      "confirmYes": "হ্যাঁ, নেওয়া হয়েছে",
+      "confirmNo": "না, বাতিল করুন",
+      "undo": "আগের অবস্থায় ফিরিয়ে আনুন",
+      "markedAsTaken": "ডোজটি নেওয়া হয়েছে হিসেবে চিহ্নিত করা হয়েছে"
+    }
+  },
+  "as-IN": {
+    "phrases": {
+      "OPEN_GAMES": [
+        "খেল খোলা",
+        "খেল খেলা",
+        "খেল দেখুওৱা",
+        "মগজুৰ খেল",
+        "জ্ঞানমূলক অনুশীলন",
+        "মই খেল খেলিব বিচাৰোঁ",
+        "খেল আৰম্ভ কৰা",
+        "মোক খেললৈ লৈ যোৱা",
+        "open games",
+        "play games"
+      ],
+      "NEXT_GAME": [
+        "পৰৱৰ্তী খেল",
+        "আৰু এটা খেল",
+        "নতুন খেল",
+        "পৰৱৰ্তী খেল দেখুওৱা",
+        "মোক আন এটা খেল দিয়া",
+        "খেল সলনি কৰা",
+        "next game",
+        "another game"
+      ],
+      "OPEN_GAME": [
+        "খেলা",
+        "খোলো",
+        "আৰম্ভ কৰা",
+        "লঞ্চ কৰা",
+        "play",
+        "open"
+      ],
+      "OPEN_REMINDERS": [
+        "ৰিমাইণ্ডাৰ খোলা",
+        "ৰিমাইণ্ডাৰ দেখুওৱা",
+        "মোৰ ৰিমাইণ্ডাৰসমূহ",
+        "ৰুটিন",
+        "দৈনিক ৰুটিন",
+        "খোলা ৰুটিন",
+        "সময়সূচী দেখুৱাওক",
+        "সময়সূচী চাওক",
+        "open reminders",
+        "show reminders"
+      ],
+      "TODAY_REMINDERS": [
+        "আজি মোৰ কি আছে",
+        "আজিৰ ৰিমাইণ্ডাৰসমূহ",
+        "আজি কি কাম আছে",
+        "আজি কি আছে",
+        "আজিৰ সময়সূচী",
+        "আজি মই কি কৰিব লাগে",
+        "আজিৰ বাবে সময়সূচী",
+        "what do i have today",
+        "today reminders"
+      ],
+      "NEXT_REMINDER": [
+        "মোৰ পৰৱৰ্তী কাম কি",
+        "পৰৱৰ্তী ৰিমাইণ্ডাৰ",
+        "পৰৱৰ্তী কাম",
+        "পৰৱৰ্তী কি আছে",
+        "মই পৰৱৰ্তী কি কৰিব লাগে",
+        "আসন্ন ৰিমাইণ্ডাৰ",
+        "what is my next task",
+        "next reminder"
+      ],
+      "ADD_ROUTINE": [
+        "এটা কাম যোগ কৰক",
+        "ৰুটিন যোগ কৰক",
+        "কাৰ্য্য সৃষ্টি কৰক",
+        "নতুন ৰুটিন",
+        "নতুন কাৰ্য্য",
+        "খোজ কাঢ়িবলৈ সময় নিৰ্ধাৰণ কৰক",
+        "কাৰ্যকলাপৰ সময় নিৰ্ধাৰণ কৰক",
+        "স্মাৰক যোগ কৰক",
+        "স্মাৰক ছেট কৰক",
+        "add a task",
+        "add routine"
+      ],
+      "COMPLETE_ROUTINE": [
+        "কাৰ্য্য সম্পূৰ্ণ হোৱা বুলি চিহ্নিত কৰক",
+        "কাৰ্য্য সম্পূৰ্ণ হ'ল",
+        "ৰুটিন সম্পূৰ্ণ হ'ল",
+        "সম্পূৰ্ণ হোৱা কাৰ্য্য",
+        "কাৰ্য্য শেষ হ'ল",
+        "মই মোৰ কাৰ্য্য শেষ কৰিলো",
+        "ৰুটিন সম্পূৰ্ণ হোৱা বুলি চিহ্নিত কৰক",
+        "mark task done",
+        "task completed"
+      ],
+      "REMOVE_ROUTINE": [
+        "কাৰ্য্য মচি দিয়ক",
+        "কাৰ্য্য আঁতৰাওক",
+        "ৰুটিন মচি দিয়ক",
+        "ৰুটিন আঁতৰাওক",
+        "কাৰ্য্য বাতিল কৰক",
+        "স্পষ্ট কাম",
+        "delete task",
+        "remove task"
+      ],
+      "UPDATE_ROUTINE": [
+        "সময় সলনি কৰা",
+        "নিয়মীয়া কাম আপডেট কৰা",
+        "নিয়মীয়া কামৰ সময় সলনি কৰা",
+        "কাম পুনৰ নিৰ্ধাৰণ কৰা",
+        "নিয়মীয়া কাম পুনৰ নিৰ্ধাৰণ কৰা",
+        "কামৰ সময় সংশোধন কৰা",
+        "change the time",
+        "update routine"
+      ],
+      "OPEN_MEDICATIONS": [
+        "মোৰ ঔষধবোৰ দেখুওৱা",
+        "ঔষধ খোলা",
+        "মোৰ ঔষধ",
+        "ঔষধ দেখুওৱা",
+        "ঔষধৰ তালিকা",
+        "প্ৰেছক্ৰিপচন",
+        "ঔষধৰ সময়সূচী খোলা",
+        "show my medicines",
+        "open medications"
+      ],
+      "TODAY_MEDICATIONS": [
+        "মই আজি কি ঔষধ লওঁ",
+        "আজিৰ ঔষধ",
+        "আজিৰ বাবে ঔষধ",
+        "আজি কি পিল",
+        "মই আজি কি ঔষধ ল’ব লাগে",
+        "দৈনিক ঔষধ",
+        "what medicine do i take today",
+        "today's medicines"
+      ],
+      "NEXT_MEDICATION": [
+        "what is my next dose",
+        "next medicine",
+        "next pill",
+        "when is my next dose",
+        "what medicine next",
+        "upcoming medicine"
+      ],
+      "MEDICATION_TAKEN": [
+        "i took my medicine",
+        "medicine taken",
+        "took pill",
+        "took tablet",
+        "already took medicine",
+        "i have taken my medicine",
+        "mark medicine taken"
+      ],
+      "MEDICATION_SKIPPED": [
+        "skip medicine",
+        "skip dose",
+        "skipped medicine",
+        "did not take medicine",
+        "missed medicine"
+      ],
+      "OPEN_ANALYTICS": [
+        "show my progress",
+        "open analytics",
+        "মোৰ অগ্ৰগতি",
+        "জ্ঞানমূলক নম্বৰ",
+        "কাৰ্যক্ষমতাৰ প্ৰতিবেদন",
+        "মই কেনে কৰি আছো",
+        "প্ৰতিবেদনখন দেখুৱাওক"
+      ],
+      "OPEN_MEMORIES": [
+        "মোৰ স্মৃতিবোৰ দেখুৱাওক",
+        "স্মৃতিবোৰ খোলক",
+        "মোৰ ফটোবোৰ",
+        "পৰিয়ালৰ ফটোবোৰ",
+        "ফটো এলবাম",
+        "স্মৃতিবোৰ চাওক",
+        "show my memories",
+        "open memories"
+      ],
+      "OPEN_CAREGIVER": [
+        "শুশ্ৰূষাকাৰী",
+        "শুশ্ৰূষাকাৰী",
+        "শুশ্ৰূষাকাৰীৰ ডেশ্ববৰ্ড",
+        "শুশ্ৰূষাকাৰীৰ প'ৰ্টেল",
+        "শুশ্ৰূষাকাৰীক খোলক",
+        "caregiver",
+        "caretaker"
+      ],
+      "GO_HOME": [
+        "ঘৰলৈ যোৱা",
+        "ঘৰৰ পৃষ্ঠা",
+        "ডেশ্ববৰ্ডলৈ ঘূৰি যাওক",
+        "মুখ্য পৰ্দা",
+        "ঘৰলৈ উভতি যোৱা",
+        "ঘৰলৈ ওলাই যোৱা",
+        "go home",
+        "home page"
+      ],
+      "HELP": [
+        "সহায়",
+        "মই কি ক'ব পাৰোঁ",
+        "কণ্ঠৰ নিৰ্দেশ",
+        "এইটো কেনেকৈ কাম কৰে",
+        "সহায়কৰ নিৰ্দেশিকা",
+        "help",
+        "what can i say"
+      ],
+      "CLOSE": [
+        "বন্ধ কৰা",
+        "ওলাই যোৱা",
+        "এৰা",
+        "বৰ্খাস্ত কৰা",
+        "থামোৱা",
+        "বাতিল কৰা",
+        "close",
+        "exit"
+      ]
+    },
+    "games": {
+      "WATER_JUGS": [
+        "পানীৰ জগ",
+        "পানীৰ জগ",
+        "জগৰ সাঁথৰ",
+        "মাপ লোৱা জগ"
+      ],
+      "TOWER_OF_HANOI": [
+        "হানয়ৰ স্তম্ভ",
+        "হানোই টাৱাৰ্ছ",
+        "হানোই পাজল",
+        "পেগ ডিস্ক"
+      ],
+      "BALL_SORT": [
+        "বল চৰ্ট",
+        "বল পাজল",
+        "চৰ্ট বল্ছ",
+        "কালৰ বল্ছ"
+      ],
+      "N_BACK": [
+        "এন বেক",
+        "এন-বেক",
+        "মেমৰি এন বেক",
+        "ডুৱেল এন বেক"
+      ],
+      "LOGIC_PUZZLES": [
+        "লজিক পাজল্ছ",
+        "লজিক পাজল",
+        "মেথ লজিক",
+        "ৰিডল্ছ"
+      ],
+      "STROOP": [
+        "ষ্ট্ৰুপ টেষ্ট",
+        "ষ্ট্ৰুপ ৰং",
+        "ৰং পৰীক্ষা",
+        "ষ্ট্ৰুপ প্ৰভাৱ"
+      ],
+      "MENTAL_ROTATION": [
+        "মানসিক ঘূৰ্ণন",
+        "আকৃতি ঘূৰোৱা",
+        "3D ঘূৰ্ণন",
+        "আকৃতি মিলোৱা"
+      ],
+      "SCHULTE_TABLE": [
+        "শ্বুল্টে টেবুল",
+        "সংখ্যাৰ গ্ৰীড",
+        "শ্বুল্টে গ্ৰীড",
+        "সংখ্যা বিচাৰি উলিওৱা"
+      ],
+      "MAZE": [
+        "পথৰ মেজ",
+        "মেজ",
+        "ল্যাৰিথম্ব",
+        "পথ বিচাৰি উলিওৱা"
+      ],
+      "CARD_MATCHING": [
+        "কাৰ্ড মেচিং",
+        "স্মৃতিৰ মিল",
+        "কাৰ্ড লুটিয়াই দিয়া",
+        "যোৰা মেলোৱা",
+        "স্মৃতিৰ কাৰ্ড"
+      ],
+      "NUMBER_SEQUENCE": [
+        "সংখ্যাৰ ক্ৰম",
+        "সংখ্যাৰ সাঁথৰ",
+        "হেৰোৱা সংখ্যা",
+        "সংখ্যাৰ শৃংখল"
+      ],
+      "WORD_SCRAMBLE": [
+        "শব্দৰ খেল",
+        "শব্দৰ সাঁথৰ",
+        "শব্দবোৰ ঠিক কৰা",
+        "গোলমাল কৰা শব্দ"
+      ],
+      "QUICK_MATH": [
+        "দ্ৰুত গণিত",
+        "গতি গণিত",
+        "মানসিক গণিত",
+        "গাণিতিক খেল"
+      ],
+      "VISUAL_SEARCH": [
+        "দৃষ্টিগত সন্ধান",
+        "বস্তু বিচাৰি উলিয়াই",
+        "লুকাই থোৱা বস্তু",
+        "পাৰ্থক্য ধৰা"
+      ],
+      "REACTION_TIME": [
+        "প্ৰতিক্ৰিয়াৰ সময়",
+        "গতি পৰীক্ষা",
+        "প্ৰতিফলন পৰীক্ষা",
+        "টেপৰ গতি"
+      ],
+      "SIMON_SAYS": [
+        "ছাইমনে কয়",
+        "নমুনা অনুসৰণ কৰা",
+        "পোহৰৰ ক্ৰম",
+        "ছাইমনৰ ক্ৰম"
+      ],
+      "TRAIL_MAKING": [
+        "ট্ৰেইল বনোৱা",
+        "ডট সংযোগ কৰা",
+        "ট্ৰেইল পৰীক্ষা",
+        "সংখ্যা সংযোগ কৰা"
+      ],
+      "ANAGRAM_SOLVER": [
+        "অনুৰূপ শব্দ সমাধানকাৰী",
+        "অনুৰূপ শব্দ",
+        "শব্দৰ পুনৰ্গঠন",
+        "অক্ষৰৰ সাঁথৰ"
+      ],
+      "DELAYED_RECALL": [
+        "বিলম্বিত স্মৰণ",
+        "শব্দৰ স্মৃতি",
+        "স্মৰণ তালিকা",
+        "শব্দ মনত ৰখা"
+      ],
+      "PATTERN_MATRIX": [
+        "নমুনা মেট্ৰিক্স",
+        "মেট্ৰিক্স সাঁথৰ",
+        "আকৃতিৰ নमुना",
+        "ৰাভেন মেট্ৰিক্স"
+      ],
+      "DUAL_TASK": [
+        "দ্বৈত কাৰ্য",
+        "বহুকাৰ্য্য খেল",
+        "বিভক্ত মনোযোগ",
+        "দুটা কাৰ্য"
+      ],
+      "WORKING_MEMORY_GRID": [
+        "কামৰ স্মৃতিৰ গ্ৰীড",
+        "স্মৃতিৰ গ্ৰীড",
+        "স্থানিক গ্ৰীড",
+        "গ্ৰীডৰ সোঁৱৰণ"
+      ],
+      "CULTURAL_OBJECT_RECOGNITION": [
+        "সাংস্কৃতিক বস্তু চিনাক্তকৰণ",
+        "বস্তু চিনাক্তকৰণ",
+        "ঐতিহ্যৰ সামগ্ৰী",
+        "পুৰণি সামগ্ৰী"
+      ],
+      "DAILY_ROUTINE_RECALL": [
+        "দৈনিক ৰুটিনৰ সোঁৱৰণ",
+        "ৰুটিনৰ স্মৃতি",
+        "দিনটোৰ সোঁৱৰণ",
+        "কাৰ্যকলাপৰ স্মৃতি"
+      ]
+    },
+    "gameTitles": {
+      "WATER_JUGS": "পানীৰ জগ",
+      "TOWER_OF_HANOI": "হানয়ৰ স্তম্ভ",
+      "BALL_SORT": "বল চৰ্ট পাজল",
+      "N_BACK": "এন-বেক",
+      "LOGIC_PUZZLES": "লজিক পাজল্ছ",
+      "STROOP": "ষ্ট্ৰুপ টেষ্ট",
+      "MENTAL_ROTATION": "মানসিক ঘূৰ্ণন",
+      "SCHULTE_TABLE": "শ্বুল্টে টেবুল",
+      "MAZE": "পথৰ মেজ",
+      "CARD_MATCHING": "কাৰ্ড মেচিং মেমৰি",
+      "NUMBER_SEQUENCE": "সংখ্যাৰ ক্ৰম",
+      "WORD_SCRAMBLE": "শব্দৰ খেল",
+      "QUICK_MATH": "দ্ৰুত গণিত",
+      "VISUAL_SEARCH": "দৃষ্টিগত সন্ধান",
+      "REACTION_TIME": "প্ৰতিক্ৰিয়াৰ সময়",
+      "SIMON_SAYS": "ছাইমনে কয়",
+      "TRAIL_MAKING": "ট্ৰেইল বনোৱা",
+      "ANAGRAM_SOLVER": "এনাগ্ৰাম সমাধানকাৰী",
+      "DELAYED_RECALL": "বিলম্বিত স্মৰণ",
+      "PATTERN_MATRIX": "নমুনা মেট্ৰিক্স",
+      "DUAL_TASK": "দ্বৈত কাৰ্য",
+      "WORKING_MEMORY_GRID": "কৰ্মক্ষম স্মৃতি গ্ৰীড",
+      "CULTURAL_OBJECT_RECOGNITION": "সাংস্কৃতিক বস্তু চিনাক্তকৰণ",
+      "DAILY_ROUTINE_RECALL": "দৈনিক ৰুটিনৰ সোঁৱৰণ"
+    },
+    "responses": {
+      "OPEN_GAMES": "মগজুৰ প্ৰশিক্ষণ খেল কেন্দ্ৰ খোলা হৈছে।",
+      "NEXT_GAME": "আৰু এটা মগজুৰ প্ৰশিক্ষণ অনুশীলন আৰম্ভ কৰা হৈছে।",
+      "OPEN_GAME": "{{name}} খেলখন খোলা হৈছে।",
+      "OPEN_REMINDERS": "আপোনাৰ দৈনিক ৰুটিন আৰু সোঁৱৰণীসমূহ খোলা হৈছে।",
+      "TODAY_REMINDERS": "আজিৰ বাবে আপোনাৰ ৰুটিনৰ সময়সূচী ইয়াত দিয়া হ'ল।",
+      "NEXT_REMINDER": "আপোনাৰ পৰৱৰ্তী আগন্তুক সোঁৱৰণীটো পৰীক্ষা কৰা হৈছে।",
+      "ADD_ROUTINE": "অনুগ্রহ কৰি নতুন ৰুটিনৰ বিৱৰণসমূহ লিখক বা নিশ্চিত কৰক।",
+      "COMPLETE_ROUTINE": "চমৎকার কাম! আপোনাৰ কামটো সম্পূৰ্ণ হোৱা বুলি চিহ্নিত কৰা হ'ল।",
+      "REMOVE_ROUTINE": "নিৰ্দিষ্ট ৰুটিনৰ বস্তু আঁতৰোৱা হৈছে।",
+      "UPDATE_ROUTINE": "আপোনাৰ সময়সূচী আপডেট কৰিবলৈ ৰুটিন সম্পাদক খুলিছে।",
+      "OPEN_MEDICATIONS": "আপোনাৰ ঔষধৰ সময়সূচী খুলিছে।",
+      "TODAY_MEDICATIONS": "আজিৰ বাবে আপোনাৰ নিৰ্ধাৰিত ঔষধসমূহ ইয়াত আছে।",
+      "NEXT_MEDICATION": "আপোনাৰ পৰৱৰ্তী নিৰ্ধাৰিত ঔষধৰ পালি পৰীক্ষা কৰা হৈছে।",
+      "MEDICATION_TAKEN": "আপুনি আপোনাৰ ঔষধ সেৱন কৰিছে বুলি নিশ্চিত কৰিব বিচাৰেনে?",
+      "MEDICATION_SKIPPED": "ঔষধৰ পালি বাদ দিয়া বুলি চিহ্নিত কৰা হৈছে।",
+      "OPEN_ANALYTICS": "আপোনাৰ জ্ঞানীয় কাৰ্যক্ষমতাৰ বিশ্লেষণ আৰু প্ৰতিবেদন খুলিছে।",
+      "OPEN_MEMORIES": "আপোনাৰ মৰমৰ স্মৃতিৰ এলবাম খুলিছে।",
+      "OPEN_CAREGIVER": "শুশ্ৰূষাকাৰী নিৰীক্ষণ পৰ্টেল খুলিছে।",
+      "GO_HOME": "ঘৰৰ ডেশ্ববৰ্ডলৈ ঘূৰি গৈছে।",
+      "HELP": "আপুনি ব্যৱহাৰ কৰিব পৰা ভইচ কমাণ্ডসমূহ ইয়াত আছে।",
+      "CLOSE": "ভইচ সহকাৰী বন্ধ কৰা হৈছে।",
+      "UNKNOWN": "মই সেইটো বুজি পোৱা নাই। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক বা এটা পৰামৰ্শত টিপক।",
+      "CARETAKER_ONLY": "শুশ্ৰূষাকাৰীৰ ডেশ্ববৰ্ড কেৱল অনুমোদিত শুশ্ৰূষাকাৰীৰ বাবে উপলব্ধ।"
+    },
+    "shortPhrases": {
+      "OPEN_GAMES": "গেমসমূহ খুলিছে",
+      "NEXT_GAME": "পৰৱৰ্তী গেম",
+      "OPEN_GAME": "গেম খুলিছে",
+      "OPEN_REMINDERS": "অনুস্মাৰণসমূহ খুলি আছে",
+      "TODAY_REMINDERS": "আজিৰ অনুস্মাৰণসমূহ দেখুৱাই আছে",
+      "NEXT_REMINDER": "পৰৱৰ্তী অনুস্মাৰণটো দেখুৱাই আছে",
+      "ADD_ROUTINE": "ৰুটিন যোগ কৰক",
+      "COMPLETE_ROUTINE": "কামটো সম্পূৰ্ণ হোৱা বুলি চিহ্নিত কৰা হ’ল",
+      "REMOVE_ROUTINE": "কামটো আঁতৰোৱা হ’ল",
+      "UPDATE_ROUTINE": "ৰুটিন আপডেট কৰক",
+      "OPEN_MEDICATIONS": "ঔষধসমূহ খুলি আছে",
+      "TODAY_MEDICATIONS": "আজিৰ ঔষধসমূহ দেখুৱাই আছে",
+      "NEXT_MEDICATION": "পৰৱৰ্তী ঔষধটো দেখুৱাই আছে",
+      "MEDICATION_TAKEN": "ঔষধটো ৰেকৰ্ড কৰা হ’ল",
+      "MEDICATION_SKIPPED": "ঔষধটো বাদ দিয়া হ’ল",
+      "OPEN_ANALYTICS": "প্ৰগতিৰ প্ৰতিবেদন খুলি আছে",
+      "OPEN_MEMORIES": "স্মৃতিসমূহ খুলি আছে",
+      "OPEN_CAREGIVER": "শুশ্ৰূষাকাৰীৰ দৃশ্য খুলি আছে",
+      "GO_HOME": "ঘৰলৈ গৈ আছে",
+      "HELP": "সহায় খুলি আছে",
+      "CLOSE": "সহকাৰী বন্ধ কৰিছে",
+      "UNKNOWN": "অনুগ্রহ কৰি পুনৰাবৃত্তি কৰক",
+      "CONFIRM_DOSE": "লোৱা ড’জটো নিশ্চিত কৰক নেকি?",
+      "VOICE_NOT_AVAILABLE": "স্বৰ পঢ়া উপলব্ধ নহয়"
+    },
+    "status": {
+      "listening": "শুনি আছো... মাইক্ৰফোনত স্পষ্টকৈ কওক",
+      "processing": "আপোনাৰ ভইচ কমাণ্ড প্ৰক্ৰিয়াকৰণ কৰি থকা হৈছে...",
+      "speaking": "উত্তৰ দিবলৈ সাজু...",
+      "ready": "কথা পাতিবলৈ মাইক্ৰফোনত টিপক।",
+      "micDenied": "মাইক্ৰফোনৰ সুবিধা নাই। অনুগ্ৰহ কৰি অনুমতি পৰীক্ষা কৰক।",
+      "error": "ভইচ সহকাৰীয়ে এটা ত্ৰুটিৰ সন্মুখীন হৈছে।",
+      "notUnderstood": "বুজিব পৰা নগ'ল। পুনৰ চেষ্টা কৰক।",
+      "wakeWordActive": "হে' সেতু ৱেক-ৱৰ্ড লিছেনাৰ সক্ৰিয়"
+    },
+    "ui": {
+      "youSaid": "আপুনি কৈছিল:",
+      "action": "কাৰ্য:",
+      "intent": "অভিপ্রায়:",
+      "match": "মিল:",
+      "listeningPrompt": "শুনি আছো... শেষ হ'লে মাইক্ৰফোনত টিপক",
+      "tapToSpeak": "কথা পাতিবলৈ টিপক",
+      "tapToStop": "থামিবলৈ টিপক",
+      "spokenSummary": "ভইচৰ সাৰাংশ",
+      "voiceReadingUnavailable": "{{language}} ভাষাত ভইচ পঢ়া এতিয়াও উপলব্ধ নহয়",
+      "confirmMarkTaken": "লৈ যোৱা বুলি নিশ্চিত কৰা হৈছে নেকি?",
+      "confirmYes": "হয়, লৈ যোৱা হ'ল",
+      "confirmNo": "নাই, বাতিল কৰক",
+      "undo": "পূৰ্বাবস্থালৈ ঘূৰাই আনক",
+      "markedAsTaken": "ডোজ লোৱা বুলি চিহ্নিত কৰা হ'ল"
+    }
+  },
+  "ne-IN": {
+    "phrases": {
+      "OPEN_GAMES": [
+        "खेलहरू खोल्नुहोस्",
+        "खेलहरू खेल्नुहोस्",
+        "खेलहरू देखाउनुहोस्",
+        "मस्तिष्क खेलहरू",
+        "संज्ञानात्मक अभ्यासहरू",
+        "म खेलहरू खेल्न चाहन्छु",
+        "खेलहरू सुरु गर्नुहोस्",
+        "मलाई खेलहरूमा लैजानुहोस्",
+        "open games",
+        "play games"
+      ],
+      "NEXT_GAME": [
+        "अर्को खेल",
+        "अर्को खेल",
+        "नयाँ खेल",
+        "अर्को खेल देखाउनुहोस्",
+        "मलाई अर्को खेल दिनुहोस्",
+        "खेल परिवर्तन गर्नुहोस्",
+        "next game",
+        "another game"
+      ],
+      "OPEN_GAME": [
+        "खेल्नुहोस्",
+        "खोल्नुहोस्",
+        "सुरु गर्नुहोस्",
+        "लन्च गर्नुहोस्",
+        "play",
+        "open"
+      ],
+      "OPEN_REMINDERS": [
+        "रिमाइन्डरहरू खोल्नुहोस्",
+        "रिमाइन्डरहरू देखाउनुहोस्",
+        "मेरो रिमाइन्डरहरू",
+        "दिनचर्या",
+        "दैनिक दिनचर्या",
+        "खुल्ने दिनचर्या",
+        "तालिका देखाउनुहोस्",
+        "तालिका हेर्नुहोस्",
+        "open reminders",
+        "show reminders"
+      ],
+      "TODAY_REMINDERS": [
+        "आज मसँग के छ?",
+        "आजका रिमाइन्डरहरू",
+        "आज के कामहरू छन्?",
+        "आज के छ?",
+        "आजको तालिका",
+        "आज मैले के गर्नुपर्छ?",
+        "आजको लागि तालिका",
+        "what do i have today",
+        "today reminders"
+      ],
+      "NEXT_REMINDER": [
+        "मेरो अर्को काम के हो?",
+        "अर्को रिमाइन्डर",
+        "अर्को काम",
+        "अर्को के छ?",
+        "मैले अर्को के गर्नुपर्छ?",
+        "आगामी रिमाइन्डर",
+        "what is my next task",
+        "next reminder"
+      ],
+      "ADD_ROUTINE": [
+        "एउटा काम थप्नुहोस्",
+        "दिनचर्या थप्नुहोस्",
+        "कार्य सिर्जना गर्नुहोस्",
+        "नयाँ दिनचर्या",
+        "नयाँ कार्य",
+        "हिँड्ने तालिका बनाउनुहोस्",
+        "गतिविधि तालिका बनाउनुहोस्",
+        "रिमाइन्डर थप्नुहोस्",
+        "रिमाइन्डर सेट गर्नुहोस्",
+        "add a task",
+        "add routine"
+      ],
+      "COMPLETE_ROUTINE": [
+        "कार्य सम्पन्न भयो भनी चिन्ह लगाउनुहोस्",
+        "कार्य सम्पन्न भयो",
+        "दिनचर्या सम्पन्न भयो",
+        "सम्पूर्ण कार्य",
+        "कार्य समाप्त भयो",
+        "मैले मेरो कार्य समाप्त गरें",
+        "दिनचर्या सम्पन्न भयो भनी चिन्ह लगाउनुहोस्",
+        "mark task done",
+        "task completed"
+      ],
+      "REMOVE_ROUTINE": [
+        "कार्य मेटाउनुहोस्",
+        "कार्य हटाउनुहोस्",
+        "दिनचर्या मेटाउनुहोस्",
+        "दिनचर्या हटाउनुहोस्",
+        "कार्य रद्द गर्नुहोस्",
+        "स्पष्ट कार्य",
+        "delete task",
+        "remove task"
+      ],
+      "UPDATE_ROUTINE": [
+        "समय परिवर्तन गर्नुहोस्",
+        "दिनचर्या अद्यावधिक गर्नुहोस्",
+        "दिनचर्या समय परिवर्तन गर्नुहोस्",
+        "कार्य पुन:तालिका गर्नुहोस्",
+        "दिनचर्या पुन:तालिका गर्नुहोस्",
+        "कार्य समय परिमार्जन गर्नुहोस्",
+        "change the time",
+        "update routine"
+      ],
+      "OPEN_MEDICATIONS": [
+        "मेरो औषधिहरू देखाउनुहोस्",
+        "औषधिहरू खोल्नुहोस्",
+        "मेरो औषधिहरू",
+        "औषधिहरू देखाउनुहोस्",
+        "औषधि सूची",
+        "प्रिस्क्रिप्शनहरू",
+        "औषधि तालिका खोल्नुहोस्",
+        "show my medicines",
+        "open medications"
+      ],
+      "TODAY_MEDICATIONS": [
+        "आज म कुन औषधि लिन्छु?",
+        "आजको औषधिहरू",
+        "आजको लागि औषधिहरू",
+        "आज कुन चक्कीहरू?",
+        "आज म कुन औषधिहरू खानुपर्छ?",
+        "दैनिक औषधि",
+        "what medicine do i take today",
+        "today's medicines"
+      ],
+      "NEXT_MEDICATION": [
+        "मेरो अर्को खुराक कहिले छ?",
+        "अर्को औषधि",
+        "अर्को चक्की",
+        "मेरो अर्को खुराक कहिले छ?",
+        "अर्को औषधि के हो?",
+        "आगामी औषधि",
+        "what is my next dose",
+        "next medicine"
+      ],
+      "MEDICATION_TAKEN": [
+        "मैले मेरो औषधि लिएँ।",
+        "औषधि लिइयो।",
+        "चक्की लिएँ।",
+        "ट्याब्लेट लिएँ।",
+        "पहिले नै औषधि लिएँ।",
+        "मैले मेरो औषधि लिएँ।",
+        "औषधि लिइयो भनी चिन्ह लगाउनुहोस्।",
+        "i took my medicine",
+        "medicine taken"
+      ],
+      "MEDICATION_SKIPPED": [
+        "औषधि छोड्नुहोस्।",
+        "खुराक छोड्नुहोस्।",
+        "औषधि छोडियो।",
+        "औषधि लिनुभएन।",
+        "औषधि छुटाउनुभयो।",
+        "skip medicine",
+        "skip dose"
+      ],
+      "OPEN_ANALYTICS": [
+        "मेरो प्रगति देखाउनुहोस्।",
+        "विश्लेषण खोल्नुहोस्।",
+        "मेरो प्रगति",
+        "संज्ञानात्मक स्कोर",
+        "कार्यसम्पादन रिपोर्ट",
+        "म कस्तो गर्दैछु?",
+        "रिपोर्ट देखाउनुहोस्",
+        "show my progress",
+        "open analytics"
+      ],
+      "OPEN_MEMORIES": [
+        "मेरा यादहरू देखाउनुहोस्",
+        "यादहरू खोल्नुहोस्",
+        "मेरा फोटोहरू",
+        "परिवारका फोटोहरू",
+        "फोटो एल्बम",
+        "यादहरू हेर्नुहोस्",
+        "show my memories",
+        "open memories"
+      ],
+      "OPEN_CAREGIVER": [
+        "हेरचाहकर्ता",
+        "हेरचाहकर्ता",
+        "हेरचाहकर्ता ड्यासबोर्ड",
+        "हेरचाहकर्ता पोर्टल",
+        "हेरचाहकर्ता खोल्नुहोस्",
+        "caregiver",
+        "caretaker"
+      ],
+      "GO_HOME": [
+        "घर जानुहोस्",
+        "होम पेज",
+        "ड्यासबोर्डमा फर्कनुहोस्",
+        "मुख्य स्क्रिन",
+        "घर फर्केर जानुहोस्",
+        "घरबाट निस्कनुहोस्",
+        "go home",
+        "home page"
+      ],
+      "HELP": [
+        "मद्दत गर्नुहोस्",
+        "म के भन्न सक्छु",
+        "आवाज आदेशहरू",
+        "यो कसरी काम गर्छ",
+        "सहायक पुस्तिका",
+        "help",
+        "what can i say"
+      ],
+      "CLOSE": [
+        "बन्द गर्नुहोस्",
+        "बाहिर निस्कनुहोस्",
+        "छोड्नुहोस्",
+        "हटाउनुहोस्",
+        "रोक्नुहोस्",
+        "रद्द गर्नुहोस्",
+        "close",
+        "exit"
+      ]
+    },
+    "games": {
+      "WATER_JUGS": [
+        "पानीका जगहरू",
+        "पानीको जग",
+        "जगहरूको पजल",
+        "जगहरू नाप्ने"
+      ],
+      "TOWER_OF_HANOI": [
+        "हनोईको टावर",
+        "हनोई टावरहरू",
+        "हनोई पजल",
+        "पेग डिस्कहरू"
+      ],
+      "BALL_SORT": [
+        "बल सोर्ट",
+        "बल पजल",
+        "बलहरू क्रमबद्ध गर्नुहोस्",
+        "रङ बलहरू"
+      ],
+      "N_BACK": [
+        "एन ब्याक",
+        "एन-ब्याक",
+        "मेमोरी एन ब्याक",
+        "ड्युअल एन ब्याक"
+      ],
+      "LOGIC_PUZZLES": [
+        "लजिक पजलहरू",
+        "लजिक पजल",
+        "गणित तर्क",
+        "पहेलियाँहरू"
+      ],
+      "STROOP": [
+        "स्ट्रूप टेस्ट",
+        "stroop color",
+        "color test",
+        "stroop effect"
+      ],
+      "MENTAL_ROTATION": [
+        "mental rotation",
+        "rotate shape",
+        "3d rotation",
+        "shape matching"
+      ],
+      "SCHULTE_TABLE": [
+        "schulte table",
+        "number grid",
+        "schulte grid",
+        "find numbers"
+      ],
+      "MAZE": [
+        "pathway maze",
+        "maze",
+        "labyrinth",
+        "find path"
+      ],
+      "CARD_MATCHING": [
+        "card matching",
+        "स्मृति मिलान",
+        "कार्डहरू पल्टाउनुहोस्",
+        "जोडी मिलाउनुहोस्",
+        "स्मृति कार्डहरू"
+      ],
+      "NUMBER_SEQUENCE": [
+        "संख्या क्रम",
+        "संख्या पजल",
+        "हराएको संख्या",
+        "संख्या श्रृंखला"
+      ],
+      "WORD_SCRAMBLE": [
+        "शब्द स्क्र्याम्बल",
+        "शब्द पजल",
+        "शब्दहरू अनस्क्र्याम्बल गर्नुहोस्",
+        "अल्टेपालटे शब्दहरू"
+      ],
+      "QUICK_MATH": [
+        "क्विक गणित",
+        "गति गणित",
+        "मानसिक गणित",
+        "अङ्कगणित खेल"
+      ],
+      "VISUAL_SEARCH": [
+        "दृश्य खोज",
+        "वस्तु पत्ता लगाउनुहोस्",
+        "लुकेको वस्तु",
+        "फरक छुट्याउनुहोस्"
+      ],
+      "REACTION_TIME": [
+        "प्रतिक्रिया समय",
+        "गति परीक्षण",
+        "प्रतिबिम्ब परीक्षण",
+        "ट्याप गति"
+      ],
+      "SIMON_SAYS": [
+        "साइमन भन्छन्",
+        "पठ्ठा पछ्याउनुहोस्",
+        "प्रकाश क्रम",
+        "साइमन क्रम"
+      ],
+      "TRAIL_MAKING": [
+        "ट्रेल बनाउने",
+        "बिन्दुहरू जोड्नुहोस्",
+        "ट्रेल परीक्षण",
+        "संख्याहरू जोड्नुहोस्"
+      ],
+      "ANAGRAM_SOLVER": [
+        "अनुक्रम समाधानकर्ता",
+        "अनुक्रमहरू",
+        "शब्द पुनर्व्यवस्थापन",
+        "अक्षर पजल"
+      ],
+      "DELAYED_RECALL": [
+        "ढिलो स्मरण",
+        "शब्द मेमोरी",
+        "स्मरण सूची",
+        "शब्दहरू सम्झनुहोस्"
+      ],
+      "PATTERN_MATRIX": [
+        "ढाँचा म्याट्रिक्स",
+        "म्याट्रिक्स पजल",
+        "आकार ढाँचा",
+        "रेभेन म्याट्रिक्स"
+      ],
+      "DUAL_TASK": [
+        "दोहोरो कार्य",
+        "मल्टिटास्किङ खेल",
+        "विभाजित ध्यान",
+        "दुई कार्यहरू"
+      ],
+      "WORKING_MEMORY_GRID": [
+        "कार्यशील मेमोरी ग्रिड",
+        "मेमोरी ग्रिड",
+        "स्थानिक ग्रिड",
+        "ग्रिड स्मरण"
+      ],
+      "CULTURAL_OBJECT_RECOGNITION": [
+        "सांस्कृतिक वस्तु पहिचान",
+        "वस्तु पहिचान",
+        "विरासत वस्तुहरू",
+        "पुराना वस्तुहरू"
+      ],
+      "DAILY_ROUTINE_RECALL": [
+        "दैनिक तालिका स्मरण",
+        "अनुस्मरण तालिका",
+        "दिन स्मरण",
+        "गतिविधि स्मरण"
+      ]
+    },
+    "gameTitles": {
+      "WATER_JUGS": "पानीका जगहरू",
+      "TOWER_OF_HANOI": "हनोईको टावर",
+      "BALL_SORT": "बल सोर्ट पजल",
+      "N_BACK": "एन-ब्याक",
+      "LOGIC_PUZZLES": "लजिक पजलहरू",
+      "STROOP": "स्ट्रूप टेस्ट",
+      "MENTAL_ROTATION": "Mental Rotation",
+      "SCHULTE_TABLE": "Schulte Table",
+      "MAZE": "Pathway Maze",
+      "CARD_MATCHING": "Card Matching Memory",
+      "NUMBER_SEQUENCE": "संख्या क्रम",
+      "WORD_SCRAMBLE": "शब्द स्क्र्याम्बल",
+      "QUICK_MATH": "क्विक गणित",
+      "VISUAL_SEARCH": "दृश्य खोज",
+      "REACTION_TIME": "प्रतिक्रिया समय",
+      "SIMON_SAYS": "साइमन भन्छन्",
+      "TRAIL_MAKING": "ट्रेल बनाउने",
+      "ANAGRAM_SOLVER": "एनाग्राम समाधानकर्ता",
+      "DELAYED_RECALL": "ढिलो स्मरण",
+      "PATTERN_MATRIX": "ढाँचा म्याट्रिक्स",
+      "DUAL_TASK": "दोहोरो कार्य",
+      "WORKING_MEMORY_GRID": "कार्यकारी मेमोरी ग्रिड",
+      "CULTURAL_OBJECT_RECOGNITION": "सांस्कृतिक वस्तु पहिचान",
+      "DAILY_ROUTINE_RECALL": "दैनिक तालिका स्मरण"
+    },
+    "responses": {
+      "OPEN_GAMES": "मस्तिष्क प्रशिक्षण खेल केन्द्र खोल्दै।",
+      "NEXT_GAME": "अर्को मस्तिष्क प्रशिक्षण अभ्यास खोल्दै।",
+      "OPEN_GAME": "{{नाम}} खेल खोल्दै।",
+      "OPEN_REMINDERS": "तपाईंको दैनिक तालिका र रिमाइन्डरहरू खोल्दै।",
+      "TODAY_REMINDERS": "आजको लागि तपाईंको तालिका यहाँ छ।",
+      "NEXT_REMINDER": "तपाईंको अर्को आउँदै गरेको रिमाइन्डर जाँच गर्दै।",
+      "ADD_ROUTINE": "कृपया नयाँ तालिका विवरणहरू प्रविष्ट गर्नुहोस् वा पुष्टि गर्नुहोस्।",
+      "COMPLETE_ROUTINE": "उत्कृष्ट काम! तपाईंको कार्य पूरा भएको रूपमा चिन्ह लगाइएको छ।",
+      "REMOVE_ROUTINE": "निर्दिष्ट तालिका वस्तु हटाइँदै छ।",
+      "UPDATE_ROUTINE": "तपाईंको तालिका अद्यावधिक गर्न तालिका सम्पादक खोल्दै।",
+      "OPEN_MEDICATIONS": "तपाईंको औषधिको तालिका खोल्दै।",
+      "TODAY_MEDICATIONS": "आजको लागि तपाईंको तालिकामा रहेका औषधिहरू यहाँ छन्।",
+      "NEXT_MEDICATION": "तपाईंको अर्को तालिकामा रहेको औषधिको मात्रा जाँच गर्दै।",
+      "MEDICATION_TAKEN": "के तपाईंले आफ्नो औषधि खाएको पुष्टि गर्न चाहनुहुन्छ?",
+      "MEDICATION_SKIPPED": "औषधिको मात्रा छुटेको रूपमा चिन्ह लगाइएको छ।",
+      "OPEN_ANALYTICS": "तपाईंको संज्ञानात्मक प्रदर्शन विश्लेषण र रिपोर्ट खोल्दै।",
+      "OPEN_MEMORIES": "तपाईंको प्यारो सम्झना एल्बम खोल्दै।",
+      "OPEN_CAREGIVER": "हेरचाहकर्ता अनुगमन पोर्टल खोल्दै।",
+      "GO_HOME": "होम ड्यासबोर्डमा फर्कदै।",
+      "HELP": "यहाँ तपाईंले प्रयोग गर्न सक्ने आवाज आदेशहरू छन्।",
+      "CLOSE": "भ्वाइस असिस्टेन्ट बन्द गर्दै।",
+      "UNKNOWN": "मैले त्यो बुझिनँ। कृपया फेरि प्रयास गर्नुहोस् वा सुझाव ट्याप गर्नुहोस्।",
+      "CARETAKER_ONLY": "हेरचाहकर्ता ड्यासबोर्ड अधिकृत हेरचाहकर्ताहरूका लागि मात्र पहुँचयोग्य छ।"
+    },
+    "shortPhrases": {
+      "OPEN_GAMES": "खेलहरू खोल्दै",
+      "NEXT_GAME": "अर्को खेल",
+      "OPEN_GAME": "खेल खोल्दै",
+      "OPEN_REMINDERS": "रिमाइन्डरहरू खोल्दै",
+      "TODAY_REMINDERS": "आजको रिमाइन्डरहरू देखाउँदै",
+      "NEXT_REMINDER": "अर्को रिमाइन्डर देखाउँदै",
+      "ADD_ROUTINE": "दिनचर्या थप्नुहोस्",
+      "COMPLETE_ROUTINE": "कार्य सम्पन्न भयो",
+      "REMOVE_ROUTINE": "कार्य हटाइयो",
+      "UPDATE_ROUTINE": "दिनचर्या अपडेट गर्नुहोस्",
+      "OPEN_MEDICATIONS": "औषधिहरू खोल्दै",
+      "TODAY_MEDICATIONS": "आजको औषधिहरू देखाउँदै",
+      "NEXT_MEDICATION": "अर्को औषधि देखाउँदै",
+      "MEDICATION_TAKEN": "औषधि रेकर्ड गरियो",
+      "MEDICATION_SKIPPED": "औषधि छोडियो",
+      "OPEN_ANALYTICS": "प्रगति रिपोर्ट खोल्दै",
+      "OPEN_MEMORIES": "स्मरणहरू खोल्दै",
+      "OPEN_CAREGIVER": "हेरचाहकर्ताको दृश्य खोल्दै",
+      "GO_HOME": "घर जाँदै",
+      "HELP": "मद्दत खोल्दै",
+      "CLOSE": "सहायक बन्द गर्दै",
+      "UNKNOWN": "कृपया दोहोर्याउनुहोस्",
+      "CONFIRM_DOSE": "खाइएको खुराक पुष्टि गर्नुहोस्?",
+      "VOICE_NOT_AVAILABLE": "आवाज पढ्ने सुविधा उपलब्ध छैन।"
+    },
+    "status": {
+      "listening": "सुन्दै छु... माइक्रोफोनमा स्पष्ट रूपमा बोल्नुहोस्।",
+      "processing": "तपाईंको आवाज आदेश प्रशोधन गर्दै...",
+      "speaking": "प्रतिक्रिया बोल्दै छु...",
+      "ready": "तयार। बोल्न माइक्रोफोन ट्याप गर्नुहोस्।",
+      "micDenied": "माइक्रोफोन पहुँच अस्वीकृत। कृपया अनुमतिहरू जाँच गर्नुहोस्।",
+      "error": "आवाज सहायकलाई त्रुटि भयो।",
+      "notUnderstood": "बुझ्न सकिएन। कृपया फेरि प्रयास गर्नुहोस्।",
+      "wakeWordActive": "हे सेतु वेक-वर्ड लिस्नर सक्रिय छ।"
+    },
+    "ui": {
+      "youSaid": "तपाईंले भन्नुभयो:",
+      "action": "कार्य:",
+      "intent": "इन्टेंट:",
+      "match": "मिलान:",
+      "listeningPrompt": "सुन्दै छु... सकिएपछि माइक ट्याप गर्नुहोस्।",
+      "tapToSpeak": "बोल्न ट्याप गर्नुहोस्।",
+      "tapToStop": "रोक्न ट्याप गर्नुहोस्।",
+      "spokenSummary": "आवाज सारांश",
+      "voiceReadingUnavailable": "{{भाषा}} मा आवाज पढ्ने सुविधा अझै उपलब्ध छैन।",
+      "confirmMarkTaken": "लिएको रूपमा पुष्टि गरियो?",
+      "confirmYes": "हुन्छ, लिएको भयो।",
+      "confirmNo": "होइन, रद्द गर्नुहोस्",
+      "undo": "उल्टो गर्नुहोस्",
+      "markedAsTaken": "खुराक लिइएको रूपमा चिन्ह लगाइएको"
+    }
+  },
+  "mni-IN": {
+    "phrases": {
+      "OPEN_GAMES": [
+        "ꯒꯦꯝꯁꯤꯡ ꯍꯥꯡꯗꯣꯛꯄ",
+        "ꯒꯦꯝꯁꯤꯡ ꯁꯥꯟꯅꯕ",
+        "ꯒꯦꯝꯁꯤꯡ ꯎꯠꯄ",
+        "ꯕ꯭ꯔꯦꯟ ꯒꯦꯝꯁꯤꯡ",
+        "ꯀꯣꯒꯅꯤꯇꯤꯕ ꯑꯦꯛꯁꯔꯁꯥꯏꯖꯁꯤꯡ",
+        "ꯑꯩꯍꯥꯛ ꯒꯦꯝꯁꯤꯡ ꯁꯥꯟꯅꯕ ꯄꯥꯝꯃꯤ",
+        "ꯒꯦꯝꯁꯤꯡ ꯍꯧꯗꯣꯛꯄ",
+        "ꯑꯩꯕꯨ ꯒꯦꯝꯁꯤꯡꯗ ꯄꯨꯕꯤꯌꯨ",
+        "open games",
+        "play games"
+      ],
+      "NEXT_GAME": [
+        "ꯃꯊꯪꯒꯤ ꯒꯦꯝ",
+        "ꯑꯇꯣꯞꯄ ꯒꯦꯝ",
+        "ꯑꯅꯧꯕ ꯒꯦꯝ",
+        "ꯃꯊꯪꯒꯤ ꯒꯦꯝ ꯑꯗꯨ ꯎꯠꯄꯤꯌꯨ",
+        "ꯑꯇꯣꯞꯄ ꯒꯦꯝ ꯑꯃ ꯑꯩꯉꯣꯟꯗ ꯄꯤꯌꯨ",
+        "ꯒꯦꯝ ꯁ꯭ꯋꯤꯠꯆ ꯇꯧ꯫",
+        "next game",
+        "another game"
+      ],
+      "OPEN_GAME": [
+        "ꯁꯥꯟꯅꯩ꯫",
+        "ꯍꯥꯡꯗꯣꯛꯄꯤꯌꯨ꯫",
+        "ꯍꯧꯗꯣꯛꯄꯤꯌꯨ꯫",
+        "ꯂꯣꯟꯆ ꯇꯧ꯫",
+        "play",
+        "open"
+      ],
+      "OPEN_REMINDERS": [
+        "ꯔꯤꯃꯥꯏꯟꯗꯔꯁꯤꯡ ꯍꯥꯡꯗꯣꯛꯄꯤꯌꯨ꯫",
+        "ꯔꯤꯃꯥꯏꯟꯗꯔꯁꯤꯡ ꯎꯠꯄꯤꯌꯨ꯫",
+        "ꯑꯩꯒꯤ ꯔꯤꯃꯥꯏꯟꯗꯔꯁꯤꯡ",
+        "ꯔꯨꯇꯤꯟ",
+        "ꯅꯨꯃꯤꯠ ꯈꯨꯗꯤꯡꯒꯤ ꯔꯨꯇꯤꯟ",
+        "ꯑꯣꯄꯟ ꯔꯨꯇꯤꯟ",
+        "ꯁꯦꯗ꯭ꯌꯨꯜ ꯎꯠꯂꯨ",
+        "ꯁꯦꯗ꯭ꯌꯨꯜ ꯌꯦꯡꯎ",
+        "open reminders",
+        "show reminders"
+      ],
+      "TODAY_REMINDERS": [
+        "ꯉꯁꯤ ꯑꯩꯒꯤ ꯀꯔꯤ ꯂꯩꯔꯤꯕꯒꯦ",
+        "ꯉꯁꯤꯒꯤ ꯔꯤꯃꯥꯏꯟꯗꯔꯁꯤꯡ",
+        "ꯉꯁꯤ ꯀꯔꯤ ꯊꯕꯛꯁꯤꯡ ꯂꯩꯔꯤꯕꯒꯦ",
+        "ꯉꯁꯤ ꯀꯔꯤ ꯂꯩꯔꯤꯕꯒꯦ",
+        "ꯉꯁꯤꯒꯤ ꯁꯦꯗ꯭ꯌꯨꯜ",
+        "ꯉꯁꯤ ꯑꯩꯍꯥꯛꯅ ꯀꯔꯤ ꯇꯧꯒꯗꯒꯦ",
+        "ꯉꯁꯤꯒꯤ ꯁꯦꯗ꯭ꯌꯨꯜ",
+        "what do i have today",
+        "today reminders"
+      ],
+      "NEXT_REMINDER": [
+        "ꯑꯩꯍꯥꯛꯀꯤ ꯃꯊꯪꯒꯤ ꯊꯕꯛ ꯀꯔꯤꯅꯣ",
+        "ꯃꯊꯪꯒꯤ ꯔꯤꯃꯥꯏꯟꯗꯔ",
+        "ꯃꯊꯪꯒꯤ ꯊꯕꯛ",
+        "ꯃꯊꯪꯒꯤ ꯀꯔꯤꯅꯣ",
+        "ꯑꯩꯍꯥꯛꯅ ꯃꯊꯪꯒꯤ ꯀꯔꯤ ꯇꯧꯒꯗꯒꯦ",
+        "ꯂꯥꯛꯀꯗꯧꯔꯤꯕ ꯔꯤꯃꯥꯏꯟꯗꯔ",
+        "what is my next task",
+        "next reminder"
+      ],
+      "ADD_ROUTINE": [
+        "ꯊꯕꯛ ꯑꯃ ꯍꯥꯞꯆꯤꯟꯎ",
+        "add routine",
+        "create task",
+        "new routine",
+        "new task",
+        "schedule walk",
+        "schedule activity",
+        "add reminder",
+        "set reminder",
+        "add a task"
+      ],
+      "COMPLETE_ROUTINE": [
+        "mark task done",
+        "task completed",
+        "routine done",
+        "completed task",
+        "finished task",
+        "i finished my task",
+        "mark routine completed"
+      ],
+      "REMOVE_ROUTINE": [
+        "delete task",
+        "remove task",
+        "delete routine",
+        "remove routine",
+        "cancel task",
+        "ꯊꯕꯛ ꯑꯗꯨ ꯊꯤꯡꯖꯤꯟꯅꯕ"
+      ],
+      "UPDATE_ROUTINE": [
+        "ꯃꯇꯝ ꯑꯗꯨ ꯍꯣꯡꯗꯣꯛꯄ",
+        "ꯔꯨꯇꯤꯟ ꯑꯗꯨ ꯑꯞꯗꯦꯠ ꯇꯧꯕ",
+        "ꯔꯨꯇꯤꯟꯒꯤ ꯃꯇꯝ ꯑꯗꯨ ꯍꯣꯡꯗꯣꯛꯄ",
+        "ꯊꯕꯛ ꯑꯗꯨ ꯑꯃꯨꯛ ꯍꯟꯅ ꯁꯦꯃꯗꯣꯛꯄ",
+        "ꯔꯨꯇꯤꯟ ꯑꯗꯨ ꯑꯃꯨꯛ ꯍꯟꯅ ꯁꯦꯃꯗꯣꯛꯄ",
+        "ꯊꯕꯛꯀꯤ ꯃꯇꯝ ꯑꯗꯨ ꯁꯦꯃꯗꯣꯛꯄ",
+        "change the time",
+        "update routine"
+      ],
+      "OPEN_MEDICATIONS": [
+        "ꯑꯩꯍꯥꯛꯀꯤ ꯍꯤꯗꯥꯛꯁꯤꯡ ꯎꯠꯄ",
+        "ꯍꯤꯗꯥꯛꯁꯤꯡ ꯍꯥꯡꯗꯣꯛꯄ",
+        "ꯑꯩꯍꯥꯛꯀꯤ ꯍꯤꯗꯥꯛꯁꯤꯡ",
+        "ꯍꯤꯗꯥꯛꯁꯤꯡ ꯎꯠꯄ",
+        "ꯍꯤꯗꯥꯛꯀꯤ ꯂꯤꯁꯠ",
+        "ꯄ꯭ꯔꯦꯁꯀ꯭ꯔꯤꯞꯁꯟꯁꯤꯡ",
+        "ꯍꯤꯗꯥꯛꯀꯤ ꯁꯦꯃꯨꯜ ꯑꯗꯨ ꯍꯥꯡꯗꯣꯛꯄ",
+        "show my medicines",
+        "open medications"
+      ],
+      "TODAY_MEDICATIONS": [
+        "ꯑꯩꯍꯥꯛꯅ ꯉꯁꯤ ꯀꯔꯤ ꯍꯤꯗꯥꯛ ꯆꯥꯒꯅꯤ?",
+        "ꯉꯁꯤꯒꯤ ꯍꯤꯗꯥꯛꯁꯤꯡ",
+        "ꯉꯁꯤꯒꯤ ꯍꯤꯗꯥꯛꯁꯤꯡ",
+        "ꯉꯁꯤ ꯀꯔꯤ ꯄꯤꯜꯁꯤꯡ ꯆꯥꯒꯅꯤ?",
+        "ꯑꯩꯍꯥꯛꯅ ꯉꯁꯤ ꯀꯔꯤ ꯍꯤꯗꯥꯛꯁꯤꯡ ꯆꯥꯒꯗꯕꯅꯣ?",
+        "ꯅꯨꯃꯤꯠ ꯈꯨꯗꯤꯡꯒꯤ ꯍꯤꯗꯥꯛ ꯆꯥꯕ",
+        "what medicine do i take today",
+        "today's medicines"
+      ],
+      "NEXT_MEDICATION": [
+        "ꯑꯩꯒꯤ ꯃꯊꯪꯒꯤ ꯗꯣꯁ ꯑꯗꯨ ꯀꯔꯤꯅꯣ",
+        "ꯃꯊꯪꯒꯤ ꯍꯤꯗꯥꯛ",
+        "ꯃꯊꯪꯒꯤ ꯄꯤꯜ",
+        "ꯑꯩꯒꯤ ꯃꯊꯪꯒꯤ ꯗꯣꯁ ꯑꯗꯨ ꯀꯔꯤꯒꯤꯅꯣ",
+        "ꯃꯊꯪꯒꯤ ꯍꯤꯗꯥꯛ ꯀꯔꯤꯅꯣ",
+        "ꯂꯥꯛꯀꯗꯧꯔꯤꯕ ꯍꯤꯗꯥꯛ",
+        "what is my next dose",
+        "next medicine"
+      ],
+      "MEDICATION_TAKEN": [
+        "ꯑꯩꯅ ꯑꯩꯒꯤ ꯍꯤꯗꯥꯛ ꯑꯗꯨ ꯂꯧꯈꯤ",
+        "ꯍꯤꯗꯥꯛ ꯂꯧꯈꯤ",
+        "ꯄꯤꯜ ꯂꯧꯈꯤ",
+        "ꯇꯦꯕ꯭ꯂꯦꯠ ꯂꯧꯈꯤ",
+        "ꯍꯥꯟꯅꯗꯒꯤ ꯍꯤꯗꯥꯛ ꯂꯧꯈꯤ",
+        "ꯑꯩꯅ ꯑꯩꯒꯤ ꯍꯤꯗꯥꯛ ꯑꯗꯨ ꯂꯧꯈꯤ",
+        "ꯍꯤꯗꯥꯛ ꯂꯧꯈꯤꯕ ꯑꯗꯨ ꯃꯥꯔꯛ ꯇꯧ",
+        "i took my medicine",
+        "medicine taken"
+      ],
+      "MEDICATION_SKIPPED": [
+        "ꯍꯤꯗꯥꯛ ꯂꯧꯗꯕ",
+        "ꯗꯣꯁ ꯂꯧꯗꯕ",
+        "ꯍꯤꯗꯥꯛ ꯂꯧꯗꯕ",
+        "ꯍꯤꯗꯥꯛ ꯂꯧꯈꯤꯗꯦ",
+        "ꯍꯤꯗꯥꯛ ꯂꯧꯈꯤꯗꯦ",
+        "skip medicine",
+        "skip dose"
+      ],
+      "OPEN_ANALYTICS": [
+        "ꯑꯩꯒꯤ ꯄ꯭ꯔꯣꯒ꯭ꯔꯦꯁ ꯑꯗꯨ ꯎꯠꯂꯨ",
+        "ꯑꯦꯅꯥꯂꯥꯏꯇꯤꯛꯁ ꯍꯥꯡꯗꯣꯛꯎ",
+        "ꯑꯩꯒꯤ ꯆꯥꯎꯈꯠꯄ",
+        "ꯀꯣꯒꯅꯤꯇꯤꯕ ꯁ꯭ꯀꯣꯔ",
+        "ꯄꯔꯐꯣꯔꯃꯦꯟꯁ ꯔꯤꯄꯣꯔꯠ",
+        "ꯑꯩꯍꯥꯛ ꯀꯔꯝꯅ ꯇꯧꯔꯤꯕꯒꯦ",
+        "ꯔꯤꯄꯣꯔꯠ ꯎꯠꯂꯨ",
+        "show my progress",
+        "open analytics"
+      ],
+      "OPEN_MEMORIES": [
+        "ꯑꯩꯒꯤ ꯅꯤꯡꯁꯤꯡꯕꯁꯤꯡ ꯎꯠꯂꯨ",
+        "ꯅꯤꯡꯁꯤꯡꯕꯁꯤꯡ ꯍꯥꯡꯗꯣꯛꯎ",
+        "ꯑꯩꯒꯤ ꯐꯣꯇꯣꯁꯤꯡ",
+        "ꯏꯃꯨꯡ-ꯃꯅꯨꯡꯒꯤ ꯐꯣꯇꯣꯁꯤꯡ",
+        "ꯐꯣꯇꯣ ꯑꯦꯜꯕꯝ",
+        "ꯅꯤꯡꯁꯤꯡꯕꯁꯤꯡ ꯌꯦꯡꯎ",
+        "show my memories",
+        "open memories"
+      ],
+      "OPEN_CAREGIVER": [
+        "ꯀꯦꯌꯔꯒꯤꯚꯔ",
+        "ꯀꯦꯌꯔꯇꯦꯀꯔ",
+        "ꯀꯦꯌꯔꯒꯤꯚꯔ ꯗꯦꯁꯕꯣꯔꯗ",
+        "ꯀꯦꯌꯔꯇꯦꯀꯔ ꯄꯣꯔꯇꯦꯜ",
+        "ꯀꯦꯌꯔꯒꯤꯚꯔ ꯍꯥꯡꯗꯣꯛꯎ",
+        "caregiver",
+        "caretaker"
+      ],
+      "GO_HOME": [
+        "ꯌꯨꯝꯗ ꯆꯠꯎ",
+        "ꯍꯣꯝ ꯄꯦꯖ",
+        "ꯗꯦꯁꯕꯣꯔꯗꯇ ꯍꯟꯅ ꯆꯠꯎ",
+        "ꯃꯔꯨꯑꯣꯏꯕ ꯁ꯭ꯀ꯭ꯔꯤꯟ",
+        "return home",
+        "exit to home",
+        "go home",
+        "home page"
+      ],
+      "HELP": [
+        "help",
+        "what can i say",
+        "voice commands",
+        "how does this work",
+        "assistant guide"
+      ],
+      "CLOSE": [
+        "close",
+        "exit",
+        "quit",
+        "dismiss",
+        "stop",
+        "cancel"
+      ]
+    },
+    "games": {
+      "WATER_JUGS": [
+        "water jugs",
+        "water jug",
+        "jugs puzzle",
+        "measuring jugs"
+      ],
+      "TOWER_OF_HANOI": [
+        "tower of hanoi",
+        "ꯍꯥꯅꯣꯏ ꯇꯥꯋꯔꯁꯤꯡ",
+        "ꯍꯥꯅꯣꯏ ꯄꯖꯜ",
+        "ꯄꯦꯒ ꯗꯤꯁꯛꯁꯤꯡ"
+      ],
+      "BALL_SORT": [
+        "ꯕꯣꯜ ꯁꯣꯔꯠ",
+        "ꯕꯣꯜ ꯄꯖꯜ",
+        "ꯕꯣꯜꯁꯤꯡ ꯁꯣꯔꯠ",
+        "ꯀꯂꯔ ꯕꯣꯜꯁꯤꯡ"
+      ],
+      "N_BACK": [
+        "ꯑꯦꯟ ꯕꯦꯛ",
+        "ꯑꯦꯟ-ꯕꯦꯛ",
+        "ꯃꯦꯃꯣꯔꯤ ꯑꯦꯟ ꯕꯦꯛ",
+        "ꯗ꯭ꯌꯨꯑꯦꯜ ꯑꯦꯟ ꯕꯦꯛ"
+      ],
+      "LOGIC_PUZZLES": [
+        "ꯂꯣꯖꯤꯛ ꯄꯖꯜꯁꯤꯡ",
+        "ꯂꯣꯖꯤꯛ ꯄꯖꯜ",
+        "ꯃꯦꯊ ꯂꯣꯖꯤꯛ",
+        "ꯔꯤꯗꯜꯁꯤꯡ"
+      ],
+      "STROOP": [
+        "ꯁ꯭ꯠꯔꯨꯞ ꯇꯦꯁꯠ",
+        "stroop color",
+        "color test",
+        "stroop effect"
+      ],
+      "MENTAL_ROTATION": [
+        "mental rotation",
+        "rotate shape",
+        "3d rotation",
+        "shape matching"
+      ],
+      "SCHULTE_TABLE": [
+        "schulte table",
+        "number grid",
+        "schulte grid",
+        "find numbers"
+      ],
+      "MAZE": [
+        "pathway maze",
+        "maze",
+        "labyrinth",
+        "find path"
+      ],
+      "CARD_MATCHING": [
+        "card matching",
+        "memory match",
+        "flip cards",
+        "match pairs",
+        "memory cards"
+      ],
+      "NUMBER_SEQUENCE": [
+        "number sequence",
+        "number puzzle",
+        "missing number",
+        "number series"
+      ],
+      "WORD_SCRAMBLE": [
+        "word scramble",
+        "word puzzle",
+        "unscramble words",
+        "jumbled words"
+      ],
+      "QUICK_MATH": [
+        "quick math",
+        "speed math",
+        "mental math",
+        "arithmetic game"
+      ],
+      "VISUAL_SEARCH": [
+        "visual search",
+        "find object",
+        "hidden object",
+        "spot difference"
+      ],
+      "REACTION_TIME": [
+        "reaction time",
+        "speed test",
+        "reflex test",
+        "tap speed"
+      ],
+      "SIMON_SAYS": [
+        "simon says",
+        "follow pattern",
+        "light sequence",
+        "simon sequence"
+      ],
+      "TRAIL_MAKING": [
+        "trail making",
+        "connect dots",
+        "trail test",
+        "connect numbers"
+      ],
+      "ANAGRAM_SOLVER": [
+        "anagram solver",
+        "anagrams",
+        "word rearrangement",
+        "letter puzzle"
+      ],
+      "DELAYED_RECALL": [
+        "delayed recall",
+        "word memory",
+        "recall list",
+        "remember words"
+      ],
+      "PATTERN_MATRIX": [
+        "pattern matrix",
+        "matrix puzzle",
+        "shape pattern",
+        "raven matrix"
+      ],
+      "DUAL_TASK": [
+        "dual task",
+        "multitasking game",
+        "split attention",
+        "two tasks"
+      ],
+      "WORKING_MEMORY_GRID": [
+        "working memory grid",
+        "memory grid",
+        "spatial grid",
+        "grid recall"
+      ],
+      "CULTURAL_OBJECT_RECOGNITION": [
+        "cultural object recognition",
+        "object recognition",
+        "heritage items",
+        "vintage objects"
+      ],
+      "DAILY_ROUTINE_RECALL": [
+        "daily routine recall",
+        "routine memory",
+        "day recall",
+        "activity memory"
+      ]
+    },
+    "gameTitles": {
+      "WATER_JUGS": "Water Jugs",
+      "TOWER_OF_HANOI": "Tower of Hanoi",
+      "BALL_SORT": "ꯕꯣꯜ ꯁꯣꯔꯠ ꯄꯖꯜ",
+      "N_BACK": "ꯑꯦꯟ-ꯕꯦꯛ",
+      "LOGIC_PUZZLES": "ꯂꯣꯖꯤꯛ ꯄꯖꯜꯁꯤꯡ",
+      "STROOP": "ꯁ꯭ꯠꯔꯨꯞ ꯇꯦꯁꯠ",
+      "MENTAL_ROTATION": "Mental Rotation",
+      "SCHULTE_TABLE": "Schulte Table",
+      "MAZE": "Pathway Maze",
+      "CARD_MATCHING": "Card Matching Memory",
+      "NUMBER_SEQUENCE": "Number Sequence",
+      "WORD_SCRAMBLE": "Word Scramble",
+      "QUICK_MATH": "Quick Math",
+      "VISUAL_SEARCH": "Visual Search",
+      "REACTION_TIME": "Reaction Time",
+      "SIMON_SAYS": "Simon Says",
+      "TRAIL_MAKING": "Trail Making",
+      "ANAGRAM_SOLVER": "Anagram Solver",
+      "DELAYED_RECALL": "Delayed Recall",
+      "PATTERN_MATRIX": "Pattern Matrix",
+      "DUAL_TASK": "Dual Task",
+      "WORKING_MEMORY_GRID": "Working Memory Grid",
+      "CULTURAL_OBJECT_RECOGNITION": "Cultural Object Recognition",
+      "DAILY_ROUTINE_RECALL": "Daily Routine Recall"
+    },
+    "responses": {
+      "OPEN_GAMES": "Opening brain training games center.",
+      "NEXT_GAME": "Opening another brain training exercise.",
+      "OPEN_GAME": "Opening {{name}} game.",
+      "OPEN_REMINDERS": "Opening your daily routine and reminders.",
+      "TODAY_REMINDERS": "Here is your routine schedule for today.",
+      "NEXT_REMINDER": "Checking your next upcoming reminder.",
+      "ADD_ROUTINE": "Please enter or confirm the new routine details.",
+      "COMPLETE_ROUTINE": "Great job! Marking your task as completed.",
+      "REMOVE_ROUTINE": "Removing the specified routine item.",
+      "UPDATE_ROUTINE": "Opening routine editor to update your schedule.",
+      "OPEN_MEDICATIONS": "Opening your medication schedule.",
+      "TODAY_MEDICATIONS": "Here are your scheduled medications for today.",
+      "NEXT_MEDICATION": "Checking your next scheduled medication dose.",
+      "MEDICATION_TAKEN": "Would you like to confirm that you have taken your medicine?",
+      "MEDICATION_SKIPPED": "Marking medication dose as skipped.",
+      "OPEN_ANALYTICS": "Opening your cognitive performance analytics and report.",
+      "OPEN_MEMORIES": "Opening your cherished memories album.",
+      "OPEN_CAREGIVER": "Opening the caregiver monitoring portal.",
+      "GO_HOME": "Returning to the home dashboard.",
+      "HELP": "Here are the voice commands you can use.",
+      "CLOSE": "Closing voice assistant.",
+      "UNKNOWN": "I did not understand that. Please try again or tap a suggestion.",
+      "CARETAKER_ONLY": "The caregiver dashboard is accessible to authorized caretakers only."
+    },
+    "shortPhrases": {
+      "OPEN_GAMES": "Opening games",
+      "NEXT_GAME": "Next game",
+      "OPEN_GAME": "Opening game",
+      "OPEN_REMINDERS": "Opening reminders",
+      "TODAY_REMINDERS": "Showing today's reminders",
+      "NEXT_REMINDER": "Showing next reminder",
+      "ADD_ROUTINE": "Add routine",
+      "COMPLETE_ROUTINE": "Task marked done",
+      "REMOVE_ROUTINE": "Task removed",
+      "UPDATE_ROUTINE": "Update routine",
+      "OPEN_MEDICATIONS": "Opening medicines",
+      "TODAY_MEDICATIONS": "Showing today's medicines",
+      "NEXT_MEDICATION": "Showing next medicine",
+      "MEDICATION_TAKEN": "Medicine recorded",
+      "MEDICATION_SKIPPED": "Medicine skipped",
+      "OPEN_ANALYTICS": "Opening progress report",
+      "OPEN_MEMORIES": "Opening memories",
+      "OPEN_CAREGIVER": "Opening caregiver view",
+      "GO_HOME": "Going home",
+      "HELP": "Opening help",
+      "CLOSE": "Closing assistant",
+      "UNKNOWN": "Please repeat",
+      "CONFIRM_DOSE": "Confirm dose taken?",
+      "VOICE_NOT_AVAILABLE": "Voice reading unavailable"
+    },
+    "status": {
+      "listening": "Listening… Speak clearly into microphone",
+      "processing": "Processing your voice command…",
+      "speaking": "Speaking response…",
+      "ready": "Ready. Tap microphone to speak.",
+      "micDenied": "Microphone access denied. Please check permissions.",
+      "error": "Voice assistant encountered an error.",
+      "notUnderstood": "Could not understand. Please try again.",
+      "wakeWordActive": "Hey Setu wake-word listener active"
+    },
+    "ui": {
+      "youSaid": "You said:",
+      "action": "Action:",
+      "intent": "Intent:",
+      "match": "Match:",
+      "listeningPrompt": "Listening… Tap mic when done",
+      "tapToSpeak": "Tap to speak",
+      "tapToStop": "Tap to stop",
+      "spokenSummary": "Voice Summary",
+      "voiceReadingUnavailable": "Voice reading is not yet available in {{language}}",
+      "confirmMarkTaken": "Confirm marked as taken?",
+      "confirmYes": "Yes, Taken",
+      "confirmNo": "No, Cancel",
+      "undo": "Undo",
+      "markedAsTaken": "Dose marked as taken"
+    }
+  },
+  "brx-IN": {
+    "phrases": {
+      "OPEN_GAMES": [
+        "open games",
+        "play games",
+        "show games",
+        "brain games",
+        "cognitive exercises",
+        "i want to play games",
+        "start games",
+        "take me to games"
+      ],
+      "NEXT_GAME": [
+        "next game",
+        "another game",
+        "new game",
+        "show next game",
+        "give me another game",
+        "switch game"
+      ],
+      "OPEN_GAME": [
+        "play",
+        "open",
+        "start",
+        "launch"
+      ],
+      "OPEN_REMINDERS": [
+        "open reminders",
+        "show reminders",
+        "my reminders",
+        "routine",
+        "daily routine",
+        "open routine",
+        "show schedule",
+        "view schedule"
+      ],
+      "TODAY_REMINDERS": [
+        "what do i have today",
+        "today reminders",
+        "what tasks today",
+        "what is on today",
+        "today's schedule",
+        "what should i do today",
+        "schedule for today"
+      ],
+      "NEXT_REMINDER": [
+        "what is my next task",
+        "next reminder",
+        "next task",
+        "what is next",
+        "what should i do next",
+        "upcoming reminder"
+      ],
+      "ADD_ROUTINE": [
+        "add a task",
+        "add routine",
+        "create task",
+        "new routine",
+        "new task",
+        "schedule walk",
+        "schedule activity",
+        "add reminder",
+        "set reminder"
+      ],
+      "COMPLETE_ROUTINE": [
+        "mark task done",
+        "task completed",
+        "routine done",
+        "completed task",
+        "finished task",
+        "i finished my task",
+        "mark routine completed"
+      ],
+      "REMOVE_ROUTINE": [
+        "delete task",
+        "remove task",
+        "delete routine",
+        "remove routine",
+        "cancel task",
+        "clear task"
+      ],
+      "UPDATE_ROUTINE": [
+        "change the time",
+        "update routine",
+        "change routine time",
+        "reschedule task",
+        "reschedule routine",
+        "modify task time"
+      ],
+      "OPEN_MEDICATIONS": [
+        "show my medicines",
+        "open medications",
+        "my medicines",
+        "show medicines",
+        "medicine list",
+        "prescriptions",
+        "open medicine schedule"
+      ],
+      "TODAY_MEDICATIONS": [
+        "what medicine do i take today",
+        "today's medicines",
+        "medicines for today",
+        "what pills today",
+        "what medicines should i take today",
+        "daily medication"
+      ],
+      "NEXT_MEDICATION": [
+        "what is my next dose",
+        "next medicine",
+        "next pill",
+        "when is my next dose",
+        "what medicine next",
+        "upcoming medicine"
+      ],
+      "MEDICATION_TAKEN": [
+        "i took my medicine",
+        "medicine taken",
+        "took pill",
+        "took tablet",
+        "already took medicine",
+        "i have taken my medicine",
+        "mark medicine taken"
+      ],
+      "MEDICATION_SKIPPED": [
+        "skip medicine",
+        "skip dose",
+        "skipped medicine",
+        "did not take medicine",
+        "missed medicine"
+      ],
+      "OPEN_ANALYTICS": [
+        "show my progress",
+        "open analytics",
+        "my progress",
+        "cognitive score",
+        "performance report",
+        "how am i doing",
+        "show report"
+      ],
+      "OPEN_MEMORIES": [
+        "show my memories",
+        "open memories",
+        "my photos",
+        "family photos",
+        "photo album",
+        "view memories"
+      ],
+      "OPEN_CAREGIVER": [
+        "caregiver",
+        "caretaker",
+        "caregiver dashboard",
+        "caretaker portal",
+        "open caregiver"
+      ],
+      "GO_HOME": [
+        "go home",
+        "home page",
+        "back to dashboard",
+        "main screen",
+        "return home",
+        "exit to home"
+      ],
+      "HELP": [
+        "help",
+        "what can i say",
+        "voice commands",
+        "how does this work",
+        "assistant guide"
+      ],
+      "CLOSE": [
+        "close",
+        "exit",
+        "quit",
+        "dismiss",
+        "stop",
+        "cancel"
+      ]
+    },
+    "games": {
+      "WATER_JUGS": [
+        "water jugs",
+        "water jug",
+        "jugs puzzle",
+        "measuring jugs"
+      ],
+      "TOWER_OF_HANOI": [
+        "tower of hanoi",
+        "hanoi towers",
+        "hanoi puzzle",
+        "peg disks"
+      ],
+      "BALL_SORT": [
+        "ball sort",
+        "ball puzzle",
+        "sort balls",
+        "color balls"
+      ],
+      "N_BACK": [
+        "n back",
+        "n-back",
+        "memory n back",
+        "dual n back"
+      ],
+      "LOGIC_PUZZLES": [
+        "logic puzzles",
+        "logic puzzle",
+        "math logic",
+        "riddles"
+      ],
+      "STROOP": [
+        "stroop test",
+        "stroop color",
+        "color test",
+        "stroop effect"
+      ],
+      "MENTAL_ROTATION": [
+        "mental rotation",
+        "rotate shape",
+        "3d rotation",
+        "shape matching"
+      ],
+      "SCHULTE_TABLE": [
+        "schulte table",
+        "number grid",
+        "schulte grid",
+        "find numbers"
+      ],
+      "MAZE": [
+        "pathway maze",
+        "maze",
+        "labyrinth",
+        "find path"
+      ],
+      "CARD_MATCHING": [
+        "card matching",
+        "memory match",
+        "flip cards",
+        "match pairs",
+        "memory cards"
+      ],
+      "NUMBER_SEQUENCE": [
+        "number sequence",
+        "number puzzle",
+        "missing number",
+        "number series"
+      ],
+      "WORD_SCRAMBLE": [
+        "word scramble",
+        "word puzzle",
+        "unscramble words",
+        "jumbled words"
+      ],
+      "QUICK_MATH": [
+        "quick math",
+        "speed math",
+        "mental math",
+        "arithmetic game"
+      ],
+      "VISUAL_SEARCH": [
+        "visual search",
+        "find object",
+        "hidden object",
+        "spot difference"
+      ],
+      "REACTION_TIME": [
+        "reaction time",
+        "speed test",
+        "reflex test",
+        "tap speed"
+      ],
+      "SIMON_SAYS": [
+        "simon says",
+        "follow pattern",
+        "light sequence",
+        "simon sequence"
+      ],
+      "TRAIL_MAKING": [
+        "trail making",
+        "connect dots",
+        "trail test",
+        "connect numbers"
+      ],
+      "ANAGRAM_SOLVER": [
+        "anagram solver",
+        "anagrams",
+        "word rearrangement",
+        "letter puzzle"
+      ],
+      "DELAYED_RECALL": [
+        "delayed recall",
+        "word memory",
+        "recall list",
+        "remember words"
+      ],
+      "PATTERN_MATRIX": [
+        "pattern matrix",
+        "matrix puzzle",
+        "shape pattern",
+        "raven matrix"
+      ],
+      "DUAL_TASK": [
+        "dual task",
+        "multitasking game",
+        "split attention",
+        "two tasks"
+      ],
+      "WORKING_MEMORY_GRID": [
+        "working memory grid",
+        "memory grid",
+        "spatial grid",
+        "grid recall"
+      ],
+      "CULTURAL_OBJECT_RECOGNITION": [
+        "cultural object recognition",
+        "object recognition",
+        "heritage items",
+        "vintage objects"
+      ],
+      "DAILY_ROUTINE_RECALL": [
+        "daily routine recall",
+        "routine memory",
+        "day recall",
+        "activity memory"
+      ]
+    },
+    "gameTitles": {
+      "WATER_JUGS": "Water Jugs",
+      "TOWER_OF_HANOI": "Tower of Hanoi",
+      "BALL_SORT": "Ball Sort Puzzle",
+      "N_BACK": "N-Back",
+      "LOGIC_PUZZLES": "Logic Puzzles",
+      "STROOP": "Stroop Test",
+      "MENTAL_ROTATION": "Mental Rotation",
+      "SCHULTE_TABLE": "Schulte Table",
+      "MAZE": "Pathway Maze",
+      "CARD_MATCHING": "Card Matching Memory",
+      "NUMBER_SEQUENCE": "Number Sequence",
+      "WORD_SCRAMBLE": "Word Scramble",
+      "QUICK_MATH": "Quick Math",
+      "VISUAL_SEARCH": "Visual Search",
+      "REACTION_TIME": "Reaction Time",
+      "SIMON_SAYS": "Simon Says",
+      "TRAIL_MAKING": "Trail Making",
+      "ANAGRAM_SOLVER": "Anagram Solver",
+      "DELAYED_RECALL": "Delayed Recall",
+      "PATTERN_MATRIX": "Pattern Matrix",
+      "DUAL_TASK": "Dual Task",
+      "WORKING_MEMORY_GRID": "Working Memory Grid",
+      "CULTURAL_OBJECT_RECOGNITION": "Cultural Object Recognition",
+      "DAILY_ROUTINE_RECALL": "Daily Routine Recall"
+    },
+    "responses": {
+      "OPEN_GAMES": "Opening brain training games center.",
+      "NEXT_GAME": "Opening another brain training exercise.",
+      "OPEN_GAME": "Opening {{name}} game.",
+      "OPEN_REMINDERS": "Opening your daily routine and reminders.",
+      "TODAY_REMINDERS": "Here is your routine schedule for today.",
+      "NEXT_REMINDER": "Checking your next upcoming reminder.",
+      "ADD_ROUTINE": "Please enter or confirm the new routine details.",
+      "COMPLETE_ROUTINE": "Great job! Marking your task as completed.",
+      "REMOVE_ROUTINE": "Removing the specified routine item.",
+      "UPDATE_ROUTINE": "Opening routine editor to update your schedule.",
+      "OPEN_MEDICATIONS": "Opening your medication schedule.",
+      "TODAY_MEDICATIONS": "Here are your scheduled medications for today.",
+      "NEXT_MEDICATION": "Checking your next scheduled medication dose.",
+      "MEDICATION_TAKEN": "Would you like to confirm that you have taken your medicine?",
+      "MEDICATION_SKIPPED": "Marking medication dose as skipped.",
+      "OPEN_ANALYTICS": "Opening your cognitive performance analytics and report.",
+      "OPEN_MEMORIES": "Opening your cherished memories album.",
+      "OPEN_CAREGIVER": "Opening the caregiver monitoring portal.",
+      "GO_HOME": "Returning to the home dashboard.",
+      "HELP": "Here are the voice commands you can use.",
+      "CLOSE": "Closing voice assistant.",
+      "UNKNOWN": "I did not understand that. Please try again or tap a suggestion.",
+      "CARETAKER_ONLY": "The caregiver dashboard is accessible to authorized caretakers only."
+    },
+    "shortPhrases": {
+      "OPEN_GAMES": "Opening games",
+      "NEXT_GAME": "Next game",
+      "OPEN_GAME": "Opening game",
+      "OPEN_REMINDERS": "Opening reminders",
+      "TODAY_REMINDERS": "Showing today's reminders",
+      "NEXT_REMINDER": "Showing next reminder",
+      "ADD_ROUTINE": "Add routine",
+      "COMPLETE_ROUTINE": "Task marked done",
+      "REMOVE_ROUTINE": "Task removed",
+      "UPDATE_ROUTINE": "Update routine",
+      "OPEN_MEDICATIONS": "Opening medicines",
+      "TODAY_MEDICATIONS": "Showing today's medicines",
+      "NEXT_MEDICATION": "Showing next medicine",
+      "MEDICATION_TAKEN": "Medicine recorded",
+      "MEDICATION_SKIPPED": "Medicine skipped",
+      "OPEN_ANALYTICS": "Opening progress report",
+      "OPEN_MEMORIES": "Opening memories",
+      "OPEN_CAREGIVER": "Opening caregiver view",
+      "GO_HOME": "Going home",
+      "HELP": "Opening help",
+      "CLOSE": "Closing assistant",
+      "UNKNOWN": "Please repeat",
+      "CONFIRM_DOSE": "Confirm dose taken?",
+      "VOICE_NOT_AVAILABLE": "Voice reading unavailable"
+    },
+    "status": {
+      "listening": "Listening… Speak clearly into microphone",
+      "processing": "Processing your voice command…",
+      "speaking": "Speaking response…",
+      "ready": "Ready. Tap microphone to speak.",
+      "micDenied": "Microphone access denied. Please check permissions.",
+      "error": "Voice assistant encountered an error.",
+      "notUnderstood": "Could not understand. Please try again.",
+      "wakeWordActive": "Hey Setu wake-word listener active"
+    },
+    "ui": {
+      "youSaid": "You said:",
+      "action": "Action:",
+      "intent": "Intent:",
+      "match": "Match:",
+      "listeningPrompt": "Listening… Tap mic when done",
+      "tapToSpeak": "Tap to speak",
+      "tapToStop": "Tap to stop",
+      "spokenSummary": "Voice Summary",
+      "voiceReadingUnavailable": "Voice reading is not yet available in {{language}}",
+      "confirmMarkTaken": "Confirm marked as taken?",
+      "confirmYes": "Yes, Taken",
+      "confirmNo": "No, Cancel",
+      "undo": "Undo",
+      "markedAsTaken": "Dose marked as taken"
+    }
+  }
+}

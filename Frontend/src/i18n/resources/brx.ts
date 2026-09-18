@@ -1,3 +1,4 @@
+import type { VoiceResource } from "@/features/voice/types/voicePhrases.types";
 export const brx = {
   common: {
     home: "नखर",
@@ -413,4 +414,433 @@ export const brx = {
     alreadyHaveAccount: "एकाउन्ट दंखायो? हाब",
     dontHaveAccount: "गोदान? एकाउन्ट बानाय",
   },
+  voice: {
+  "phrases": {
+    "OPEN_GAMES": [
+      "open games",
+      "play games",
+      "show games",
+      "brain games",
+      "cognitive exercises",
+      "i want to play games",
+      "start games",
+      "take me to games"
+    ],
+    "NEXT_GAME": [
+      "next game",
+      "another game",
+      "new game",
+      "show next game",
+      "give me another game",
+      "switch game"
+    ],
+    "OPEN_GAME": [
+      "play",
+      "open",
+      "start",
+      "launch"
+    ],
+    "OPEN_REMINDERS": [
+      "open reminders",
+      "show reminders",
+      "my reminders",
+      "routine",
+      "daily routine",
+      "open routine",
+      "show schedule",
+      "view schedule"
+    ],
+    "TODAY_REMINDERS": [
+      "what do i have today",
+      "today reminders",
+      "what tasks today",
+      "what is on today",
+      "today's schedule",
+      "what should i do today",
+      "schedule for today"
+    ],
+    "NEXT_REMINDER": [
+      "what is my next task",
+      "next reminder",
+      "next task",
+      "what is next",
+      "what should i do next",
+      "upcoming reminder"
+    ],
+    "ADD_ROUTINE": [
+      "add a task",
+      "add routine",
+      "create task",
+      "new routine",
+      "new task",
+      "schedule walk",
+      "schedule activity",
+      "add reminder",
+      "set reminder"
+    ],
+    "COMPLETE_ROUTINE": [
+      "mark task done",
+      "task completed",
+      "routine done",
+      "completed task",
+      "finished task",
+      "i finished my task",
+      "mark routine completed"
+    ],
+    "REMOVE_ROUTINE": [
+      "delete task",
+      "remove task",
+      "delete routine",
+      "remove routine",
+      "cancel task",
+      "clear task"
+    ],
+    "UPDATE_ROUTINE": [
+      "change the time",
+      "update routine",
+      "change routine time",
+      "reschedule task",
+      "reschedule routine",
+      "modify task time"
+    ],
+    "OPEN_MEDICATIONS": [
+      "show my medicines",
+      "open medications",
+      "my medicines",
+      "show medicines",
+      "medicine list",
+      "prescriptions",
+      "open medicine schedule"
+    ],
+    "TODAY_MEDICATIONS": [
+      "what medicine do i take today",
+      "today's medicines",
+      "medicines for today",
+      "what pills today",
+      "what medicines should i take today",
+      "daily medication"
+    ],
+    "NEXT_MEDICATION": [
+      "what is my next dose",
+      "next medicine",
+      "next pill",
+      "when is my next dose",
+      "what medicine next",
+      "upcoming medicine"
+    ],
+    "MEDICATION_TAKEN": [
+      "i took my medicine",
+      "medicine taken",
+      "took pill",
+      "took tablet",
+      "already took medicine",
+      "i have taken my medicine",
+      "mark medicine taken"
+    ],
+    "MEDICATION_SKIPPED": [
+      "skip medicine",
+      "skip dose",
+      "skipped medicine",
+      "did not take medicine",
+      "missed medicine"
+    ],
+    "OPEN_ANALYTICS": [
+      "show my progress",
+      "open analytics",
+      "my progress",
+      "cognitive score",
+      "performance report",
+      "how am i doing",
+      "show report"
+    ],
+    "OPEN_MEMORIES": [
+      "show my memories",
+      "open memories",
+      "my photos",
+      "family photos",
+      "photo album",
+      "view memories"
+    ],
+    "OPEN_CAREGIVER": [
+      "caregiver",
+      "caretaker",
+      "caregiver dashboard",
+      "caretaker portal",
+      "open caregiver"
+    ],
+    "GO_HOME": [
+      "go home",
+      "home page",
+      "back to dashboard",
+      "main screen",
+      "return home",
+      "exit to home"
+    ],
+    "HELP": [
+      "help",
+      "what can i say",
+      "voice commands",
+      "how does this work",
+      "assistant guide"
+    ],
+    "CLOSE": [
+      "close",
+      "exit",
+      "quit",
+      "dismiss",
+      "stop",
+      "cancel"
+    ]
+  },
+  "games": {
+    "WATER_JUGS": [
+      "water jugs",
+      "water jug",
+      "jugs puzzle",
+      "measuring jugs"
+    ],
+    "TOWER_OF_HANOI": [
+      "tower of hanoi",
+      "hanoi towers",
+      "hanoi puzzle",
+      "peg disks"
+    ],
+    "BALL_SORT": [
+      "ball sort",
+      "ball puzzle",
+      "sort balls",
+      "color balls"
+    ],
+    "N_BACK": [
+      "n back",
+      "n-back",
+      "memory n back",
+      "dual n back"
+    ],
+    "LOGIC_PUZZLES": [
+      "logic puzzles",
+      "logic puzzle",
+      "math logic",
+      "riddles"
+    ],
+    "STROOP": [
+      "stroop test",
+      "stroop color",
+      "color test",
+      "stroop effect"
+    ],
+    "MENTAL_ROTATION": [
+      "mental rotation",
+      "rotate shape",
+      "3d rotation",
+      "shape matching"
+    ],
+    "SCHULTE_TABLE": [
+      "schulte table",
+      "number grid",
+      "schulte grid",
+      "find numbers"
+    ],
+    "MAZE": [
+      "pathway maze",
+      "maze",
+      "labyrinth",
+      "find path"
+    ],
+    "CARD_MATCHING": [
+      "card matching",
+      "memory match",
+      "flip cards",
+      "match pairs",
+      "memory cards"
+    ],
+    "NUMBER_SEQUENCE": [
+      "number sequence",
+      "number puzzle",
+      "missing number",
+      "number series"
+    ],
+    "WORD_SCRAMBLE": [
+      "word scramble",
+      "word puzzle",
+      "unscramble words",
+      "jumbled words"
+    ],
+    "QUICK_MATH": [
+      "quick math",
+      "speed math",
+      "mental math",
+      "arithmetic game"
+    ],
+    "VISUAL_SEARCH": [
+      "visual search",
+      "find object",
+      "hidden object",
+      "spot difference"
+    ],
+    "REACTION_TIME": [
+      "reaction time",
+      "speed test",
+      "reflex test",
+      "tap speed"
+    ],
+    "SIMON_SAYS": [
+      "simon says",
+      "follow pattern",
+      "light sequence",
+      "simon sequence"
+    ],
+    "TRAIL_MAKING": [
+      "trail making",
+      "connect dots",
+      "trail test",
+      "connect numbers"
+    ],
+    "ANAGRAM_SOLVER": [
+      "anagram solver",
+      "anagrams",
+      "word rearrangement",
+      "letter puzzle"
+    ],
+    "DELAYED_RECALL": [
+      "delayed recall",
+      "word memory",
+      "recall list",
+      "remember words"
+    ],
+    "PATTERN_MATRIX": [
+      "pattern matrix",
+      "matrix puzzle",
+      "shape pattern",
+      "raven matrix"
+    ],
+    "DUAL_TASK": [
+      "dual task",
+      "multitasking game",
+      "split attention",
+      "two tasks"
+    ],
+    "WORKING_MEMORY_GRID": [
+      "working memory grid",
+      "memory grid",
+      "spatial grid",
+      "grid recall"
+    ],
+    "CULTURAL_OBJECT_RECOGNITION": [
+      "cultural object recognition",
+      "object recognition",
+      "heritage items",
+      "vintage objects"
+    ],
+    "DAILY_ROUTINE_RECALL": [
+      "daily routine recall",
+      "routine memory",
+      "day recall",
+      "activity memory"
+    ]
+  },
+  "gameTitles": {
+    "WATER_JUGS": "Water Jugs",
+    "TOWER_OF_HANOI": "Tower of Hanoi",
+    "BALL_SORT": "Ball Sort Puzzle",
+    "N_BACK": "N-Back",
+    "LOGIC_PUZZLES": "Logic Puzzles",
+    "STROOP": "Stroop Test",
+    "MENTAL_ROTATION": "Mental Rotation",
+    "SCHULTE_TABLE": "Schulte Table",
+    "MAZE": "Pathway Maze",
+    "CARD_MATCHING": "Card Matching Memory",
+    "NUMBER_SEQUENCE": "Number Sequence",
+    "WORD_SCRAMBLE": "Word Scramble",
+    "QUICK_MATH": "Quick Math",
+    "VISUAL_SEARCH": "Visual Search",
+    "REACTION_TIME": "Reaction Time",
+    "SIMON_SAYS": "Simon Says",
+    "TRAIL_MAKING": "Trail Making",
+    "ANAGRAM_SOLVER": "Anagram Solver",
+    "DELAYED_RECALL": "Delayed Recall",
+    "PATTERN_MATRIX": "Pattern Matrix",
+    "DUAL_TASK": "Dual Task",
+    "WORKING_MEMORY_GRID": "Working Memory Grid",
+    "CULTURAL_OBJECT_RECOGNITION": "Cultural Object Recognition",
+    "DAILY_ROUTINE_RECALL": "Daily Routine Recall"
+  },
+  "responses": {
+    "OPEN_GAMES": "Opening brain training games center.",
+    "NEXT_GAME": "Opening another brain training exercise.",
+    "OPEN_GAME": "Opening {{name}} game.",
+    "OPEN_REMINDERS": "Opening your daily routine and reminders.",
+    "TODAY_REMINDERS": "Here is your routine schedule for today.",
+    "NEXT_REMINDER": "Checking your next upcoming reminder.",
+    "ADD_ROUTINE": "Please enter or confirm the new routine details.",
+    "COMPLETE_ROUTINE": "Great job! Marking your task as completed.",
+    "REMOVE_ROUTINE": "Removing the specified routine item.",
+    "UPDATE_ROUTINE": "Opening routine editor to update your schedule.",
+    "OPEN_MEDICATIONS": "Opening your medication schedule.",
+    "TODAY_MEDICATIONS": "Here are your scheduled medications for today.",
+    "NEXT_MEDICATION": "Checking your next scheduled medication dose.",
+    "MEDICATION_TAKEN": "Would you like to confirm that you have taken your medicine?",
+    "MEDICATION_SKIPPED": "Marking medication dose as skipped.",
+    "OPEN_ANALYTICS": "Opening your cognitive performance analytics and report.",
+    "OPEN_MEMORIES": "Opening your cherished memories album.",
+    "OPEN_CAREGIVER": "Opening the caregiver monitoring portal.",
+    "GO_HOME": "Returning to the home dashboard.",
+    "HELP": "Here are the voice commands you can use.",
+    "CLOSE": "Closing voice assistant.",
+    "UNKNOWN": "I did not understand that. Please try again or tap a suggestion.",
+    "CARETAKER_ONLY": "The caregiver dashboard is accessible to authorized caretakers only."
+  },
+  "shortPhrases": {
+    "OPEN_GAMES": "Opening games",
+    "NEXT_GAME": "Next game",
+    "OPEN_GAME": "Opening game",
+    "OPEN_REMINDERS": "Opening reminders",
+    "TODAY_REMINDERS": "Showing today's reminders",
+    "NEXT_REMINDER": "Showing next reminder",
+    "ADD_ROUTINE": "Add routine",
+    "COMPLETE_ROUTINE": "Task marked done",
+    "REMOVE_ROUTINE": "Task removed",
+    "UPDATE_ROUTINE": "Update routine",
+    "OPEN_MEDICATIONS": "Opening medicines",
+    "TODAY_MEDICATIONS": "Showing today's medicines",
+    "NEXT_MEDICATION": "Showing next medicine",
+    "MEDICATION_TAKEN": "Medicine recorded",
+    "MEDICATION_SKIPPED": "Medicine skipped",
+    "OPEN_ANALYTICS": "Opening progress report",
+    "OPEN_MEMORIES": "Opening memories",
+    "OPEN_CAREGIVER": "Opening caregiver view",
+    "GO_HOME": "Going home",
+    "HELP": "Opening help",
+    "CLOSE": "Closing assistant",
+    "UNKNOWN": "Please repeat",
+    "CONFIRM_DOSE": "Confirm dose taken?",
+    "VOICE_NOT_AVAILABLE": "Voice reading unavailable"
+  },
+  "status": {
+    "listening": "Listening… Speak clearly into microphone",
+    "processing": "Processing your voice command…",
+    "speaking": "Speaking response…",
+    "ready": "Ready. Tap microphone to speak.",
+    "micDenied": "Microphone access denied. Please check permissions.",
+    "error": "Voice assistant encountered an error.",
+    "notUnderstood": "Could not understand. Please try again.",
+    "wakeWordActive": "Hey Setu wake-word listener active"
+  },
+  "ui": {
+    "youSaid": "You said:",
+    "action": "Action:",
+    "intent": "Intent:",
+    "match": "Match:",
+    "listeningPrompt": "Listening… Tap mic when done",
+    "tapToSpeak": "Tap to speak",
+    "tapToStop": "Tap to stop",
+    "spokenSummary": "Voice Summary",
+    "voiceReadingUnavailable": "Voice reading is not yet available in {{language}}",
+    "confirmMarkTaken": "Confirm marked as taken?",
+    "confirmYes": "Yes, Taken",
+    "confirmNo": "No, Cancel",
+    "undo": "Undo",
+    "markedAsTaken": "Dose marked as taken"
+  }
+} satisfies VoiceResource,
 };

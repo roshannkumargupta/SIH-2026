@@ -49,6 +49,7 @@ export const namespaces = [
   "routine",
   "analytics",
   "auth",
+  "voice",
 ] as const;
 
 void i18n

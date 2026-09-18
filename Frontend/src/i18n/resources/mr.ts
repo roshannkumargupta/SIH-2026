@@ -1,3 +1,4 @@
+import type { VoiceResource } from "@/features/voice/types/voicePhrases.types";
 export const mr = {
   common: {
     home: "मुख्यपृष्ठ",
@@ -404,4 +405,469 @@ export const mr = {
     alreadyHaveAccount: "आधीच खाते आहे? साइन इन करा",
     dontHaveAccount: "नवीन आहात? खाते तयार करा",
   },
+  voice: {
+  "phrases": {
+    "OPEN_GAMES": [
+      "ओपन गेम्स",
+      "प्ले गेम्स",
+      "शो गेम्स",
+      "ब्रेन गेम्स",
+      "कॉग्निटिव्ह एक्सरसाइज",
+      "मला गेम्स खेळायचे आहेत.",
+      "स्टार्ट गेम्स",
+      "मला गेम्सवर घेऊन चला.",
+      "open games",
+      "play games"
+    ],
+    "NEXT_GAME": [
+      "नेक्स्ट गेम",
+      "आणखी एक गेम",
+      "नवीन गेम",
+      "शो नेक्स्ट गेम",
+      "मला आणखी एक गेम द्या.",
+      "स्विच गेम",
+      "next game",
+      "another game"
+    ],
+    "OPEN_GAME": [
+      "प्ले",
+      "ओपन",
+      "स्टार्ट",
+      "लाँच",
+      "play",
+      "open"
+    ],
+    "OPEN_REMINDERS": [
+      "ओपन रिमाइंडर्स",
+      "शो रिमाइंडर्स",
+      "माझ्या आठवणी",
+      "नित्यक्रम",
+      "दैनंदिन नित्यक्रम",
+      "नित्यक्रम उघडा",
+      "वेळापत्रक दाखवा",
+      "वेळापत्रक पहा",
+      "open reminders",
+      "show reminders"
+    ],
+    "TODAY_REMINDERS": [
+      "आज माझ्याकडे काय आहे?",
+      "आजच्या आठवणी",
+      "आज कोणती कामे आहेत?",
+      "आज काय आहे?",
+      "आजचे वेळापत्रक",
+      "आज मी काय करावे?",
+      "आजचे वेळापत्रक",
+      "what do i have today",
+      "today reminders"
+    ],
+    "NEXT_REMINDER": [
+      "माझे पुढील काम काय आहे?",
+      "पुढील आठवण",
+      "पुढील काम",
+      "पुढे काय आहे?",
+      "मी पुढे काय करावे?",
+      "आगामी आठवण",
+      "what is my next task",
+      "next reminder"
+    ],
+    "ADD_ROUTINE": [
+      "एक काम जोडा",
+      "नियमितता जोडा",
+      "कार्य तयार करा",
+      "नवीन नियमितता",
+      "नवीन कार्य",
+      "चालण्याची वेळ निश्चित करा",
+      "कृती निश्चित करा",
+      "आठवण जोडा",
+      "आठवण सेट करा",
+      "add a task",
+      "add routine"
+    ],
+    "COMPLETE_ROUTINE": [
+      "कार्य पूर्ण झाले असे चिन्हांकित करा",
+      "कार्य पूर्ण झाले",
+      "नियमितता पूर्ण झाली",
+      "पूर्ण झालेले कार्य",
+      "संपूर्ण झालेले कार्य",
+      "मी माझे कार्य पूर्ण केले",
+      "नियमितता पूर्ण झाले असे चिन्हांकित करा",
+      "mark task done",
+      "task completed"
+    ],
+    "REMOVE_ROUTINE": [
+      "कार्य हटवा",
+      "कार्य काढा",
+      "नियमितता हटवा",
+      "नियमितता काढा",
+      "कार्य रद्द करा",
+      "clear task",
+      "delete task",
+      "remove task"
+    ],
+    "UPDATE_ROUTINE": [
+      "change the time",
+      "update routine",
+      "change routine time",
+      "reschedule task",
+      "reschedule routine",
+      "modify task time"
+    ],
+    "OPEN_MEDICATIONS": [
+      "show my medicines",
+      "open medications",
+      "my medicines",
+      "show medicines",
+      "medicine list",
+      "prescriptions",
+      "open medicine schedule"
+    ],
+    "TODAY_MEDICATIONS": [
+      "what medicine do i take today",
+      "today's medicines",
+      "medicines for today",
+      "what pills today",
+      "what medicines should i take today",
+      "daily medication"
+    ],
+    "NEXT_MEDICATION": [
+      "माझा पुढचा डोस कधी आहे?",
+      "पुढील औषध",
+      "पुढील गोळी",
+      "माझा पुढचा डोस कधी आहे?",
+      "पुढील औषध काय आहे?",
+      "येणारे औषध",
+      "what is my next dose",
+      "next medicine"
+    ],
+    "MEDICATION_TAKEN": [
+      "मी माझे औषध घेतले.",
+      "औषध घेतले.",
+      "गोळी घेतली.",
+      "टॅबलेट घेतली.",
+      "मी आधीच औषध घेतले आहे.",
+      "मी माझे औषध घेतले आहे.",
+      "औषध घेतले, नोंद करा.",
+      "i took my medicine",
+      "medicine taken"
+    ],
+    "MEDICATION_SKIPPED": [
+      "औषध वगळा.",
+      "डोस वगळा.",
+      "औषध वगळले.",
+      "मी औषध घेतले नाही.",
+      "औषध चुकले.",
+      "skip medicine",
+      "skip dose"
+    ],
+    "OPEN_ANALYTICS": [
+      "माझी प्रगती दाखवा.",
+      "ॲनालिटिक्स उघडा.",
+      "माझी प्रगती",
+      "संज्ञानात्मक गुण",
+      "कामगिरी अहवाल",
+      "मी कशी आहे?",
+      "अहवाल दाखवा",
+      "show my progress",
+      "open analytics"
+    ],
+    "OPEN_MEMORIES": [
+      "माझ्या आठवणी दाखवा",
+      "आठवणी उघडा",
+      "माझे फोटो",
+      "कुटुंबाचे फोटो",
+      "फोटो अल्बम",
+      "आठवणी पहा",
+      "show my memories",
+      "open memories"
+    ],
+    "OPEN_CAREGIVER": [
+      "काळजी घेणारी",
+      "काळजी घेणारी",
+      "काळजी घेणाऱ्यांसाठी डॅशबोर्ड",
+      "काळजी घेणाऱ्यांसाठी पोर्टल",
+      "काळजी घेणारी उघडा",
+      "caregiver",
+      "caretaker"
+    ],
+    "GO_HOME": [
+      "घरी जा",
+      "होम पेज",
+      "डॅशबोर्डवर परत जा",
+      "मुख्य स्क्रीन",
+      "घरी परत जा",
+      "घराकडे जा",
+      "go home",
+      "home page"
+    ],
+    "HELP": [
+      "मदत",
+      "मी काय बोलू?",
+      "आवाज आदेश",
+      "हे कसे काम करते?",
+      "सहाय्यक मार्गदर्शक",
+      "help",
+      "what can i say"
+    ],
+    "CLOSE": [
+      "बंद करा",
+      "बाहेर पडा",
+      "सोडा",
+      "निकाला",
+      "थांबा",
+      "रद्द करा",
+      "close",
+      "exit"
+    ]
+  },
+  "games": {
+    "WATER_JUGS": [
+      "पाण्याचे जग",
+      "पाण्याचे जग",
+      "जगांचे कोडे",
+      "मापन जग"
+    ],
+    "TOWER_OF_HANOI": [
+      "हनोईचा मनोरा",
+      "हनोई टॉवर्स",
+      "हनोई पझल",
+      "पेग डिस्क"
+    ],
+    "BALL_SORT": [
+      "बॉल सॉर्ट",
+      "बॉल पझल",
+      "सॉर्ट बॉल्स",
+      "कलर बॉल्स"
+    ],
+    "N_BACK": [
+      "एन बॅक",
+      "एन-बॅक",
+      "मेमरी एन बॅक",
+      "ड्यूल एन बॅक"
+    ],
+    "LOGIC_PUZZLES": [
+      "लॉजिक पझल्स",
+      "लॉजिक पझल",
+      "मॅथ लॉजिक",
+      "कोडी"
+    ],
+    "STROOP": [
+      "स्ट्रूप टेस्ट",
+      "स्ट्रूप रंग",
+      "रंग चाचणी",
+      "स्ट्रूप इफेक्ट"
+    ],
+    "MENTAL_ROTATION": [
+      "मानसिक रोटेशन",
+      "आकार फिरवा",
+      "3D रोटेशन",
+      "आकार जुळवा"
+    ],
+    "SCHULTE_TABLE": [
+      "शुल्टे टेबल",
+      "नंबर ग्रीड",
+      "शुल्टे ग्रीड",
+      "नंबर शोधा"
+    ],
+    "MAZE": [
+      "पाथवे मेझ",
+      "मेझ",
+      "लॅबिरिंथ",
+      "मार्ग शोधा"
+    ],
+    "CARD_MATCHING": [
+      "कार्ड मॅचिंग",
+      "मेमरी जुळवा",
+      "कार्ड्स फ्लिप करा",
+      "जोड्या जुळवा",
+      "मेमरी कार्ड्स"
+    ],
+    "NUMBER_SEQUENCE": [
+      "संख्या क्रम",
+      "संख्या कोडे",
+      "गहाळ संख्या",
+      "संख्या मालिका"
+    ],
+    "WORD_SCRAMBLE": [
+      "शब्द घोटाळा",
+      "शब्द कोडे",
+      "शब्द उलगडा",
+      "गोंधळलेले शब्द"
+    ],
+    "QUICK_MATH": [
+      "जलद गणित",
+      "वेगवान गणित",
+      "मानसिक गणित",
+      "अंकगणित खेळ"
+    ],
+    "VISUAL_SEARCH": [
+      "दृश्य शोध",
+      "वस्तू शोधा",
+      "लपलेली वस्तू",
+      "फरक ओळखा"
+    ],
+    "REACTION_TIME": [
+      "प्रतिक्रिया वेळ",
+      "गती चाचणी",
+      "प्रतिसाद चाचणी",
+      "टॅप गती"
+    ],
+    "SIMON_SAYS": [
+      "सायमन सांगा",
+      "पॅटर्न फॉलो करा",
+      "प्रकाश क्रम",
+      "सायमन क्रम"
+    ],
+    "TRAIL_MAKING": [
+      "ट्रेल मेकिंग",
+      "कनेक्ट डॉट्स",
+      "ट्रेल चाचणी",
+      "कनेक्ट नंबर्स"
+    ],
+    "ANAGRAM_SOLVER": [
+      "अक्षर क्रम बदलण्याचे कोडे",
+      "अक्षर क्रम बदलणे",
+      "शब्द पुनर्रचना",
+      "अक्षरांचे कोडे"
+    ],
+    "DELAYED_RECALL": [
+      "विलंबित स्मरण",
+      "शब्द स्मृती",
+      "स्मरण सूची",
+      "शब्द लक्षात ठेवा"
+    ],
+    "PATTERN_MATRIX": [
+      "पॅटर्न मॅट्रिक्स",
+      "मॅट्रिक्स कोडे",
+      "आकार पॅटर्न",
+      "रेव्हन मॅट्रिक्स"
+    ],
+    "DUAL_TASK": [
+      "दुहेरी कार्य",
+      "मल्टीटास्किंग गेम",
+      "एकाग्रता विभागणे",
+      "दोन कार्ये"
+    ],
+    "WORKING_MEMORY_GRID": [
+      "स्मरणशक्तीचा आराखडा",
+      "स्मरणशक्तीचा आराखडा",
+      "स्थानिक आराखडा",
+      "आराखडा आठवण"
+    ],
+    "CULTURAL_OBJECT_RECOGNITION": [
+      "सांस्कृतिक वस्तू ओळख",
+      "वस्तू ओळख",
+      "वारसा वस्तू",
+      "विंटेज वस्तू"
+    ],
+    "DAILY_ROUTINE_RECALL": [
+      "दैनंदिन दिनचर्या आठवण",
+      "नित्य स्मृती",
+      "दिवस आठवण",
+      "कृती स्मृती"
+    ]
+  },
+  "gameTitles": {
+    "WATER_JUGS": "पाण्याचे जग",
+    "TOWER_OF_HANOI": "हनोईचा मनोरा",
+    "BALL_SORT": "बॉल सॉर्ट पझल",
+    "N_BACK": "एन-बॅक",
+    "LOGIC_PUZZLES": "लॉजिक पझल्स",
+    "STROOP": "स्ट्रूप टेस्ट",
+    "MENTAL_ROTATION": "मानसिक रोटेशन",
+    "SCHULTE_TABLE": "शुल्टे टेबल",
+    "MAZE": "पाथवे मेझ",
+    "CARD_MATCHING": "कार्ड मॅचिंग मेमरी",
+    "NUMBER_SEQUENCE": "संख्या क्रम",
+    "WORD_SCRAMBLE": "शब्द घोटाळा",
+    "QUICK_MATH": "जलद गणित",
+    "VISUAL_SEARCH": "दृश्य शोध",
+    "REACTION_TIME": "प्रतिक्रिया वेळ",
+    "SIMON_SAYS": "सायमन सांगा",
+    "TRAIL_MAKING": "ट्रेल मेकिंग",
+    "ANAGRAM_SOLVER": "अ‍ॅनॅग्राम सॉल्वर",
+    "DELAYED_RECALL": "विलंबित स्मरण",
+    "PATTERN_MATRIX": "पॅटर्न मॅट्रिक्स",
+    "DUAL_TASK": "दुहेरी कार्य",
+    "WORKING_MEMORY_GRID": "कार्यशील स्मृती ग्रीड",
+    "CULTURAL_OBJECT_RECOGNITION": "सांस्कृतिक वस्तू ओळख",
+    "DAILY_ROUTINE_RECALL": "दैनंदिन दिनचर्या आठवण"
+  },
+  "responses": {
+    "OPEN_GAMES": "मेंदू प्रशिक्षण खेळ केंद्र सुरू करत आहे.",
+    "NEXT_GAME": "आणखी एक मेंदू प्रशिक्षण व्यायाम सुरू करत आहे.",
+    "OPEN_GAME": "{{नाव}} गेम सुरू करत आहे.",
+    "OPEN_REMINDERS": "तुमची दैनंदिन दिनचर्या आणि स्मरणपत्रे उघडत आहे.",
+    "TODAY_REMINDERS": "आजसाठी तुमचे दिनचर्या वेळापत्रक येथे आहे.",
+    "NEXT_REMINDER": "तुमचे पुढील आगामी स्मरणपत्र तपासत आहे.",
+    "ADD_ROUTINE": "कृपया नवीन दिनचर्या तपशील प्रविष्ट करा किंवा निश्चित करा.",
+    "COMPLETE_ROUTINE": "उत्कृष्ट काम! तुमचे कार्य पूर्ण झाले म्हणून चिन्हांकित केले.",
+    "REMOVE_ROUTINE": "दिलेली दिनचर्या वस्तू काढली जात आहे.",
+    "UPDATE_ROUTINE": "तुमचे वेळापत्रक अद्यतनित करण्यासाठी दिनचर्या संपादक उघडत आहे.",
+    "OPEN_MEDICATIONS": "तुमचे औषध वेळापत्रक उघडत आहे.",
+    "TODAY_MEDICATIONS": "आज तुमच्या नियोजित औषधांची यादी येथे आहे.",
+    "NEXT_MEDICATION": "तुमच्या पुढील नियोजित औषधाची मात्रा तपासत आहे.",
+    "MEDICATION_TAKEN": "तुम्ही तुमची औषधे घेतली आहेत याची तुम्हाला खात्री करायची आहे का?",
+    "MEDICATION_SKIPPED": "औषधाची मात्रा वगळली म्हणून चिन्हांकित केले.",
+    "OPEN_ANALYTICS": "तुमचे संज्ञानात्मक कार्यप्रदर्शन विश्लेषण आणि अहवाल उघडत आहे.",
+    "OPEN_MEMORIES": "तुमचे प्रिय आठवणींचे अल्बम उघडत आहे.",
+    "OPEN_CAREGIVER": "काळजीवाहू देखरेख पोर्टल उघडत आहे.",
+    "GO_HOME": "होम डॅशबोर्डवर परत येत आहे.",
+    "HELP": "तुम्ही वापरू शकता ते व्हॉइस कमांड येथे आहेत.",
+    "CLOSE": "व्हॉइस असिस्टंट बंद करत आहे.",
+    "UNKNOWN": "मला ते समजले नाही. कृपया पुन्हा प्रयत्न करा किंवा सूचना टॅप करा.",
+    "CARETAKER_ONLY": "काळजीवाहू डॅशबोर्ड केवळ अधिकृत काळजीवाहूंसाठी उपलब्ध आहे."
+  },
+  "shortPhrases": {
+    "OPEN_GAMES": "गेम उघडत आहे",
+    "NEXT_GAME": "पुढील गेम",
+    "OPEN_GAME": "गेम उघडत आहे",
+    "OPEN_REMINDERS": "Opening reminders",
+    "TODAY_REMINDERS": "Showing today's reminders",
+    "NEXT_REMINDER": "Showing next reminder",
+    "ADD_ROUTINE": "Add routine",
+    "COMPLETE_ROUTINE": "Task marked done",
+    "REMOVE_ROUTINE": "Task removed",
+    "UPDATE_ROUTINE": "Update routine",
+    "OPEN_MEDICATIONS": "Opening medicines",
+    "TODAY_MEDICATIONS": "Showing today's medicines",
+    "NEXT_MEDICATION": "Showing next medicine",
+    "MEDICATION_TAKEN": "Medicine recorded",
+    "MEDICATION_SKIPPED": "Medicine skipped",
+    "OPEN_ANALYTICS": "Opening progress report",
+    "OPEN_MEMORIES": "Opening memories",
+    "OPEN_CAREGIVER": "Opening caregiver view",
+    "GO_HOME": "Going home",
+    "HELP": "Opening help",
+    "CLOSE": "Closing assistant",
+    "UNKNOWN": "Please repeat",
+    "CONFIRM_DOSE": "Confirm dose taken?",
+    "VOICE_NOT_AVAILABLE": "आवाज वाचन अनुपलब्ध आहे"
+  },
+  "status": {
+    "listening": "ऐकत आहे... मायक्रोफोनमध्ये स्पष्टपणे बोला",
+    "processing": "तुमच्या व्हॉइस कमांडवर प्रक्रिया करत आहे...",
+    "speaking": "उत्तर बोलत आहे...",
+    "ready": "तयार आहे. बोलण्यासाठी मायक्रोफोन टॅप करा.",
+    "micDenied": "मायक्रोफोन ॲक्सेस नाकारला. कृपया परवानग्या तपासा.",
+    "error": "व्हॉइस असिस्टंटला त्रुटी आढळली.",
+    "notUnderstood": "समजले नाही. कृपया पुन्हा प्रयत्न करा.",
+    "wakeWordActive": "हे सेतु वेक-वर्ड लिसनर सक्रिय आहे"
+  },
+  "ui": {
+    "youSaid": "तुम्ही म्हणाला:",
+    "action": "कृती:",
+    "intent": "हेतू:",
+    "match": "जुळणारे:",
+    "listeningPrompt": "ऐकत आहे... पूर्ण झाल्यावर माइक टॅप करा",
+    "tapToSpeak": "बोलण्यासाठी टॅप करा",
+    "tapToStop": "थांबवण्यासाठी टॅप करा",
+    "spokenSummary": "व्हॉइस सारांश",
+    "voiceReadingUnavailable": "{{भाषा}} मध्ये व्हॉइस वाचन अद्याप उपलब्ध नाही",
+    "confirmMarkTaken": "घ्याला गेले म्हणून निश्चित केले आहे का?",
+    "confirmYes": "होय, घेतले आहे",
+    "confirmNo": "नाही, रद्द करा",
+    "undo": "पूर्ववत करा",
+    "markedAsTaken": "घेतला गेला म्हणून डोस चिन्हांकित केला आहे"
+  }
+} satisfies VoiceResource,
 };

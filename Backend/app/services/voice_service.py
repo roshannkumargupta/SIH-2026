@@ -17,22 +17,14 @@ from app.services.nlp_interpreter import interpret_command
 
 logger = logging.getLogger("voice_service")
 
-SUPPORTED_VOICE_LANGUAGES = [
-    VoiceLanguage(code="en-IN", name="English (India)", native_name="English"),
-    VoiceLanguage(code="hi-IN", name="Hindi", native_name="हिन्दी"),
-    VoiceLanguage(code="as-IN", name="Assamese", native_name="অসমীয়া"),
-    VoiceLanguage(code="bn-IN", name="Bengali", native_name="বাংলা"),
-    VoiceLanguage(code="ne-IN", name="Nepali", native_name="नेपाली"),
-    VoiceLanguage(code="mni-IN", name="Manipuri", native_name="মৈতৈলোন্"),
-    VoiceLanguage(code="brx-IN", name="Bodo", native_name="बर'"),
-    VoiceLanguage(code="te-IN", name="Telugu", native_name="తెలుగు"),
-    VoiceLanguage(code="ta-IN", name="Tamil", native_name="தமிழ்"),
-    VoiceLanguage(code="mr-IN", name="Marathi", native_name="मराठी"),
-    VoiceLanguage(code="gu-IN", name="Gujarati", native_name="ગુજરાતી"),
-    VoiceLanguage(code="kn-IN", name="Kannada", native_name="ಕನ್ನಡ"),
-    VoiceLanguage(code="ml-IN", name="Malayalam", native_name="മലയാളം"),
-    VoiceLanguage(code="pa-IN", name="Punjabi", native_name="ਪੰਜਾਬੀ"),
-]
+from app.core.voice_languages import (
+    SUPPORTED_VOICE_LANGUAGES,
+    SARVAM_STT_SUPPORTED,
+    SARVAM_TTS_SUPPORTED,
+    BHASHINI_STT_SUPPORTED,
+    BHASHINI_TTS_SUPPORTED,
+    get_language_capability,
+)
 
 
 def get_supported_voice_languages() -> list[VoiceLanguage]:
@@ -50,24 +42,6 @@ def interpret_user_text(text: str, language: str = "en") -> InterpretResponse:
 
 
 import httpx
-
-SARVAM_STT_SUPPORTED = {
-    "en-IN", "hi-IN", "bn-IN", "ta-IN", "te-IN",
-    "kn-IN", "ml-IN", "mr-IN", "gu-IN", "pa-IN", "od-IN"
-}
-
-BHASHINI_STT_SUPPORTED = {
-    "as-IN", "mni-IN", "brx-IN", "ne-IN"
-}
-
-SARVAM_TTS_SUPPORTED = {
-    "en-IN", "hi-IN", "bn-IN", "ta-IN", "te-IN",
-    "kn-IN", "ml-IN", "mr-IN", "gu-IN", "pa-IN", "od-IN"
-}
-
-BHASHINI_TTS_SUPPORTED = {
-    "as-IN", "mni-IN", "brx-IN", "ne-IN"
-}
 
 
 def transcribe_bhashini_speech(
@@ -136,7 +110,7 @@ def transcribe_bhashini_speech(
             headers=headers,
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=25.0) as resp:
+        with urllib.request.urlopen(req, timeout=6.0) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             pipeline_resp = data.get("pipelineResponse", [])
             for task in pipeline_resp:
@@ -190,7 +164,7 @@ def transcribe_audio_bytes(
                         "routine, walk, doctor, analytics, help."
                     ),
                 },
-                timeout=25.0,
+                timeout=12.0,
             )
             if res.status_code == 200:
                 payload = res.json()
@@ -304,7 +278,7 @@ def synthesize_bhashini_speech(
             settings.BHASHINI_PIPELINE_URL,
             headers=headers,
             json=payload,
-            timeout=25.0,
+            timeout=6.0,
         )
         if res.status_code == 200:
             data = res.json()
@@ -359,7 +333,7 @@ def synthesize_speech_payload(
                     "model": "bulbul:v3",
                     "speaker": speaker,
                 },
-                timeout=25.0,
+                timeout=8.0,
             )
 
             if res.status_code == 200:

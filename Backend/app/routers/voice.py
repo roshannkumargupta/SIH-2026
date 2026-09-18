@@ -35,6 +35,19 @@ def list_voice_languages():
     return get_supported_voice_languages()
 
 
+@router.get("/capabilities")
+def get_voice_capabilities():
+    """Returns runtime STT and TTS capabilities per language based on configured API keys."""
+    from app.core.config import settings
+    from app.core.voice_languages import compute_runtime_capabilities
+
+    return compute_runtime_capabilities(
+        sarvam_key=settings.SARVAM_API_KEY,
+        bhashini_key=settings.BHASHINI_API_KEY,
+    )
+
+
+
 @router.post("/interpret", response_model=InterpretResponse)
 def interpret_command_endpoint(data: InterpretRequest):
     """Interpret transcribed speech or typed commands into structured intent."""

@@ -26,23 +26,9 @@ export interface LanguageContextValue {
   }>;
 }
 
-export const SUPPORTED_LANGUAGES_LIST: Array<{
-  code: VoiceLanguageCode;
-  name: string;
-  nativeName: string;
-}> = [
-  { code: "hi-IN", name: "Hindi", nativeName: "हिन्दी" },
-  { code: "en-IN", name: "English", nativeName: "English" },
-  { code: "te-IN", name: "Telugu", nativeName: "తెలుగు" },
-  { code: "ta-IN", name: "Tamil", nativeName: "தமிழ்" },
-  { code: "mr-IN", name: "Marathi", nativeName: "मराठी" },
-  { code: "gu-IN", name: "Gujarati", nativeName: "ગુજરાતી" },
-  { code: "bn-IN", name: "Bengali", nativeName: "বাংলা" },
-  { code: "as-IN", name: "Assamese", nativeName: "অসমীয়া" },
-  { code: "ne-IN", name: "Nepali", nativeName: "नेपाली" },
-  { code: "mni-IN", name: "Manipuri", nativeName: "মৈতৈলোন্" },
-  { code: "brx-IN", name: "Bodo", nativeName: "बड़ो" },
-];
+import { SUPPORTED_LANGUAGES_LIST } from "@/features/voice/config/languageRegistry";
+export { SUPPORTED_LANGUAGES_LIST };
+
 
 const STORAGE_KEY = "smritisetu_preferred_language";
 

@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import QuickMath from "@/features/games/games/QuickMath";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/quick-math")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/quick-math")({
 
 function QuickMathPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("quick-math")!;
-  return (
-    <GameShell game={game} level={level}>
-      <QuickMath level={level} />
-    </GameShell>
-  );
+  return <QuickMath level={level} />;
 }

@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import ReactionTime from "@/features/games/games/ReactionTime";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/reaction-time")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/reaction-time")({
 
 function ReactionTimePage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("reaction-time")!;
-  return (
-    <GameShell game={game} level={level}>
-      <ReactionTime level={level} />
-    </GameShell>
-  );
+  return <ReactionTime level={level} />;
 }

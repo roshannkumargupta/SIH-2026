@@ -42,7 +42,6 @@ Desktop.ini
 *.db
 *.sqlite
 *.sqlite3
-.env
 .dev.vars
 .wrangler/
 

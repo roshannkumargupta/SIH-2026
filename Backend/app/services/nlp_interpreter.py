@@ -218,6 +218,38 @@ BN_PHRASES = {
     "caregiver": ["কেয়ারগিভার"],
 }
 
+MNI_PHRASES = {
+    "addRoutine": ["থবক হাপচিল্লু", "অনৌবা রুটিন", "রুটিন হাপচিল্লু", "অনৌবা থবক"],
+    "completeRoutine": ["থবক লোইরে", "হিদাক চারে", "রুটিন লোইরে", "লোইরে"],
+    "removeRoutine": ["থবক লৌথোকউ", "রুটিন লৌথোকউ"],
+    "updateRoutine": ["মতম হোংদোকউ", "রুটিন হোংদোকউ", "মতম সল্লি"],
+    "help": ["মতেং", "মতেং পাংবীয়ু", "কমান্ড"],
+    "nextGame": ["মথংগী শান্নপোৎ", "অতোপ্পা শান্নপোৎ", "মথংগী গেম", "অতোপ্পা গেম"],
+    "nextReminder": ["মথংগী থবক", "মথংগী রিমাইন্ডার", "মথংগী হিদাক"],
+    "today": ["ঙসিগী থবক", "ঙসি করি তৌগদগে", "ঙসিগী রিমাইন্ডার"],
+    "reminders": ["রিমাইন্ডার উৎলো", "থবক উৎলো", "হিদাক উৎলো", "হিদাক"],
+    "games": ["শান্নবা খোল্লু", "গেম খোল্লু", "শান্নবা য়াম্না পাম্মি", "শান্নপোৎ"],
+    "progress": ["খোংথাং", "স্কোর", "প্ৰোগ্ৰেস"],
+    "memories": ["নীংশিংবা", "ফোতো", "এলবাম"],
+    "caregiver": ["কেয়রগিভর", "য়েনশিনবা", "কেয়রটেকর"],
+}
+
+BRX_PHRASES = {
+    "addRoutine": ["गोदान हाबा सोदेर", "हाबा सोदेर", "गोदान रूटीन", "रिमाइन्डर सोदेर"],
+    "completeRoutine": ["हाबा जोबबाय", "मुलि लोंबाय", "हाबा फोजोबबाय", "रूटीन जोबबाय"],
+    "removeRoutine": ["हाबा बोखार", "रूटीन बोखार"],
+    "updateRoutine": ["सम सोलाय", "रूटीन सोलाय"],
+    "help": ["हेफाजाब", "मदद", "कमाण्ड"],
+    "nextGame": ["उनाव थानाय गेलेमु", "गुबुन गेलेमु", "नेक्स्ट गेम", "गुबुन खेल"],
+    "nextReminder": ["उनाव थानाय हाबा", "उनाव थानाय मुलि", "नेक्स्ट रिमाइन्डर"],
+    "today": ["दिनैनि हाबा", "दिनै मा मावनांगौ", "दिनैनि रिमाइन्डर"],
+    "reminders": ["हाबानि फारिलाइ दिन्थि", "मुलि दिन्थि", "मुलि", "रिमाइन्डर"],
+    "games": ["गेलेमु खुलि", "गेलेमु गेले", "गेम खुलि"],
+    "progress": ["जौगानाय", "स्कोर", "प्रोग्रेस"],
+    "memories": ["गोसोखांथि", "फोटो", "एल्बम"],
+    "caregiver": ["हेफाजाबगिरि", "केयारगिभार"],
+}
+
 
 def find_game_entity(text: str, language: str) -> str | None:
     game_entities: list[tuple[str, list[str]]] = [
@@ -314,7 +346,8 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
     all_add_routine = (
         EN_PHRASES["addRoutine"] + HI_PHRASES["addRoutine"] + TE_PHRASES["addRoutine"] +
         TA_PHRASES["addRoutine"] + MR_PHRASES["addRoutine"] + GU_PHRASES["addRoutine"] +
-        AS_PHRASES["addRoutine"] + NE_PHRASES["addRoutine"] + BN_PHRASES["addRoutine"]
+        AS_PHRASES["addRoutine"] + NE_PHRASES["addRoutine"] + BN_PHRASES["addRoutine"] +
+        MNI_PHRASES["addRoutine"] + BRX_PHRASES["addRoutine"]
     )
     if includes_any(text, all_add_routine):
         return {"intent": "ADD_ROUTINE", "confidence": 0.96, "entity": None}
@@ -322,7 +355,8 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
     all_complete_routine = (
         EN_PHRASES["completeRoutine"] + HI_PHRASES["completeRoutine"] + TE_PHRASES["completeRoutine"] +
         TA_PHRASES["completeRoutine"] + MR_PHRASES["completeRoutine"] + GU_PHRASES["completeRoutine"] +
-        AS_PHRASES["completeRoutine"] + NE_PHRASES["completeRoutine"] + BN_PHRASES["completeRoutine"]
+        AS_PHRASES["completeRoutine"] + NE_PHRASES["completeRoutine"] + BN_PHRASES["completeRoutine"] +
+        MNI_PHRASES["completeRoutine"] + BRX_PHRASES["completeRoutine"]
     )
     if includes_any(text, all_complete_routine):
         return {"intent": "COMPLETE_ROUTINE", "confidence": 0.96, "entity": None}
@@ -330,7 +364,8 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
     all_remove_routine = (
         EN_PHRASES["removeRoutine"] + HI_PHRASES["removeRoutine"] + TE_PHRASES["removeRoutine"] +
         TA_PHRASES["removeRoutine"] + MR_PHRASES["removeRoutine"] + GU_PHRASES["removeRoutine"] +
-        AS_PHRASES["removeRoutine"] + NE_PHRASES["removeRoutine"] + BN_PHRASES["removeRoutine"]
+        AS_PHRASES["removeRoutine"] + NE_PHRASES["removeRoutine"] + BN_PHRASES["removeRoutine"] +
+        MNI_PHRASES["removeRoutine"] + BRX_PHRASES["removeRoutine"]
     )
     if includes_any(text, all_remove_routine):
         return {"intent": "REMOVE_ROUTINE", "confidence": 0.95, "entity": None}
@@ -338,7 +373,8 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
     all_update_routine = (
         EN_PHRASES["updateRoutine"] + HI_PHRASES["updateRoutine"] + TE_PHRASES["updateRoutine"] +
         TA_PHRASES["updateRoutine"] + MR_PHRASES["updateRoutine"] + GU_PHRASES["updateRoutine"] +
-        AS_PHRASES["updateRoutine"] + NE_PHRASES["updateRoutine"] + BN_PHRASES["updateRoutine"]
+        AS_PHRASES["updateRoutine"] + NE_PHRASES["updateRoutine"] + BN_PHRASES["updateRoutine"] +
+        MNI_PHRASES["updateRoutine"] + BRX_PHRASES["updateRoutine"]
     )
     if includes_any(text, all_update_routine):
         return {"intent": "UPDATE_ROUTINE", "confidence": 0.95, "entity": None}
@@ -348,21 +384,24 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
         EN_PHRASES["help"] + HI_PHRASES["help"] + TE_PHRASES["help"] +
         TA_PHRASES["help"] + MR_PHRASES["help"] + GU_PHRASES["help"] +
         AS_PHRASES["help"] + BN_PHRASES["help"] + NE_PHRASES["help"] +
-        ["help", "मदद", "सहाय", "সাহায্য", "मद्दत"]
+        MNI_PHRASES["help"] + BRX_PHRASES["help"] +
+        ["help", "मदद", "सहाय", "সাহায্য", "मद्दत", "মতেং", "हेफाजाब"]
     )
     if includes_any(text, all_help):
         return {"intent": "HELP", "confidence": 0.97, "entity": None}
 
     all_next_game = (
         EN_PHRASES["nextGame"] + HI_PHRASES["nextGame"] + TE_PHRASES["nextGame"] +
-        AS_PHRASES["nextGame"] + BN_PHRASES["nextGame"] + NE_PHRASES["nextGame"]
+        AS_PHRASES["nextGame"] + BN_PHRASES["nextGame"] + NE_PHRASES["nextGame"] +
+        MNI_PHRASES["nextGame"] + BRX_PHRASES["nextGame"]
     )
     if includes_any(text, all_next_game):
         return {"intent": "NEXT_GAME", "confidence": 0.95, "entity": None}
 
     all_next_reminder = (
         EN_PHRASES["nextReminder"] + HI_PHRASES["nextReminder"] + TE_PHRASES["nextReminder"] +
-        AS_PHRASES["nextReminder"] + BN_PHRASES["nextReminder"] + NE_PHRASES["nextReminder"]
+        AS_PHRASES["nextReminder"] + BN_PHRASES["nextReminder"] + NE_PHRASES["nextReminder"] +
+        MNI_PHRASES["nextReminder"] + BRX_PHRASES["nextReminder"]
     )
     if includes_any(text, all_next_reminder):
         return {"intent": "NEXT_REMINDER", "confidence": 0.95, "entity": None}
@@ -371,14 +410,15 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
         EN_PHRASES["today"] + HI_PHRASES["today"] + TE_PHRASES["today"] +
         TA_PHRASES["today"] + MR_PHRASES["today"] + GU_PHRASES["today"] +
         BN_PHRASES["today"] + NE_PHRASES["today"] + AS_PHRASES["today"] +
-        ["today", "आज", "আজি", "আজকে", "आजका", "आजको", "আজকের", "ఈ రోజు"]
+        MNI_PHRASES["today"] + BRX_PHRASES["today"] +
+        ["today", "आज", "আজি", "আজকে", "आजका", "आजको", "আজকের", "ఈ రోజు", "ঙসি", "दिनै"]
     )
     if includes_any(text, all_today):
         return {"intent": "TODAY_REMINDERS", "confidence": 0.95, "entity": None}
 
     all_medications = [
         "take medicine", "take my medicine", "dawa dikhao", "medicine", "medication", "meds",
-        "dawa", "dawai", "goli", "दवा", "दवाई", "औষধ", "ওষুধ", "औषधि"
+        "dawa", "dawai", "goli", "दवा", "दवाई", "औষধ", "ওষুধ", "औषधि", "হিদাক", "मुलि"
     ]
     if includes_any(text, all_medications):
         return {"intent": "OPEN_MEDICATIONS", "confidence": 0.95, "entity": None}
@@ -387,7 +427,8 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
         EN_PHRASES["progress"] + HI_PHRASES["progress"] + TE_PHRASES["progress"] +
         TA_PHRASES["progress"] + MR_PHRASES["progress"] + GU_PHRASES["progress"] +
         BN_PHRASES["progress"] + NE_PHRASES["progress"] + AS_PHRASES["progress"] +
-        ["progress", "score", "analytics", "प्रोग्रेस", "स्कोर", "এনালাইটিক্স", "প্রোগ্রেস", "প্রগতি", "పురోగతి"]
+        MNI_PHRASES["progress"] + BRX_PHRASES["progress"] +
+        ["progress", "score", "analytics", "प्रोग्रेस", "स्कोर", "এনালাইটিক্স", "প্রোগ্রেস", "প্রগতি", "పురోగతి", "খোংথাং", "जौगानाय"]
     )
     if includes_any(text, all_progress):
         return {"intent": "OPEN_ANALYTICS", "confidence": 0.94, "entity": None}
@@ -396,7 +437,8 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
         EN_PHRASES["memories"] + HI_PHRASES["memories"] + TE_PHRASES["memories"] +
         TA_PHRASES["memories"] + MR_PHRASES["memories"] + GU_PHRASES["memories"] +
         BN_PHRASES["memories"] + NE_PHRASES["memories"] + AS_PHRASES["memories"] +
-        ["memory", "memories", "photos", "यादें", "फोटो", "স্মৃতি", "सम्झनाहरू", "অ্যালবাম", "এলবাম", "జ్ఞాపకాలు"]
+        MNI_PHRASES["memories"] + BRX_PHRASES["memories"] +
+        ["memory", "memories", "photos", "यादें", "फोटो", "স্মৃতি", "सम्झनाहरू", "অ্যালবাম", "এলবাম", "జ్ఞాపకాలు", "নীংশিংবা", "गोसोखांथि"]
     )
     if includes_any(text, all_memories):
         return {"intent": "OPEN_MEMORIES", "confidence": 0.94, "entity": None}
@@ -404,12 +446,13 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
     all_caregiver = (
         EN_PHRASES["caregiver"] + HI_PHRASES["caregiver"] + TE_PHRASES["caregiver"] +
         AS_PHRASES["caregiver"] + BN_PHRASES["caregiver"] + NE_PHRASES["caregiver"] +
-        ["caregiver", "caretaker", "केयरगिवर", "কেয়াৰগিভাৰ", "केयरटेकर", "हेरचाहकर्ता", "సంరక్షకుడు"]
+        MNI_PHRASES["caregiver"] + BRX_PHRASES["caregiver"] +
+        ["caregiver", "caretaker", "केयरगिवर", "কেয়াৰগিভাৰ", "केयरटेकर", "हेरचाहकर्ता", "సంరక్షకుడు", "কেয়রগিভর", "हेफाजाबगिरि"]
     )
     if includes_any(text, all_caregiver):
         return {"intent": "OPEN_CAREGIVER", "confidence": 0.94, "entity": None}
 
-    all_home = ["home", "dashboard", "main page", "go home", "go back to home", "go back to home dashboard", "मुख्य पृष्ठ", "होम"]
+    all_home = ["home", "dashboard", "main page", "go home", "go back to home", "go back to home dashboard", "मुख्य पृष्ठ", "होम", "ময়ুম"]
     if includes_any(text, all_home):
         return {"intent": "GO_HOME", "confidence": 0.95, "entity": None}
 
@@ -417,9 +460,10 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
         EN_PHRASES["reminders"] + HI_PHRASES["reminders"] + TE_PHRASES["reminders"] +
         TA_PHRASES["reminders"] + MR_PHRASES["reminders"] + GU_PHRASES["reminders"] +
         AS_PHRASES["reminders"] + BN_PHRASES["reminders"] + NE_PHRASES["reminders"] +
+        MNI_PHRASES["reminders"] + BRX_PHRASES["reminders"] +
         [
             "reminder", "reminders", "task", "tasks", "kam", "kaam", "schedule", "routine",
-            "रूटीन", "routine dikhao", "समयসূচি", "तालिका", "రొటీన్"
+            "रूटीन", "routine dikhao", "समयসূচি", "तालिका", "రొటీన్", "थবক", "हाबा"
         ]
     )
     if includes_any(text, all_reminders):
@@ -429,9 +473,10 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
         EN_PHRASES["games"] + HI_PHRASES["games"] + TE_PHRASES["games"] +
         TA_PHRASES["games"] + MR_PHRASES["games"] + GU_PHRASES["games"] +
         AS_PHRASES["games"] + BN_PHRASES["games"] + NE_PHRASES["games"] +
+        MNI_PHRASES["games"] + BRX_PHRASES["games"] +
         [
             "game", "games", "play", "play game", "play games", "khel", "khelo", "khelna", "khelna hai",
-            "गेम", "खेल", "খেল", "খেলা", "puzzle", "puzzles", "पजल", "ఆటలు"
+            "गेम", "खेल", "খেল", "খেলা", "puzzle", "puzzles", "पजल", "ఆటలు", "শান্নপোৎ", "गेलेमु"
         ]
     )
     if includes_any(text, all_games):

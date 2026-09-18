@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 type Problem = { text: string; answer: number };
@@ -35,6 +34,7 @@ export default function QuickMath({ level }: { level: number }) {
     setProblem(generateProblem(level));
     setInput("");
     setScore(0);
+    setFeedback(null);
     setCompleted(false);
     setSynced(false);
     setOffline(false);
@@ -48,13 +48,15 @@ export default function QuickMath({ level }: { level: number }) {
       setFeedback("Enter a number");
       return;
     }
+
     if (val === problem.answer) {
-      const newScore = score + 1;
-      setScore(newScore);
+      const nextScore = score + 1;
+      setScore(nextScore);
       setFeedback("✓ Correct!");
-      if (newScore >= target && !saved.current) {
+
+      if (nextScore >= target && !saved.current) {
         saved.current = true;
-        const acc = Math.min(100, Math.round((newScore / target) * 100));
+        const acc = Math.min(100, Math.round((nextScore / target) * 100));
         const dur = Math.round((Date.now() - sessionStart.current) / 1000);
         submitResult({
           gameId: "quick-math",
@@ -69,13 +71,13 @@ export default function QuickMath({ level }: { level: number }) {
           setOffline(r.offline);
           setCompleted(true);
         });
-      } else {
-        setTimeout(() => {
-          setProblem(generateProblem(level));
-          setInput("");
-          setFeedback(null);
-        }, 700);
+        return;
       }
+      setTimeout(() => {
+        setProblem(generateProblem(level));
+        setInput("");
+        setFeedback(null);
+      }, 800);
     } else {
       setFeedback(`✗ Answer was ${problem.answer}`);
       setTimeout(() => {
@@ -86,71 +88,66 @@ export default function QuickMath({ level }: { level: number }) {
     }
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((score / target) * 100))}
-          accuracy={Math.min(100, Math.round((score / target) * 100))}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName="Quick Math"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setCompleted(false);
-            setScore(0);
-            saved.current = false;
-            setSynced(false);
-            setOffline(false);
-            setProblem(generateProblem(level));
-            setInput("");
-            sessionStart.current = Date.now();
-          }}
-        />
-      </>
-    );
+  const finalAccuracy = Math.min(100, Math.round((score / target) * 100));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
+
+  const resetGame = () => {
+    setCompleted(false);
+    setScore(0);
+    saved.current = false;
+    setSynced(false);
+    setOffline(false);
+    setProblem(generateProblem(level));
+    setInput("");
+    sessionStart.current = Date.now();
+  };
 
   return (
-    <div className="space-y-6 text-center">
-      <div>
-        <p className="text-cream/50 text-xs uppercase font-bold mb-2">
-          Score: {score}/{target}
-        </p>
-        <div className="mx-auto inline-block rounded-2xl border-4 border-sun bg-ink px-10 py-6 shadow-card">
+    <GameShell
+      gameId="quick-math"
+      level={level}
+      score={score}
+      targetScore={target}
+      feedback={feedback}
+      instructionHint="Calculate the result as fast as you can"
+      completed={completed}
+      results={{
+        score: finalAccuracy,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+    >
+      <div className="space-y-8 text-center max-w-md mx-auto">
+        <div className="mx-auto inline-block rounded-3xl border-4 border-sun/60 bg-ink px-10 py-7 shadow-card">
           <span className="font-display text-5xl sm:text-6xl font-black text-sun">
             {problem.text} = ?
           </span>
         </div>
-      </div>
 
-      <div className="flex flex-col items-center gap-3">
-        <input
-          type="number"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") submit();
-          }}
-          className="w-36 rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-3xl font-bold py-3 focus:border-sun focus:outline-none"
-          placeholder="?"
-          autoFocus
-        />
-        <button
-          onClick={submit}
-          className="px-8 py-3 rounded-xl bg-sun text-ink font-extrabold text-lg hover:opacity-90 transition shadow"
-        >
-          Submit
-        </button>
-        {feedback && (
-          <p
-            className={`text-sm font-bold ${feedback.startsWith("✓") ? "text-tea-confirm" : "text-fire"}`}
+        <div className="flex flex-col items-center gap-3.5">
+          <input
+            type="number"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") submit();
+            }}
+            className="w-40 rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-4xl font-bold py-3 focus:border-sun focus:outline-none min-h-[48px]"
+            placeholder="?"
+            autoFocus
+          />
+          <button
+            type="button"
+            onClick={submit}
+            className="px-8 py-3.5 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-black text-lg hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center"
           >
-            {feedback}
-          </p>
-        )}
+            Submit Answer
+          </button>
+        </div>
       </div>
-    </div>
+    </GameShell>
   );
 }

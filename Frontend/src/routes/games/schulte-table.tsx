@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import SchulteTable from "@/features/games/games/SchulteTable";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/schulte-table")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/schulte-table")({
 
 function SchulteTablePage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("schulte-table")!;
-  return (
-    <GameShell game={game} level={level}>
-      <SchulteTable level={level} />
-    </GameShell>
-  );
+  return <SchulteTable level={level} />;
 }

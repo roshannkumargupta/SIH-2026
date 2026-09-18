@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import BallSort from "@/features/games/games/BallSort";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/ball-sort")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/ball-sort")({
 
 function BallSortPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("ball-sort")!;
-  return (
-    <GameShell game={game} level={level}>
-      <BallSort level={level} />
-    </GameShell>
-  );
+  return <BallSort level={level} />;
 }

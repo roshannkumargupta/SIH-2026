@@ -16,7 +16,7 @@ import { formatApiError } from "@/api/client";
 import { doctorsApi } from "@/api/doctors.api";
 import { prescriptionsApi } from "@/api/prescriptions.api";
 import { useAuth } from "@/hooks/use-auth";
-import { NavigationHeader } from "@/components/navigation-header";
+import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -104,190 +104,186 @@ function DoctorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <NavigationHeader />
+    <AppShell className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto space-y-8">
+      {/* Navigation Breadcrumb */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <Button asChild variant="outline" className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold">
+          <Link to="/">
+            <ArrowLeft size={18} className="mr-2 text-[#22C55E]" /> Back to Dashboard
+          </Link>
+        </Button>
 
-      <main className="flex-1 mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12 w-full">
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-          <Button asChild variant="cream" size="touch">
-            <Link to="/">
-              <ArrowLeft size={20} className="mr-2" /> Back to Patient View
-            </Link>
-          </Button>
+        {/* Write Prescription Modal */}
+        <Dialog open={isRxOpen} onOpenChange={setIsRxOpen}>
+          <DialogTrigger asChild>
+            <Button size="touch" className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] text-base font-bold gap-2 shadow-lg shadow-[#22C55E]/20">
+              <Plus size={20} /> WRITE PRESCRIPTION
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-[#121D2B] border border-white/10 text-[#E8ECEF] max-w-md rounded-3xl shadow-2xl">
+            <DialogHeader>
+              <DialogTitle className="font-display text-2xl font-bold text-[#E8ECEF]">
+                Issue Clinical Prescription
+              </DialogTitle>
+            </DialogHeader>
 
-          {/* Write Prescription Modal */}
-          <Dialog open={isRxOpen} onOpenChange={setIsRxOpen}>
-            <DialogTrigger asChild>
-              <Button variant="cream" size="touch" className="text-base font-extrabold gap-2">
-                <Plus size={20} /> WRITE PRESCRIPTION
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-surface border-clay text-cream max-w-md">
-              <DialogHeader>
-                <DialogTitle className="font-display text-2xl font-bold text-cream">
-                  Issue Clinical Prescription
-                </DialogTitle>
-              </DialogHeader>
+            <form onSubmit={handleCreatePrescription} className="space-y-4 mt-4">
+              <div>
+                <Label htmlFor="rx-med" className="text-sm font-bold text-[#E8ECEF]">
+                  Medicine Name
+                </Label>
+                <Input
+                  id="rx-med"
+                  required
+                  value={medicineName}
+                  onChange={(e) => setMedicineName(e.target.value)}
+                  placeholder="e.g. Rivastigmine or Donepezil"
+                  className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl mt-1 focus-visible:ring-[#22C55E] shadow-sm"
+                />
+              </div>
 
-              <form onSubmit={handleCreatePrescription} className="space-y-4 mt-4">
-                <div>
-                  <Label htmlFor="rx-med" className="text-sm font-bold text-cream">
-                    Medicine Name
-                  </Label>
-                  <Input
-                    id="rx-med"
-                    required
-                    value={medicineName}
-                    onChange={(e) => setMedicineName(e.target.value)}
-                    placeholder="e.g. Rivastigmine or Donepezil"
-                    className="bg-ink border-clay text-cream mt-1"
-                  />
-                </div>
+              <div>
+                <Label htmlFor="rx-dose" className="text-sm font-bold text-[#E8ECEF]">
+                  Dosage
+                </Label>
+                <Input
+                  id="rx-dose"
+                  required
+                  value={dosage}
+                  onChange={(e) => setDosage(e.target.value)}
+                  placeholder="e.g. 5mg or 10mg"
+                  className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl mt-1 focus-visible:ring-[#22C55E] shadow-sm"
+                />
+              </div>
 
-                <div>
-                  <Label htmlFor="rx-dose" className="text-sm font-bold text-cream">
-                    Dosage
-                  </Label>
-                  <Input
-                    id="rx-dose"
-                    required
-                    value={dosage}
-                    onChange={(e) => setDosage(e.target.value)}
-                    placeholder="e.g. 5mg or 10mg"
-                    className="bg-ink border-clay text-cream mt-1"
-                  />
-                </div>
+              <div>
+                <Label htmlFor="rx-inst" className="text-sm font-bold text-[#E8ECEF]">
+                  Dosage Instructions
+                </Label>
+                <Input
+                  id="rx-inst"
+                  required
+                  value={instructions}
+                  onChange={(e) => setInstructions(e.target.value)}
+                  placeholder="e.g. 1 tablet once daily after breakfast"
+                  className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl mt-1 focus-visible:ring-[#22C55E] shadow-sm"
+                />
+              </div>
 
-                <div>
-                  <Label htmlFor="rx-inst" className="text-sm font-bold text-cream">
-                    Dosage Instructions
-                  </Label>
-                  <Input
-                    id="rx-inst"
-                    required
-                    value={instructions}
-                    onChange={(e) => setInstructions(e.target.value)}
-                    placeholder="e.g. 1 tablet once daily after breakfast"
-                    className="bg-ink border-clay text-cream mt-1"
-                  />
-                </div>
+              <div className="pt-4 flex justify-end gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsRxOpen(false)}
+                  className="rounded-full border-white/10 text-[#8A99A8] hover:text-[#E8ECEF] bg-transparent"
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isSubmittingRx} className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-bold">
+                  {isSubmittingRx ? "Issuing…" : "Issue Prescription"}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
 
-                <div className="pt-4 flex justify-end gap-3">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => setIsRxOpen(false)}
-                    className="border border-clay text-cream"
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" variant="cream" disabled={isSubmittingRx}>
-                    {isSubmittingRx ? "Issuing…" : "Issue Prescription"}
-                  </Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
-
-        {/* Doctor Header Card */}
-        <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card mb-8">
-          <div className="flex items-center gap-4">
-            <span className="flex size-16 items-center justify-center rounded-2xl bg-fire text-ink shadow-sm">
-              <Stethoscope size={36} />
-            </span>
-            <div>
-              <h1 className="font-display text-3xl sm:text-4xl font-bold text-cream">
-                Doctor Clinical Portal
-              </h1>
-              <p className="text-cream/80 mt-1">
-                {user?.name || "Dr. Ananya Sharma"} · Department of Cognitive Neurology.
-              </p>
-            </div>
+      {/* Doctor Header Card */}
+      <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
+        <div className="flex items-center gap-4">
+          <span className="flex size-16 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] shadow-inner">
+            <Stethoscope size={34} />
+          </span>
+          <div>
+            <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#E8ECEF]">
+              Doctor Clinical Portal
+            </h1>
+            <p className="text-[#8A99A8] mt-1 font-medium">
+              {user?.name || "Dr. Ananya Sharma"} · Department of Cognitive Neurology.
+            </p>
           </div>
         </div>
+      </div>
 
-        {/* Patients Overview */}
-        <div className="space-y-6">
-          <h2 className="text-xl font-bold uppercase text-sun tracking-wider">
-            Monitored Clinical Patients
-          </h2>
+      {/* Patients Overview */}
+      <div className="space-y-6">
+        <h2 className="text-lg font-bold uppercase text-[#22C55E] tracking-wider">
+          Monitored Clinical Patients
+        </h2>
 
-          {isLoading ? (
-            <div className="py-12 text-center text-cream/70 text-lg">
-              Loading clinical patient roster…
-            </div>
-          ) : isError ? (
-            <div className="rounded-2xl border border-fire/50 bg-fire/15 p-8 text-center text-cream">
-              <p className="text-lg font-bold">Unable to load clinical patient roster</p>
-              <p className="text-sm opacity-80 mt-1 mb-4">{formatApiError(error)}</p>
-              <button
-                type="button"
-                onClick={() => refetch()}
-                className="px-4 py-2 rounded-xl bg-sun text-ink font-bold text-sm"
-              >
-                Retry
-              </button>
-            </div>
-          ) : !dashboard?.patients || dashboard.patients.length === 0 ? (
-            <div className="rounded-2xl border border-clay bg-surface p-12 text-center text-cream/70">
-              <Stethoscope size={48} className="mx-auto text-sun/40 mb-4" />
-              <p className="text-xl font-bold text-cream">No assigned patients found</p>
-            </div>
-          ) : (
-            dashboard.patients.map((item) => (
-              <div
-                key={item.patient.id}
-                className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6"
-              >
-                <div className="flex items-start gap-4">
-                  <span className="flex size-14 items-center justify-center rounded-2xl bg-sun text-ink font-display text-2xl font-bold shrink-0">
-                    {item.patient.name.charAt(0)}
-                  </span>
-                  <div>
-                    <h3 className="font-display text-2xl sm:text-3xl font-bold text-cream">
-                      {item.patient.name}
-                    </h3>
-                    <p className="text-sm text-cream/70 mt-1">
-                      Email: {item.patient.email} · Phone: {item.patient.phone || "On file"}
-                    </p>
-                    <div className="flex flex-wrap items-center gap-3 mt-3">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase bg-sun/20 text-sun border border-sun/40">
-                        <Brain size={14} /> Score:{" "}
-                        {item.latest_score ? `${item.latest_score}/100` : "83.5/100"}
-                      </span>
-                      <span
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase ${
-                          item.risk_level === "low"
-                            ? "bg-tea-confirm/30 text-tea-confirm border border-tea-confirm"
-                            : "bg-sun/30 text-sun border border-sun"
-                        }`}
-                      >
-                        Risk: {item.risk_level}
-                      </span>
-                    </div>
+        {isLoading ? (
+          <div className="py-12 text-center text-[#8A99A8] text-lg">
+            Loading clinical patient roster…
+          </div>
+        ) : isError ? (
+          <div className="rounded-3xl border border-rose-500/20 bg-rose-500/10 p-8 text-center text-rose-300 shadow-xl">
+            <p className="text-lg font-bold">Unable to load clinical patient roster</p>
+            <p className="text-sm opacity-80 mt-1 mb-4">{formatApiError(error)}</p>
+            <button
+              type="button"
+              onClick={() => refetch()}
+              className="px-5 py-2 rounded-full bg-[#22C55E] text-[#0A1420] font-bold text-sm shadow-sm"
+            >
+              Retry
+            </button>
+          </div>
+        ) : !dashboard?.patients || dashboard.patients.length === 0 ? (
+          <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-12 text-center text-[#8A99A8] shadow-xl">
+            <Stethoscope size={48} className="mx-auto text-[#22C55E]/40 mb-4" />
+            <p className="text-xl font-bold text-[#E8ECEF]">No assigned patients found</p>
+          </div>
+        ) : (
+          dashboard.patients.map((item) => (
+            <div
+              key={item.patient.id}
+              className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6"
+            >
+              <div className="flex items-start gap-4">
+                <span className="flex size-14 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] font-display text-2xl font-bold shrink-0 shadow-sm">
+                  {item.patient.name.charAt(0)}
+                </span>
+                <div>
+                  <h3 className="font-display text-2xl sm:text-3xl font-bold text-[#E8ECEF]">
+                    {item.patient.name}
+                  </h3>
+                  <p className="text-sm text-[#8A99A8] mt-1 font-medium">
+                    Email: {item.patient.email} · Phone: {item.patient.phone || "On file"}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-3 mt-3">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase bg-sky-500/15 text-sky-400 border border-sky-500/25">
+                      <Brain size={14} /> Score:{" "}
+                      {item.latest_score ? `${item.latest_score}/100` : "83.5/100"}
+                    </span>
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase ${
+                        item.risk_level === "low"
+                          ? "bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/25"
+                          : "bg-amber-500/15 text-amber-300 border border-amber-500/25"
+                      }`}
+                    >
+                      Risk: {item.risk_level}
+                    </span>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-3 w-full sm:w-auto">
-                  <Button
-                    type="button"
-                    variant="cream"
-                    size="touch"
-                    onClick={() => {
-                      setSelectedPatientId(item.patient.id);
-                      setIsRxOpen(true);
-                    }}
-                    className="w-full sm:w-auto font-bold"
-                  >
-                    Prescribe Medication
-                  </Button>
-                </div>
               </div>
-            ))
-          )}
-        </div>
-      </main>
-    </div>
+
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <Button
+                  type="button"
+                  size="touch"
+                  onClick={() => {
+                    setSelectedPatientId(item.patient.id);
+                    setIsRxOpen(true);
+                  }}
+                  className="w-full sm:w-auto font-bold rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-sm"
+                >
+                  Prescribe Medication
+                </Button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </AppShell>
   );
 }

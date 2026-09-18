@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 const gridSize = (l: number) => (l <= 2 ? 3 : l <= 5 ? 5 : 7);
@@ -36,7 +35,7 @@ export default function WorkingMemoryGrid({ level }: { level: number }) {
     setTimeout(() => setPhase("recall"), displayTime);
   };
 
-  useEffect(() => {
+  const resetGame = () => {
     setScore(0);
     setCompleted(false);
     setSynced(false);
@@ -45,6 +44,10 @@ export default function WorkingMemoryGrid({ level }: { level: number }) {
     setLastResult(null);
     sessionStart.current = Date.now();
     startRound();
+  };
+
+  useEffect(() => {
+    resetGame();
   }, [level, size, count]);
 
   const toggleCell = (idx: number) => {
@@ -92,85 +95,90 @@ export default function WorkingMemoryGrid({ level }: { level: number }) {
     setTimeout(startRound, 1000);
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((score / target) * 100))}
-          accuracy={Math.min(100, Math.round((score / target) * 100))}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName="Working Memory Grid"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setCompleted(false);
-            setScore(0);
-            saved.current = false;
-            setSynced(false);
-            setOffline(false);
-            sessionStart.current = Date.now();
-            startRound();
-          }}
-        />
-      </>
-    );
+  const finalScore = Math.min(100, Math.round((score / target) * 100));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
 
   return (
-    <div className="flex flex-col items-center space-y-5">
-      <div className="text-sm text-cream/60 text-center">
-        {phase === "show"
-          ? "Memorise the highlighted positions…"
-          : phase === "recall"
-            ? "Select the positions that were highlighted, then Submit"
-            : lastResult === "correct"
-              ? "✓ Correct!"
-              : "✗ Try again!"}
-      </div>
-      <p className="text-xs text-cream/40 font-semibold">
-        Score: {score}/{target} · Remember {count} cells
-      </p>
-
-      <div
-        className="grid gap-1"
-        style={{
-          gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
-          maxWidth: "360px",
-          width: "100%",
-        }}
-      >
-        {Array.from({ length: size * size }).map((_, idx) => {
-          const isActive = positions.includes(idx);
-          const isSelected = selected.has(idx);
-          const showFeedback = phase === "feedback";
-          return (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => toggleCell(idx)}
-              disabled={phase !== "recall"}
-              className={`aspect-square rounded-lg border-2 transition-all
-                ${phase === "show" && isActive ? "bg-sun border-sun" : ""}
-                ${phase === "recall" && isSelected ? "bg-sun/80 border-sun" : ""}
-                ${phase === "recall" && !isSelected ? "bg-ink/60 border-clay hover:border-sun/40" : ""}
-                ${showFeedback && isActive ? "bg-tea-confirm/50 border-tea-confirm" : ""}
-                ${showFeedback && !isActive && isSelected ? "bg-fire/30 border-fire" : ""}
-                ${showFeedback && !isActive && !isSelected ? "bg-ink/60 border-clay" : ""}`}
-              aria-label={`Cell ${idx + 1}`}
-            />
-          );
-        })}
-      </div>
-
-      {phase === "recall" && (
-        <button
-          onClick={checkAnswer}
-          className="px-6 py-3 rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 transition shadow"
+    <GameShell
+      gameId="working-memory-grid"
+      level={level}
+      score={score}
+      targetScore={target}
+      stats={[
+        {
+          label: "Phase",
+          value: phase === "show" ? "Memorise" : phase === "recall" ? "Recall" : "Result",
+          highlight: phase === "show" ? "sun" : "tea-confirm",
+        },
+        { label: "Selected", value: `${selected.size}/${count}` },
+      ]}
+      feedback={
+        lastResult && phase === "feedback"
+          ? {
+              text: lastResult === "correct" ? "✓ Excellent memory!" : "✗ Missed some squares!",
+              type: lastResult === "correct" ? "success" : "error",
+            }
+          : undefined
+      }
+      instructionHint={
+        phase === "show"
+          ? `Memorise the ${count} highlighted tiles before they disappear.`
+          : `Tap the ${count} tiles that were highlighted, then tap Submit.`
+      }
+      completed={completed}
+      results={{
+        score: finalScore,
+        accuracy: 100,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+      onNextLevel={level < 10 ? () => { window.location.href = `/games/working-memory-grid?level=${level + 1}`; } : undefined}
+    >
+      <div className="flex flex-col items-center space-y-6">
+        <div
+          className="grid gap-2 p-3 bg-ink/40 rounded-2xl border border-clay"
+          style={{
+            gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
+            maxWidth: "380px",
+            width: "100%",
+          }}
         >
-          ✓ Submit
-        </button>
-      )}
-    </div>
+          {Array.from({ length: size * size }).map((_, idx) => {
+            const isActive = positions.includes(idx);
+            const isSelected = selected.has(idx);
+            const showFeedback = phase === "feedback";
+            return (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => toggleCell(idx)}
+                disabled={phase !== "recall"}
+                className={`aspect-square min-w-[44px] min-h-[44px] rounded-xl border-2 transition-all touch-manipulation select-none cursor-pointer active:scale-95 shadow-sm
+                  ${phase === "show" && isActive ? "bg-sun border-sun shadow-lg shadow-sun/30 scale-105" : ""}
+                  ${phase === "show" && !isActive ? "bg-ink/60 border-clay" : ""}
+                  ${phase === "recall" && isSelected ? "bg-sun/90 border-sun ring-2 ring-sun/40 text-ink" : ""}
+                  ${phase === "recall" && !isSelected ? "bg-surface/50 border-clay hover:border-sun/40 hover:bg-surface" : ""}
+                  ${showFeedback && isActive ? "bg-tea-confirm/60 border-tea-confirm shadow-lg shadow-tea-confirm/30" : ""}
+                  ${showFeedback && !isActive && isSelected ? "bg-fire/40 border-fire" : ""}
+                  ${showFeedback && !isActive && !isSelected ? "bg-ink/60 border-clay opacity-60" : ""}`}
+                aria-label={`Cell ${idx + 1}`}
+              />
+            );
+          })}
+        </div>
+
+        {phase === "recall" && (
+          <button
+            onClick={checkAnswer}
+            disabled={selected.size === 0}
+            className="px-8 py-3.5 min-h-[48px] rounded-xl bg-sun text-ink font-black text-lg hover:opacity-95 active:scale-95 transition shadow-lg touch-manipulation cursor-pointer disabled:opacity-40"
+          >
+            ✓ Submit Answer ({selected.size}/{count})
+          </button>
+        )}
+      </div>
+    </GameShell>
   );
 }

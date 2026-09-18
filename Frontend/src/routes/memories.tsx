@@ -1,19 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useRef } from "react";
-import { Heart, ArrowLeft, Plus, Volume2, Image as ImageIcon, Trash2 } from "lucide-react";
+import { Heart, ArrowLeft, Plus, Image as ImageIcon, Volume2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { NavigationHeader } from "@/components/navigation-header";
+import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useMemories } from "@/hooks/use-memories";
 import { useLanguage } from "@/context/LanguageContext";
 import { formatApiError } from "@/api/client";
@@ -22,10 +16,10 @@ import defaultMemoryPhoto from "@/assets/memory-triptych.jpg";
 export const Route = createFileRoute("/memories")({
   head: () => ({
     meta: [
-      { title: "My Memories | SmritiSetu" },
+      { title: "Memory Lane | SmritiSetu" },
       {
         name: "description",
-        content: "Familiar people, places, and personal life stories on SmritiSetu.",
+        content: "Cherished photos, family stories, and familiar voices on SmritiSetu.",
       },
     ],
   }),
@@ -33,33 +27,22 @@ export const Route = createFileRoute("/memories")({
 });
 
 function MemoriesPage() {
-  const { memories, isLoading, createMemory, deleteMemory, isCreating } = useMemories();
+  const { memories, createMemory, deleteMemory, isLoading } = useMemories();
   const { t } = useLanguage();
+
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [category, setCategory] = useState<"Family" | "Places" | "Celebrations">("Family");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState<"Family" | "Places" | "Celebrations">("Family");
   const [location, setLocation] = useState("");
   const [imageBase64, setImageBase64] = useState<string>("");
+  const [isCreating, setIsCreating] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const categoryLabels: Record<string, string> = {
+  const categoryLabels = {
     Family: t("memories:family"),
     Places: t("memories:places"),
     Celebrations: t("memories:celebrations"),
-  };
-
-  const handleSpeak = (promptText: string) => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(promptText);
-      utterance.rate = 0.88;
-      utterance.pitch = 1.0;
-      window.speechSynthesis.speak(utterance);
-      toast.info(t("memories:playingRecollection"));
-    } else {
-      toast.info(promptText);
-    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,27 +55,12 @@ function MemoriesPage() {
       img.onload = () => {
         const canvas = document.createElement("canvas");
         const MAX_WIDTH = 800;
-        const MAX_HEIGHT = 600;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
+        const scale = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scale;
         const ctx = canvas.getContext("2d");
-        ctx?.drawImage(img, 0, 0, width, height);
-        const dataUrl = canvas.toDataURL("image/jpeg", 0.75);
+        ctx?.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
         setImageBase64(dataUrl);
       };
       img.src = event.target?.result as string;
@@ -104,23 +72,35 @@ function MemoriesPage() {
     e.preventDefault();
     if (!title.trim() || !description.trim()) return;
 
+    setIsCreating(true);
     try {
       await createMemory({
         title: title.trim(),
         description: description.trim(),
-        location: location.trim() || undefined,
         tags: [category],
+        location: location.trim() || undefined,
         image_url: imageBase64 || undefined,
       });
 
-      toast.success(t("memories:savedSuccess"));
+      toast.success(t("memories:memorySaved"));
       setIsAddOpen(false);
       setTitle("");
       setDescription("");
       setLocation("");
       setImageBase64("");
     } catch (err: unknown) {
-      toast.error(formatApiError(err, "Failed to save memory"));
+      toast.error(formatApiError(err, "Failed to create memory"));
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleSpeak = (text: string) => {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.85;
+      window.speechSynthesis.speak(utterance);
     }
   };
 
@@ -134,35 +114,33 @@ function MemoriesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <NavigationHeader />
-
-      <main className="flex-1 mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12 w-full">
-        {/* Navigation Breadcrumb */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-          <Button asChild variant="cream" size="touch">
+    <AppShell>
+      <div className="px-4 sm:px-8 py-6 max-w-[1550px] w-full mx-auto space-y-7">
+        {/* Navigation Breadcrumb & Action Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <Button asChild variant="outline" className="rounded-full bg-[#121D2B] border-white/8 text-[#E8ECEF] hover:bg-[#152335] shadow-sm font-semibold">
             <Link to="/">
-              <ArrowLeft size={20} className="mr-2" /> {t("common:backHome")}
+              <ArrowLeft size={18} className="mr-2 text-[#22C55E]" /> {t("common:backHome")}
             </Link>
           </Button>
 
           {/* Add Memory Dialog */}
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
-              <Button variant="cream" size="touch" className="text-base font-extrabold">
+              <Button size="touch" className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] text-base font-bold shadow-md">
                 <Plus size={20} className="mr-2" /> {t("memories:addMemory")}
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-surface border-clay text-cream max-w-md max-h-[90vh] overflow-y-auto">
+            <DialogContent className="bg-[#121D2B] border border-white/10 text-[#E8ECEF] max-w-md max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl">
               <DialogHeader>
-                <DialogTitle className="font-display text-2xl font-bold text-cream">
+                <DialogTitle className="font-serif text-2xl font-bold text-[#E8ECEF]">
                   {t("memories:addMemoryDialogTitle")}
                 </DialogTitle>
               </DialogHeader>
 
               <form onSubmit={handleAddMemory} className="space-y-4 mt-4">
                 <div>
-                  <Label htmlFor="mem-title" className="text-sm font-bold text-cream">
+                  <Label htmlFor="mem-title" className="text-sm font-bold text-[#E8ECEF]">
                     {t("memories:memoryTitle")}
                   </Label>
                   <Input
@@ -171,12 +149,12 @@ function MemoriesPage() {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g. Diwalis with Family in Jaipur"
-                    className="bg-ink border-clay text-cream mt-1"
+                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-xl mt-1 focus:border-[#22C55E]"
                   />
                 </div>
 
                 <div>
-                  <Label className="text-sm font-bold text-cream mb-1 block">
+                  <Label className="text-sm font-bold text-[#E8ECEF] mb-1 block">
                     {t("memories:category")}
                   </Label>
                   <div className="grid grid-cols-3 gap-2">
@@ -185,10 +163,10 @@ function MemoriesPage() {
                         key={cat}
                         type="button"
                         onClick={() => setCategory(cat)}
-                        className={`py-2 rounded-lg text-xs font-bold transition ${
+                        className={`py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                           category === cat
-                            ? "bg-sun text-ink shadow-sm"
-                            : "bg-ink border border-clay text-cream hover:bg-clay"
+                            ? "bg-[#22C55E] text-[#0A1420] shadow-sm"
+                            : "bg-[#0A1420] border border-white/10 text-[#8A99A8] hover:text-[#E8ECEF]"
                         }`}
                       >
                         {categoryLabels[cat] || cat}
@@ -198,7 +176,7 @@ function MemoriesPage() {
                 </div>
 
                 <div>
-                  <Label htmlFor="mem-loc" className="text-sm font-bold text-cream">
+                  <Label htmlFor="mem-loc" className="text-sm font-bold text-[#E8ECEF]">
                     {t("memories:location")}
                   </Label>
                   <Input
@@ -206,12 +184,12 @@ function MemoriesPage() {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="e.g. Shimla / Home Veranda"
-                    className="bg-ink border-clay text-cream mt-1"
+                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-xl mt-1 focus:border-[#22C55E]"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="mem-desc" className="text-sm font-bold text-cream">
+                  <Label htmlFor="mem-desc" className="text-sm font-bold text-[#E8ECEF]">
                     {t("memories:description")}
                   </Label>
                   <Textarea
@@ -221,12 +199,12 @@ function MemoriesPage() {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Describe who was there, how it felt, or familiar sights…"
-                    className="bg-ink border-clay text-cream mt-1"
+                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-xl mt-1 focus:border-[#22C55E]"
                   />
                 </div>
 
                 <div>
-                  <Label className="text-sm font-bold text-cream mb-1 block">
+                  <Label className="text-sm font-bold text-[#E8ECEF] mb-1 block">
                     {t("memories:uploadPhoto")}
                   </Label>
                   <input
@@ -242,16 +220,16 @@ function MemoriesPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => fileInputRef.current?.click()}
-                      className="border-clay text-cream hover:bg-clay"
+                      className="rounded-full border-white/10 text-[#E8ECEF] bg-[#0A1420] hover:bg-white/5"
                     >
-                      <ImageIcon size={18} className="mr-2" /> {t("memories:uploadPhoto")}
+                      <ImageIcon size={18} className="mr-2 text-[#22C55E]" /> {t("memories:uploadPhoto")}
                     </Button>
                     {imageBase64 && (
-                      <span className="text-xs text-tea-confirm font-bold">Photo attached</span>
+                      <span className="text-xs text-[#22C55E] font-bold">Photo attached</span>
                     )}
                   </div>
                   {imageBase64 && (
-                    <div className="mt-2 relative rounded-lg overflow-hidden border border-clay max-h-40">
+                    <div className="mt-2 relative rounded-2xl overflow-hidden border border-white/10 max-h-40">
                       <img src={imageBase64} alt="Preview" className="w-full h-36 object-cover" />
                     </div>
                   )}
@@ -260,13 +238,13 @@ function MemoriesPage() {
                 <div className="pt-4 flex justify-end gap-3">
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="outline"
                     onClick={() => setIsAddOpen(false)}
-                    className="border border-clay text-cream"
+                    className="rounded-full border-white/10 text-[#8A99A8] hover:text-[#E8ECEF] bg-[#0A1420]"
                   >
                     {t("common:cancel")}
                   </Button>
-                  <Button type="submit" variant="cream" disabled={isCreating}>
+                  <Button type="submit" disabled={isCreating} className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-bold">
                     {isCreating ? t("common:loading") : t("memories:saveMemory")}
                   </Button>
                 </div>
@@ -276,89 +254,88 @@ function MemoriesPage() {
         </div>
 
         {/* Title Card */}
-        <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card mb-8">
-          <div className="flex items-center gap-4">
-            <span className="flex size-16 items-center justify-center rounded-2xl bg-sun text-ink shadow-sm">
-              <Heart size={36} />
+        <div className="relative overflow-hidden rounded-3xl border border-white/8 bg-gradient-to-br from-[#13283E] via-[#0F2032] to-[#0A1420] p-6 sm:p-8 shadow-2xl">
+          <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#22C55E]/10 blur-3xl pointer-events-none" />
+          <div className="relative z-10 flex items-center gap-4">
+            <span className="flex size-16 items-center justify-center rounded-2xl bg-[#22C55E] text-[#0A1420] shadow-md shrink-0">
+              <Heart size={34} />
             </span>
             <div>
-              <h1 className="font-display text-3xl sm:text-4xl font-bold text-cream">
+              <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#E8ECEF]">
                 {t("memories:pageTitle")}
               </h1>
-              <p className="text-cream/80 mt-1">{t("memories:pageSubtitle")}</p>
+              <p className="text-[#8A99A8] mt-1 font-medium text-sm sm:text-base">{t("memories:pageSubtitle")}</p>
             </div>
           </div>
         </div>
 
         {/* Memory Grid / Empty State */}
         {isLoading ? (
-          <div className="py-20 text-center text-cream/70 text-xl font-medium">
+          <div className="py-20 text-center text-[#8A99A8] text-xl font-medium">
             {t("common:loading")}
           </div>
         ) : memories.length === 0 ? (
-          <div className="rounded-2xl border border-clay bg-surface/50 p-12 text-center">
-            <span className="flex size-20 items-center justify-center rounded-full bg-clay/50 text-cream/70 mx-auto mb-4">
+          <div className="rounded-3xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-12 text-center shadow-md">
+            <span className="flex size-20 items-center justify-center rounded-full bg-rose-500/15 text-rose-400 mx-auto mb-4 border border-rose-500/30">
               <Heart size={40} />
             </span>
-            <h2 className="text-2xl font-bold text-cream">{t("memories:emptyMemories")}</h2>
-            <p className="mt-2 text-lg text-cream/70 max-w-md mx-auto">
+            <h2 className="text-2xl font-bold text-[#E8ECEF]">{t("memories:emptyMemories")}</h2>
+            <p className="mt-2 text-lg text-[#8A99A8] max-w-md mx-auto">
               {t("dashboard:memoriesEmptyDesc")}
             </p>
             <Button
-              variant="cream"
               size="touch"
               onClick={() => setIsAddOpen(true)}
-              className="mt-6 text-base font-extrabold"
+              className="mt-6 text-base font-bold rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-md"
             >
               <Plus size={20} className="mr-2" /> {t("dashboard:createFirstMemory")}
             </Button>
           </div>
         ) : (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {memories.map((m) => {
               const tag = m.tags && m.tags.length > 0 ? m.tags[0] : "Memory";
-              const localizedTag = categoryLabels[tag] || tag;
+              const localizedTag = categoryLabels[tag as keyof typeof categoryLabels] || tag;
               const voiceText = `${m.title}. ${m.description}`;
               return (
                 <article
                   key={m.id}
-                  className="rounded-2xl border border-clay bg-surface overflow-hidden shadow-card hover:shadow-card-active transition duration-300 flex flex-col justify-between"
+                  className="rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md overflow-hidden shadow-md hover:border-white/15 transition duration-300 flex flex-col justify-between"
                 >
                   <div>
                     <img
                       src={m.image_url || defaultMemoryPhoto}
                       alt={m.title}
-                      className="h-48 w-full object-cover border-b border-clay/60"
+                      className="h-48 w-full object-cover border-b border-white/5"
                     />
                     <div className="p-6">
-                      <div className="flex items-center justify-between text-xs font-bold text-sun mb-2">
-                        <span className="uppercase tracking-wider">{localizedTag}</span>
-                        {m.location && <span className="text-cream/60">{m.location}</span>}
+                      <div className="flex items-center justify-between text-xs font-bold text-[#22C55E] mb-2">
+                        <span className="uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30">{localizedTag}</span>
+                        {m.location && <span className="text-[#8A99A8] font-medium">{m.location}</span>}
                       </div>
-                      <h2 className="font-display text-2xl font-bold text-cream mb-2 leading-tight">
+                      <h2 className="font-display text-xl sm:text-2xl font-bold text-[#E8ECEF] mb-2 leading-tight">
                         {m.title}
                       </h2>
-                      <p className="text-cream/80 text-base leading-relaxed">{m.description}</p>
+                      <p className="text-[#8A99A8] text-sm leading-relaxed">{m.description}</p>
                     </div>
                   </div>
 
-                  <div className="p-6 pt-0 border-t border-clay/40 mt-4 flex items-center gap-2">
+                  <div className="p-6 pt-0 border-t border-white/5 mt-4 flex items-center gap-2">
                     <Button
                       type="button"
-                      variant="cream"
                       size="touch"
                       onClick={() => handleSpeak(voiceText)}
-                      className="flex-1 text-base font-extrabold gap-2 mt-4"
+                      className="flex-1 text-sm sm:text-base font-bold gap-2 mt-4 rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-md"
                     >
-                      <Volume2 size={20} /> {t("memories:listenRecollection")}
+                      <Volume2 size={18} /> {t("memories:listenRecollection")}
                     </Button>
                     <button
                       type="button"
                       onClick={() => handleDeleteMemory(m.id)}
-                      className="mt-4 p-3 rounded-xl border border-clay text-cream/60 hover:text-fire hover:border-fire transition"
+                      className="mt-4 p-3 rounded-full border border-white/10 bg-[#0A1420] text-[#8A99A8] hover:text-[#E85D6B] hover:border-[#E85D6B]/40 transition shadow-sm cursor-pointer"
                       title={t("common:delete")}
                     >
-                      <Trash2 size={20} />
+                      <Trash2 size={18} />
                     </button>
                   </div>
                 </article>
@@ -366,7 +343,7 @@ function MemoriesPage() {
             })}
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </AppShell>
   );
 }

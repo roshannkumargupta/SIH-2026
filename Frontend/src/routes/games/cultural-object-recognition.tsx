@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import CulturalObjectRecognition from "@/features/games/games/CulturalObjectRecognition";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/cultural-object-recognition")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -10,7 +8,7 @@ export const Route = createFileRoute("/games/cultural-object-recognition")({
   head: () => ({
     meta: [
       { title: "Cultural Object Recognition | SmritiSetu" },
-      { name: "description", content: "Cultural heritage cognitive game on SmritiSetu." },
+      { name: "description", content: "Cognitive training game on SmritiSetu." },
     ],
   }),
   component: CulturalObjectRecognitionPage,
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/cultural-object-recognition")({
 
 function CulturalObjectRecognitionPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("cultural-object-recognition")!;
-  return (
-    <GameShell game={game} level={level}>
-      <CulturalObjectRecognition level={level} />
-    </GameShell>
-  );
+  return <CulturalObjectRecognition level={level} />;
 }

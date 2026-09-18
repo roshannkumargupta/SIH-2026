@@ -61,33 +61,33 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0A1420] text-[#E8ECEF] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link to="/" className="inline-flex items-center gap-3">
-          <span className="flex size-14 items-center justify-center rounded-xl bg-sun text-ink shadow-md">
-            <House size={32} strokeWidth={2.5} />
+          <span className="flex size-14 items-center justify-center rounded-2xl bg-[#22C55E] text-[#0A1420] shadow-sm">
+            <House size={28} strokeWidth={2.5} />
           </span>
-          <span className="font-display text-4xl font-bold text-cream">SmritiSetu</span>
+          <span className="font-display text-4xl font-bold text-[#E8ECEF]">SmritiSetu</span>
         </Link>
-        <h1 className="mt-6 text-3xl font-bold tracking-tight text-cream">
+        <h1 className="mt-6 text-3xl font-display font-bold tracking-tight text-[#E8ECEF]">
           {t("auth:signInTitle")}
         </h1>
-        <p className="mt-2 text-base text-cream/70">{t("auth:signInSubtitle")}</p>
+        <p className="mt-2 text-base text-[#8A99A8] font-medium">{t("auth:signInSubtitle")}</p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-lg px-4">
         {/* Credentials Login Form */}
-        <div className="rounded-2xl border border-clay bg-surface p-8 shadow-card">
+        <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-8 sm:p-10 shadow-2xl">
           {errorMessage && (
-            <div className="mb-6 flex items-center gap-3 rounded-xl border border-fire/60 bg-fire/15 p-4 text-sm text-cream">
-              <AlertCircle size={20} className="shrink-0 text-fire" />
-              <span>{errorMessage}</span>
+            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-300">
+              <AlertCircle size={20} className="shrink-0 text-rose-400" />
+              <span className="font-medium">{errorMessage}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <Label htmlFor="email" className="block text-base font-bold text-cream mb-2">
+              <Label htmlFor="email" className="block text-sm font-bold text-[#E8ECEF] mb-2">
                 {t("auth:email")}
               </Label>
               <Input
@@ -97,12 +97,12 @@ function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="h-12 text-base bg-ink border-clay text-cream focus-visible:ring-sun"
+                className="h-12 text-base bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl focus-visible:ring-[#22C55E] shadow-sm"
               />
             </div>
 
             <div>
-              <Label htmlFor="password" className="block text-base font-bold text-cream mb-2">
+              <Label htmlFor="password" className="block text-sm font-bold text-[#E8ECEF] mb-2">
                 {t("auth:password")}
               </Label>
               <Input
@@ -112,16 +112,15 @@ function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="h-12 text-base bg-ink border-clay text-cream focus-visible:ring-sun"
+                className="h-12 text-base bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl focus-visible:ring-[#22C55E] shadow-sm"
               />
             </div>
 
             <Button
               type="submit"
               disabled={isLoading}
-              variant="cream"
               size="touch"
-              className="w-full text-lg mt-2 font-bold"
+              className="w-full text-base sm:text-lg mt-3 font-bold rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-lg shadow-[#22C55E]/20"
             >
               {isLoading ? (
                 t("common:loading")
@@ -133,9 +132,9 @@ function LoginPage() {
             </Button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-cream/70">
+          <div className="mt-6 text-center text-sm text-[#8A99A8] font-medium">
             {t("auth:dontHaveAccount")}{" "}
-            <Link to="/register" className="font-bold text-sun hover:underline">
+            <Link to="/register" className="font-bold text-[#22C55E] hover:underline">
               {t("common:register")}
             </Link>
           </div>

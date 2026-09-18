@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import DelayedRecall from "@/features/games/games/DelayedRecall";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/delayed-recall")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/delayed-recall")({
 
 function DelayedRecallPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("delayed-recall")!;
-  return (
-    <GameShell game={game} level={level}>
-      <DelayedRecall level={level} />
-    </GameShell>
-  );
+  return <DelayedRecall level={level} />;
 }

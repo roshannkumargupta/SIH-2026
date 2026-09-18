@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import TowerOfHanoi from "@/features/games/games/TowerOfHanoi";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/tower-of-hanoi")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/tower-of-hanoi")({
 
 function TowerOfHanoiPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("tower-of-hanoi")!;
-  return (
-    <GameShell game={game} level={level}>
-      <TowerOfHanoi level={level} />
-    </GameShell>
-  );
+  return <TowerOfHanoi level={level} />;
 }

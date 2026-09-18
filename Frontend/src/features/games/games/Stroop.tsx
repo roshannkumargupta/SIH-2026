@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 export type StroopProps = { level: number };
@@ -82,67 +81,60 @@ export default function Stroop({ level }: StroopProps) {
     setTimeout(() => setFeedback(null), 900);
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((score / target) * 100))}
-          accuracy={Math.min(100, Math.round((score / target) * 100))}
-          durationSeconds={Math.round((Date.now() - startTime.current) / 1000)}
-          level={level}
-          gameName="Stroop Test"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setCompleted(false);
-            saved.current = false;
-            setScore(0);
-            setSynced(false);
-            setOffline(false);
-            startTime.current = Date.now();
-          }}
-        />
-      </>
-    );
+  const finalAccuracy = Math.min(100, Math.round((score / target) * 100));
+  const finalDuration = Math.round((Date.now() - startTime.current) / 1000);
+
+  const resetGame = () => {
+    setCompleted(false);
+    saved.current = false;
+    setScore(0);
+    setSynced(false);
+    setOffline(false);
+    startTime.current = Date.now();
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <p className="text-cream/60 text-sm mb-4">
-          Click the COLOR of the ink — ignore what the word says!
-        </p>
-        <div className="mx-auto rounded-2xl border-4 border-clay bg-ink p-8 inline-block shadow-card">
-          <span
-            className="font-display text-6xl sm:text-7xl font-black"
-            style={{ color: COLOR_HEX[word.color] ?? "#fff" }}
-          >
-            {word.text}
-          </span>
+    <GameShell
+      gameId="stroop"
+      level={level}
+      score={score}
+      targetScore={target}
+      feedback={feedback}
+      instructionHint="Click the COLOR of the ink — ignore what the word says!"
+      completed={completed}
+      results={{
+        score: finalAccuracy,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+    >
+      <div className="space-y-8">
+        <div className="text-center">
+          <div className="mx-auto rounded-2xl border-4 border-clay bg-ink p-8 inline-block shadow-card">
+            <span
+              className="font-display text-6xl sm:text-7xl font-black"
+              style={{ color: COLOR_HEX[word.color] ?? "#fff" }}
+            >
+              {word.text}
+            </span>
+          </div>
         </div>
-        <div className="mt-3 text-cream/60 text-sm font-semibold">
-          Score: <span className="text-sun font-bold text-xl">{score}</span> / {target}
-        </div>
-        {feedback && (
-          <p
-            className={`mt-2 text-sm font-semibold ${feedback.startsWith("✓") ? "text-tea-confirm" : "text-fire"}`}
-          >
-            {feedback}
-          </p>
-        )}
-      </div>
 
-      <div className="flex flex-wrap gap-3 justify-center">
-        {ALL_COLORS.map((c) => (
-          <button
-            key={c}
-            onClick={() => press(c)}
-            className={`px-6 py-3 rounded-xl text-white text-lg font-extrabold shadow transition-all hover:scale-105 active:scale-95 ${BTN_STYLE[c]}`}
-          >
-            {c}
-          </button>
-        ))}
+        <div className="flex flex-wrap gap-3 justify-center">
+          {ALL_COLORS.map((c) => (
+            <button
+              key={c}
+              onClick={() => press(c)}
+              className={`px-8 py-4 min-h-[48px] min-w-[48px] rounded-xl text-white text-lg font-extrabold shadow-md transition-all touch-manipulation select-none hover:scale-105 active:scale-95 ${BTN_STYLE[c]}`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
       </div>
-    </div>
+    </GameShell>
   );
 }

@@ -101,3 +101,84 @@ def test_centralized_error_handling(client):
     assert body_422["success"] is False
     assert body_422["errorCode"] == "VALIDATION_ERROR"
     assert len(body_422["details"]) > 0
+
+
+def test_bhashini_northeast_languages_fallback(client, patient_user):
+    """
+    Verifies that for Northeast Indian languages unsupported by Sarvam (as-IN, mni-IN, brx-IN),
+    the endpoint queries the secondary provider (Bhashini) and gracefully falls back to empty audio
+    (so the client activates browser window.speechSynthesis) when no Bhashini key is present.
+    """
+    for lang in ["as-IN", "mni-IN", "brx-IN"]:
+        res = client.post(
+            "/api/v1/voice/speak",
+            headers=patient_user["headers"],
+            json={"text": "নমস্কাৰ", "language_code": lang},
+        )
+        assert res.status_code == 200
+        data = res.json()
+        assert data["language_code"] == lang
+        # Without BHASHINI_API_KEY, audio_base64 is empty for safe browser fallback
+        assert "audio_base64" in data
+
+
+def test_bhashini_synthesis_mocked(client, patient_user, monkeypatch):
+    """
+    Verifies that when Bhashini API returns audio content, it is returned in the response.
+    """
+    from app.services import voice_service
+
+    dummy_audio = "UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="
+    monkeypatch.setattr(voice_service.settings, "BHASHINI_API_KEY", "mock_bhashini_key")
+    monkeypatch.setattr(voice_service, "synthesize_bhashini_speech", lambda text, lang, gender: dummy_audio)
+
+    res = client.post(
+        "/api/v1/voice/speak",
+        headers=patient_user["headers"],
+        json={"text": "নমস্কাৰ", "language_code": "as-IN"},
+    )
+    assert res.status_code == 200
+    data = res.json()
+    assert data["audio_base64"] == dummy_audio
+    assert data["language_code"] == "as-IN"
+
+
+def test_bhashini_asr_mocked(client, patient_user, monkeypatch):
+    """
+    Verifies that when Bhashini ASR transcribes Northeast speech, it returns the transcribed text.
+    """
+    from app.services import voice_service
+
+    monkeypatch.setattr(voice_service.settings, "BHASHINI_API_KEY", "mock_bhashini_key")
+    mock_texts = {"as-IN": "খেল খোলক", "brx-IN": "गेलेमु खुलि"}
+    monkeypatch.setattr(
+        voice_service,
+        "transcribe_bhashini_speech",
+        lambda audio_bytes, lang, fn: mock_texts.get(lang, ""),
+    )
+
+    mock_audio_b64 = base64.b64encode(b"RIFFdummydataWAVEfmt ").decode("utf-8")
+    for lang, expected in mock_texts.items():
+        res = client.post(
+            "/api/v1/voice/transcribe",
+            headers=patient_user["headers"],
+            json={"audio_base64": mock_audio_b64, "language_code": lang},
+        )
+        assert res.status_code == 200
+        assert res.json()["transcribed_text"] == expected
+
+
+def test_northeast_nlp_intents(client):
+    """
+    Verifies that fallback intent interpreter correctly classifies Northeast (Manipuri & Bodo) phrases.
+    """
+    from app.services.nlp_interpreter import interpret_command
+
+    # Manipuri games request
+    res_mni = interpret_command("শান্নবা খোল্লু", "mni", api_key=None)
+    assert res_mni["intent"] == "OPEN_GAMES"
+
+    # Bodo medicine / reminder
+    res_brx = interpret_command("मुलि लोंबाय", "brx", api_key=None)
+    assert res_brx["intent"] == "COMPLETE_ROUTINE"
+

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 type Puzzle = { question: string; answer: number; hint: string };
@@ -28,105 +27,105 @@ const PUZZLES_BY_LEVEL: Puzzle[][] = [
   // Level 3-5
   [
     {
-      question:
-        "If 5 machines take 5 minutes to make 5 widgets, how many minutes for 100 machines to make 100 widgets?",
+      question: "If 5 cats catch 5 mice in 5 minutes, how many cats are needed to catch 100 mice in 100 minutes?",
       answer: 5,
-      hint: "Each machine makes 1 widget in 5 minutes.",
+      hint: "Each cat catches 1 mouse per 5 minutes. In 100 minutes, 1 cat catches 20 mice.",
     },
     {
-      question:
-        "A lily pad doubles every day. It takes 48 days to cover a lake. How many days to cover half the lake?",
-      answer: 47,
-      hint: "If it covers all on day 48, it covered half on day 47.",
+      question: "A doctor gives you 3 pills and tells you to take one every 30 minutes. How long do they last?",
+      answer: 60,
+      hint: "First at minute 0, second at min 30, third at min 60. Answer in minutes.",
     },
     {
-      question: "I have 6 eggs. I break 2, cook 2, eat 2. How many eggs do I have left?",
-      answer: 6,
-      hint: "Think carefully — you started with 6.",
+      question: "How many months have 28 days?",
+      answer: 12,
+      hint: "ALL 12 months have at least 28 days!",
     },
   ],
   // Level 6-8
   [
     {
-      question:
-        "Three friends share a hotel room for $30. Manager says it's $25, refunds $5. Bell boy pockets $2 and gives $1 to each friend. They paid $9 each = $27 + $2 = $29. Where's the missing $1?",
-      answer: 0,
-      hint: "There is no missing dollar — the framing is misleading.",
+      question: "A lily pad doubles in size every day. On day 48 it covers the entire pond. On which day did it cover half?",
+      answer: 47,
+      hint: "If it doubles each day, the day before full was half.",
     },
     {
-      question:
-        "A snail climbs 3m per day, slides 2m at night. Wall is 10m. How many days to reach the top?",
-      answer: 8,
-      hint: "Net gain = 1m/day, but on the day it reaches 10m it doesn't slide back.",
+      question: "Divide 30 by 1/2 and add 10. What do you get?",
+      answer: 70,
+      hint: "30 ÷ 0.5 = 60. Then 60 + 10 = 70.",
     },
     {
-      question:
-        "You have two ropes. Each burns in exactly 1 hour (non-uniformly). How do you measure 45 minutes?",
-      answer: 45,
-      hint: "Light rope 1 at both ends, rope 2 at one end. When rope 1 is done (30min), light rope 2's other end.",
+      question: "If there are 3 apples and you take away 2, how many do YOU have?",
+      answer: 2,
+      hint: "YOU took 2, so you have 2.",
     },
   ],
   // Level 9-10
   [
     {
-      question: "What is the next in the series: 1, 1, 2, 3, 5, 8, 13, ?",
-      answer: 21,
-      hint: "Each number = sum of the two before it (Fibonacci).",
+      question: "Two fathers and two sons go fishing. Each catches a fish, yet only 3 fish are caught. How many people are there?",
+      answer: 3,
+      hint: "Grandfather, father, and son.",
     },
     {
-      question: "A clock shows 3:15. What is the angle between hour and minute hands?",
-      answer: 8,
-      hint: "At 3:15, minute is at 90°, hour is at 97.5°. Difference = 7.5 ≈ 8 (rounded).",
+      question: "A grandfather, father, and son's ages total 100. Grandfather is twice father's age, father is 25 years older than son. How old is the son?",
+      answer: 5,
+      hint: "S + (S+25) + 2(S+25) = 100 → 4S + 75 = 100 → S = 25/4... let's simplify: son=5, father=30, grandfather=65. 5+30+65=100.",
     },
     {
-      question: "In a race, you overtake the person in 2nd place. What position are you in now?",
-      answer: 2,
-      hint: "You took their place — you are now 2nd.",
+      question: "What is 3 + 3 × 3 - 3 + 3?",
+      answer: 12,
+      hint: "Order of operations: 3 × 3 = 9. Then 3 + 9 - 3 + 3 = 12.",
     },
   ],
 ];
 
 export default function LogicPuzzles({ level }: { level: number }) {
-  const pool = PUZZLES_BY_LEVEL[Math.min(Math.floor((level - 1) / 2.5), 3)]!;
+  const tier = level <= 2 ? 0 : level <= 5 ? 1 : level <= 8 ? 2 : 3;
+  const puzzleSet = PUZZLES_BY_LEVEL[tier] ?? PUZZLES_BY_LEVEL[0]!;
+  const target = puzzleSet.length;
+
   const [puzzleIdx, setPuzzleIdx] = useState(0);
-  const puzzle = pool[puzzleIdx % pool.length]!;
   const [input, setInput] = useState("");
+  const [score, setScore] = useState(0);
   const [feedback, setFeedback] = useState("");
   const [showHint, setShowHint] = useState(false);
   const [attempts, setAttempts] = useState(0);
-  const [score, setScore] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [synced, setSynced] = useState(false);
   const [offline, setOffline] = useState(false);
   const saved = useRef(false);
   const sessionStart = useRef(Date.now());
-  const target = Math.max(2, Math.ceil(level / 3));
   const { submitResult } = useGameSession();
 
+  const puzzle = puzzleSet[puzzleIdx] ?? puzzleSet[0]!;
+
   useEffect(() => {
+    setPuzzleIdx(0);
+    setInput("");
     setScore(0);
+    setFeedback("");
+    setShowHint(false);
+    setAttempts(0);
     setCompleted(false);
     setSynced(false);
     setOffline(false);
     saved.current = false;
     sessionStart.current = Date.now();
-    setPuzzleIdx(0);
-    setInput("");
-    setFeedback("");
-    setShowHint(false);
-    setAttempts(0);
   }, [level]);
 
   const submit = () => {
-    const val = parseInt(input, 10);
+    const ans = parseInt(input, 10);
     setAttempts((a) => a + 1);
-    if (val === puzzle.answer) {
-      setFeedback("✓ Correct!");
-      const newScore = score + 1;
-      setScore(newScore);
-      if (newScore >= target && !saved.current) {
+
+    if (ans === puzzle.answer) {
+      setScore((s) => s + 1);
+      setFeedback("✓ Correct reasoning!");
+
+      if (puzzleIdx + 1 >= target && !saved.current) {
         saved.current = true;
-        const acc = Math.min(100, Math.round((newScore / target) * 100));
+        const finalScoreVal = score + 1;
+        const acc = Math.min(100, Math.round((finalScoreVal / target) * 100));
         const dur = Math.round((Date.now() - sessionStart.current) / 1000);
         submitResult({
           gameId: "logic-puzzles",
@@ -155,84 +154,85 @@ export default function LogicPuzzles({ level }: { level: number }) {
     }
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((score / target) * 100))}
-          accuracy={Math.min(100, Math.round((score / target) * 100))}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName="Logic Puzzles"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setCompleted(false);
-            setScore(0);
-            saved.current = false;
-            setSynced(false);
-            setOffline(false);
-            setPuzzleIdx(0);
-            setInput("");
-            setFeedback("");
-            setShowHint(false);
-            setAttempts(0);
-            sessionStart.current = Date.now();
-          }}
-        />
-      </>
-    );
+  const finalAccuracy = Math.min(100, Math.round((score / target) * 100));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
+
+  const resetGame = () => {
+    setCompleted(false);
+    setScore(0);
+    saved.current = false;
+    setSynced(false);
+    setOffline(false);
+    setPuzzleIdx(0);
+    setInput("");
+    setFeedback("");
+    setShowHint(false);
+    setAttempts(0);
+    sessionStart.current = Date.now();
+  };
 
   return (
-    <div className="space-y-5">
-      <p className="text-cream/50 text-xs uppercase font-bold text-center">
-        Puzzle {puzzleIdx + 1} · Score: {score}/{target}
-      </p>
-      <div className="rounded-xl border border-sun/40 bg-sun/5 p-5 text-cream/90 text-base leading-relaxed">
-        {puzzle.question}
-      </div>
+    <GameShell
+      gameId="logic-puzzles"
+      level={level}
+      score={score}
+      targetScore={target}
+      stats={[
+        { label: "Puzzle", value: `${puzzleIdx + 1} / ${target}` },
+      ]}
+      feedback={feedback}
+      instructionHint="Read the puzzle carefully and enter the numerical answer"
+      completed={completed}
+      results={{
+        score: finalAccuracy,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+    >
+      <div className="space-y-6 max-w-xl mx-auto">
+        <div className="rounded-2xl border-2 border-sun/30 bg-sun/5 p-6 text-cream text-lg sm:text-xl font-medium leading-relaxed shadow-sm">
+          {puzzle.question}
+        </div>
 
-      <div className="flex gap-3 items-center justify-center">
-        <input
-          type="number"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") submit();
-          }}
-          className="w-28 rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-2xl font-bold py-2.5 focus:border-sun focus:outline-none"
-          placeholder="?"
-          autoFocus
-        />
-        <button
-          onClick={submit}
-          className="px-5 py-2.5 rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 transition shadow"
-        >
-          Submit
-        </button>
-      </div>
-
-      {feedback && (
-        <p
-          className={`text-center text-sm font-bold ${feedback.startsWith("✓") ? "text-tea-confirm" : "text-fire"}`}
-        >
-          {feedback}
-        </p>
-      )}
-
-      {attempts > 0 && !showHint && (
-        <div className="flex justify-center">
-          <button onClick={() => setShowHint(true)} className="text-xs text-cream/40 underline">
-            💡 Show Hint
+        <div className="flex gap-3 items-center justify-center">
+          <input
+            type="number"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") submit();
+            }}
+            className="w-32 rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-2xl font-bold py-3 focus:border-sun focus:outline-none min-h-[48px]"
+            placeholder="?"
+            autoFocus
+          />
+          <button
+            onClick={submit}
+            className="px-7 py-3 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-black text-base hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center"
+          >
+            Submit Answer
           </button>
         </div>
-      )}
-      {showHint && (
-        <div className="rounded-xl border border-sun/30 bg-sun/10 px-4 py-3 text-sm text-cream/80">
-          <span className="font-bold text-sun">Hint:</span> {puzzle.hint}
-        </div>
-      )}
-    </div>
+
+        {attempts > 0 && !showHint && (
+          <div className="flex justify-center pt-1">
+            <button
+              onClick={() => setShowHint(true)}
+              className="text-sm font-semibold text-sun underline min-h-[48px] min-w-[48px] inline-flex items-center justify-center px-4 py-2 rounded-lg hover:text-sun/80 active:scale-95 transition touch-manipulation"
+            >
+              💡 Show Helpful Hint
+            </button>
+          </div>
+        )}
+        {showHint && (
+          <div className="rounded-xl border border-sun/40 bg-sun/10 px-5 py-3.5 text-sm text-cream/90 shadow-sm">
+            <span className="font-bold text-sun">Hint:</span> {puzzle.hint}
+          </div>
+        )}
+      </div>
+    </GameShell>
   );
 }

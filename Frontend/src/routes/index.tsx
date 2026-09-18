@@ -1,21 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ArrowRight,
   Brain,
   CalendarDays,
   Check,
   Pill,
-  Volume2,
   Sparkles,
   RefreshCw,
   Heart,
   Droplets,
+  Play,
+  Activity,
+  Trophy,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { NavigationHeader } from "@/components/navigation-header";
+import { AppShell } from "@/components/layout/AppShell";
 import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTasks } from "@/hooks/use-tasks";
@@ -26,6 +29,8 @@ import { useHydration } from "@/hooks/use-hydration";
 import { useMood } from "@/hooks/use-mood";
 import type { MoodType } from "@/types/api";
 import { formatApiError } from "@/api/client";
+import { GAME_REGISTRY } from "@/features/games/data/gameRegistry";
+import defaultProfilePhoto from "@/assets/default-avatar.svg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -52,7 +57,7 @@ function Index() {
   const { user } = useAuth();
   const { t, language } = useLanguage();
   const { todayTasks, completeTask, isLoading: tasksLoading } = useTasks();
-  const { todayLogs, todaySchedules, updateLogStatus, isLoading: medsLoading } = useMedications();
+  const { todayLogs, todaySchedules, updateLogStatus } = useMedications();
   const { memories } = useMemories();
   const { summary: gameSummary } = useGames();
   const { summary: hydrationSummary, glassCount, logWater, isLogging } = useHydration();
@@ -157,501 +162,666 @@ function Index() {
     }
   };
 
+  // Rotating Badge Palette for cards and reminders
+  const badgePalette = ["#E85D6B", "#4DA3E0", "#9B7FE0", "#2DD4BF", "#E0A23B"];
+
+  // 4 Featured Cognitive Games
+  const featuredGames = [
+    {
+      id: "water-jugs",
+      title: "Water Jugs",
+      desc: "Measure exact water using logic and careful planning.",
+      difficulty: "Medium",
+      diffColor: "bg-[#E0A23B]/15 text-[#E0A23B] border-[#E0A23B]/30",
+      icon: "🪣",
+      gradient: "from-[#1a3854] to-[#122435]",
+    },
+    {
+      id: "tower-of-hanoi",
+      title: "Tower of Hanoi",
+      desc: "Move disks following rules to build recursive agility.",
+      difficulty: "Medium",
+      diffColor: "bg-[#E0A23B]/15 text-[#E0A23B] border-[#E0A23B]/30",
+      icon: "🗼",
+      gradient: "from-[#222e4d] to-[#121c32]",
+    },
+    {
+      id: "ball-sort",
+      title: "Ball Sort Puzzle",
+      desc: "Sort vibrant balls into matching tubes with clarity.",
+      difficulty: "Easy",
+      diffColor: "bg-[#22C55E]/15 text-[#22C55E] border-[#22C55E]/30",
+      icon: "🎱",
+      gradient: "from-[#1d3a3d] to-[#112426]",
+    },
+    {
+      id: "n-back",
+      title: "N-Back Recall",
+      desc: "Remember items from N steps back to boost working memory.",
+      difficulty: "Hard",
+      diffColor: "bg-[#E85D6B]/15 text-[#E85D6B] border-[#E85D6B]/30",
+      icon: "🧠",
+      gradient: "from-[#352549] to-[#1a1426]",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      {/* Central Accessible Navigation Header */}
-      <NavigationHeader progress={progress} />
-
-      <main className="flex-1 mx-auto max-w-7xl px-5 pb-20 pt-8 sm:px-8 sm:pt-12 w-full">
-        {/* Reassuring Greeting */}
-        <p className="text-xl font-extrabold uppercase tracking-wider text-sun">{todayFormatted}</p>
-        <h1 className="mt-3 font-display text-5xl font-bold leading-tight text-cream sm:text-7xl">
-          {t(greetingKey, { name: patientName })} <span aria-hidden="true">👋</span>
-        </h1>
-        <p className="mt-3 text-2xl text-cream/80 max-w-2xl">{t("dashboard:subGreetingGentle")}</p>
-
-        {/* 1-Tap Emotional Mood Check-in */}
-        <section
-          className="mt-8 rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card"
-          aria-label="Daily Mood Check-in"
-        >
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-sun">
-                <Heart size={18} aria-hidden="true" />
-                <span>{t("dashboard:moodSectionTitle")}</span>
-              </div>
-              <h2 className="mt-1 font-display text-2xl sm:text-3xl font-bold text-cream">
-                {t("dashboard:moodPrompt")}
-              </h2>
-            </div>
-
-            {/* Optional Note toggle */}
-            <button
-              type="button"
-              onClick={() => setShowMoodNote(!showMoodNote)}
-              className="text-xs sm:text-sm font-bold text-sun hover:underline flex items-center gap-1 self-start md:self-auto"
-            >
-              {showMoodNote ? t("dashboard:moodHideNote") : t("dashboard:moodAddNote")}
-            </button>
-          </div>
-
-          {/* Optional Collapsed Note Input */}
-          {showMoodNote && (
-            <div className="mt-4">
-              <input
-                type="text"
-                value={moodNote}
-                onChange={(e) => setMoodNote(e.target.value)}
-                placeholder={t("dashboard:moodNotePlaceholder")}
-                maxLength={200}
-                className="w-full px-4 py-2.5 rounded-xl bg-ink/80 border border-clay text-cream text-sm focus:outline-none focus:border-sun placeholder:text-cream/40"
-              />
-            </div>
-          )}
-
-          {/* 4 Large 1-Tap Mood Buttons */}
-          <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            {[
-              {
-                type: "happy" as MoodType,
-                emoji: "😊",
-                labelKey: "dashboard:moodHappy",
-                descKey: "dashboard:moodHappyDesc",
-                border: "border-amber-400/40 hover:border-amber-400",
-                bg: "bg-amber-500/10 hover:bg-amber-500/20 active:bg-amber-500/30",
-                text: "text-amber-300",
-              },
-              {
-                type: "calm" as MoodType,
-                emoji: "😌",
-                labelKey: "dashboard:moodCalm",
-                descKey: "dashboard:moodCalmDesc",
-                border: "border-teal-400/40 hover:border-teal-400",
-                bg: "bg-teal-500/10 hover:bg-teal-500/20 active:bg-teal-500/30",
-                text: "text-teal-300",
-              },
-              {
-                type: "confused" as MoodType,
-                emoji: "🤔",
-                labelKey: "dashboard:moodConfused",
-                descKey: "dashboard:moodConfusedDesc",
-                border: "border-indigo-400/40 hover:border-indigo-400",
-                bg: "bg-indigo-500/10 hover:bg-indigo-500/20 active:bg-indigo-500/30",
-                text: "text-indigo-300",
-              },
-              {
-                type: "anxious" as MoodType,
-                emoji: "😟",
-                labelKey: "dashboard:moodAnxious",
-                descKey: "dashboard:moodAnxiousDesc",
-                border: "border-rose-400/40 hover:border-rose-400",
-                bg: "bg-rose-500/10 hover:bg-rose-500/20 active:bg-rose-500/30",
-                text: "text-rose-300",
-              },
-            ].map((item) => {
-              const isAcknowledged = recentMoodAcknowledged === item.type;
-              return (
-                <button
-                  key={item.type}
-                  type="button"
-                  onClick={() => handleTapMood(item.type)}
-                  disabled={isMoodLogging}
-                  className={`group relative flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl border ${item.border} ${item.bg} transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 text-center min-h-[110px] sm:min-h-[130px]`}
-                >
-                  <span
-                    className="text-3xl sm:text-4xl transition-transform group-hover:scale-110"
-                    role="img"
-                    aria-hidden="true"
-                  >
-                    {item.emoji}
-                  </span>
-                  <span className={`mt-2 font-display text-base sm:text-lg font-bold ${item.text}`}>
-                    {t(item.labelKey)}
-                  </span>
-                  <span className="text-[11px] sm:text-xs text-cream/60 line-clamp-1 mt-0.5">
-                    {t(item.descKey)}
-                  </span>
-                  {isAcknowledged && (
-                    <span className="absolute top-2 right-2 flex size-5 items-center justify-center rounded-full bg-tea-confirm text-ink">
-                      <Check size={12} strokeWidth={3} />
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Warm acknowledgment message banner if recently clicked */}
-          {recentMoodAcknowledged && (
-            <div className="mt-4 p-3.5 rounded-xl bg-tea-confirm/15 border border-tea-confirm/40 text-tea-confirm text-sm font-medium flex items-center gap-2">
-              <Check size={18} className="shrink-0" />
-              <span>{t("dashboard:moodAcknowledged")}</span>
-            </div>
-          )}
-        </section>
-
-        {/* Cognitive Games Highlight Card */}
-        <section className="mt-10" aria-labelledby="games-title">
-          <Link
-            to="/games"
-            className="group grid min-h-96 overflow-hidden rounded-2xl bg-sun text-ink shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-card-active active:translate-y-0 lg:grid-cols-[1.05fr_.95fr]"
-          >
-            <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-14">
-              <div className="flex items-center gap-3 text-xl font-extrabold uppercase">
-                <Brain size={32} aria-hidden="true" /> {t("dashboard:cognitiveCenter")}
-              </div>
-              <p className="mt-6 text-xl font-bold uppercase tracking-wider">
-                {t("dashboard:brainChallenge")}
-              </p>
-              <h2 id="games-title" className="mt-2 font-display text-5xl font-bold sm:text-6xl">
-                {t("dashboard:memoryMatch")}
-              </h2>
-              <p className="mt-4 max-w-xl text-xl leading-relaxed opacity-90">
-                {gameSummary && gameSummary.total_sessions > 0
-                  ? t("dashboard:memoryMatchStats", {
-                      sessions: gameSummary.total_sessions,
-                      accuracy: Math.round(gameSummary.average_accuracy),
-                    })
-                  : t("dashboard:memoryMatchDesc")}
-              </p>
-              <span className="mt-8 inline-flex min-h-16 w-fit items-center gap-3 rounded-xl bg-ink px-8 text-xl font-extrabold text-cream shadow-md transition group-hover:bg-surface">
-                {t("common:playNow")} <ArrowRight size={24} aria-hidden="true" />
-              </span>
-            </div>
-            <div className="grid grid-cols-2 gap-4 bg-ink/10 p-7 sm:p-10 items-center">
-              {["☕", "🌼", "🔑", "☕"].map((item, index) => (
-                <span
-                  key={`${item}-${index}`}
-                  className="flex min-h-32 items-center justify-center rounded-2xl border-4 border-ink/15 bg-cream text-6xl shadow-md transition-transform group-hover:animate-gentle-float"
-                  style={{ animationDelay: `${index * 140}ms` }}
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </Link>
-        </section>
-
-        {/* 2-Column Grid: Medication Card & Memories Card */}
-        <div className="mt-8 grid gap-7 lg:grid-cols-2">
-          {/* Real Backend Medication Card */}
-          <article
-            className={`relative flex min-h-96 flex-col justify-between rounded-2xl p-7 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-card-active sm:p-10 ${
-              !hasMedication
-                ? "bg-surface text-cream border border-clay"
-                : isMedicineTaken
-                  ? "bg-tea-confirm text-cream"
-                  : "bg-fire text-ink"
-            }`}
-          >
-            <Link
-              to="/medication"
-              className="absolute inset-0 rounded-2xl z-0"
-              aria-label="Open detailed medication page"
-            />
-
-            <div className="relative z-10 pointer-events-none flex items-center justify-between">
-              <div className="flex items-center gap-3 text-xl font-extrabold uppercase">
-                <Pill size={32} aria-hidden="true" /> {t("dashboard:medication")}
-              </div>
-              <span className="text-sm font-bold opacity-80 uppercase tracking-wider">
-                {!hasMedication
-                  ? t("dashboard:noPrescriptions")
-                  : isMedicineTaken
-                    ? t("dashboard:completed")
-                    : t("dashboard:dueToday")}
-              </span>
-            </div>
-
-            {!hasMedication ? (
-              <div className="relative z-10 pointer-events-none flex flex-1 flex-col items-center justify-center text-center py-6">
-                <span className="flex size-20 items-center justify-center rounded-full bg-clay/50 text-cream/70 mb-4">
-                  <Pill size={40} />
-                </span>
-                <h2 className="text-2xl font-bold">{t("dashboard:noMedsAssigned")}</h2>
-                <p className="mt-2 text-lg text-cream/70 max-w-sm">
-                  {t("dashboard:noMedsSubtext")}
-                </p>
-              </div>
-            ) : isMedicineTaken ? (
-              <div className="relative z-10 pointer-events-none flex flex-1 flex-col items-center justify-center text-center py-6">
-                <span className="flex size-24 items-center justify-center rounded-full bg-cream text-tea-confirm shadow-inner">
-                  <Check size={58} strokeWidth={3} aria-hidden="true" />
-                </span>
-                <h2 className="mt-5 font-display text-5xl font-bold">{t("dashboard:medTaken")}</h2>
-                <p className="mt-2 text-xl max-w-sm">{t("dashboard:medTakenSubtext")}</p>
-              </div>
-            ) : (
-              <div className="relative z-10 pointer-events-none flex flex-1 flex-col justify-end py-6">
-                <p className="font-display text-6xl font-bold sm:text-7xl">
-                  {matchingSchedule?.scheduled_time
-                    ? matchingSchedule.scheduled_time.slice(0, 5)
-                    : "10:00 AM"}
-                </p>
-                <h2 className="mt-2 text-3xl font-bold">
-                  {matchingSchedule?.medicine_name} {t("dashboard:dueToday")}
-                </h2>
-                <p className="mt-2 text-xl opacity-90">
-                  {matchingSchedule?.dosage} ·{" "}
-                  {matchingSchedule?.instructions || "Take as prescribed"}
-                </p>
-              </div>
-            )}
-
-            {hasMedication ? (
-              <Button
-                type="button"
-                variant="cream"
-                size="touch"
-                className="relative z-20 mt-4 w-full text-xl font-extrabold"
-                onClick={handleToggleMedicine}
+    <AppShell progress={progress}>
+      <div className="px-4 sm:px-8 py-6 max-w-[1550px] w-full mx-auto space-y-7">
+        {/* Responsive 2-Column Grid: Left Main Area + Right Sidebar Panel */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_370px] gap-6 items-start">
+          {/* === LEFT MAIN COLUMN === */}
+          <div className="space-y-6 min-w-0">
+              {/* Hero Greeting Banner */}
+              <section
+                aria-label="Welcome Hero Banner"
+                className="relative overflow-hidden rounded-3xl border border-white/8 bg-gradient-to-br from-[#13283E] via-[#0F2032] to-[#0A1420] p-6 sm:p-8 shadow-2xl"
               >
-                {isMedicineTaken ? (
-                  <>
-                    <RefreshCw size={20} className="mr-2" /> {t("dashboard:markNotTaken")}
-                  </>
-                ) : (
-                  <>
-                    {t("dashboard:takeMedicine")} <ArrowRight size={24} aria-hidden="true" />
-                  </>
-                )}
-              </Button>
-            ) : (
-              <Link
-                to="/medication"
-                className="relative z-20 mt-4 inline-flex min-h-14 items-center justify-center gap-2 rounded-xl bg-cream text-ink text-lg font-bold hover:bg-cream/90 transition text-center"
-              >
-                {t("dashboard:viewMedSchedule")} <ArrowRight size={20} />
-              </Link>
-            )}
-          </article>
+                {/* Subtle ambient decorative gradient glows */}
+                <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#22C55E]/10 blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 right-1/4 -mb-20 size-64 rounded-full bg-[#2DD4BF]/10 blur-3xl pointer-events-none" />
 
-          {/* Real Database-Backed Memories Card */}
-          <Link
-            to="/memories"
-            className="group min-h-96 overflow-hidden rounded-2xl bg-surface text-cream shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-card-active flex flex-col justify-between border border-clay"
-          >
-            <div className="p-7 pb-4 sm:p-10 sm:pb-5">
-              <div className="flex items-center gap-3 text-xl font-extrabold uppercase text-sun">
-                <Heart size={32} aria-hidden="true" /> {t("dashboard:myMemories")}
-              </div>
-              <h2 className="mt-4 font-display text-4xl font-bold">
-                {hasMemories && latestMemory ? latestMemory.title : t("dashboard:memoriesSubtext")}
-              </h2>
-              {hasMemories && latestMemory && (
-                <p className="mt-2 text-cream/70 text-base line-clamp-1">
-                  {latestMemory.description}
-                </p>
-              )}
-            </div>
-
-            {hasMemories && coverImage ? (
-              <img
-                src={coverImage}
-                alt={latestMemory?.title || "Family memory photo"}
-                loading="lazy"
-                className="h-44 w-full object-cover border-y border-clay/60"
-              />
-            ) : hasMemories ? (
-              <div className="h-44 w-full bg-ink/60 border-y border-clay/60 flex items-center justify-center text-center p-4">
-                <p className="text-cream/70 text-sm max-w-xs">
-                  {latestMemory?.description || t("dashboard:memoriesSubtext")}
-                </p>
-              </div>
-            ) : (
-              <div className="h-44 w-full bg-ink/40 border-y border-clay/50 flex flex-col items-center justify-center text-center p-4">
-                <span className="flex size-12 items-center justify-center rounded-full bg-clay/50 text-cream/60 mb-2">
-                  <Heart size={24} />
-                </span>
-                <p className="text-cream/80 font-bold text-base">
-                  {t("dashboard:memoriesEmptyTitle")}
-                </p>
-                <p className="text-cream/60 text-xs mt-0.5">{t("dashboard:memoriesEmptyDesc")}</p>
-              </div>
-            )}
-
-            <div className="flex min-h-20 items-center justify-between px-7 text-xl font-extrabold text-sun sm:px-10 border-t border-clay/50">
-              <span>
-                {hasMemories ? t("dashboard:exploreMemories") : t("dashboard:createFirstMemory")}
-              </span>
-              <ArrowRight
-                className="transition-transform group-hover:translate-x-2"
-                aria-hidden="true"
-              />
-            </div>
-          </Link>
-        </div>
-
-        {/* 💧 Drink Water / Hydration Card */}
-        <section className="mt-8" aria-labelledby="hydration-title">
-          <article className="rounded-2xl border border-clay bg-surface p-7 shadow-card sm:p-10 transition duration-300 hover:-translate-y-1 hover:shadow-card-active">
-            <div className="flex flex-wrap items-center justify-between gap-6">
-              {/* Left: Progress Ring + Info */}
-              <div className="flex items-center gap-6">
-                {/* Circular Progress Ring */}
-                <div className="relative flex size-28 shrink-0 items-center justify-center">
-                  <svg className="size-28 -rotate-90" viewBox="0 0 112 112">
-                    <circle
-                      cx="56"
-                      cy="56"
-                      r="48"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="8"
-                      className="text-clay/50"
+                <div className="relative z-10 space-y-6">
+                  {/* Top user avatar and greeting */}
+                  <div className="flex items-start gap-4">
+                    <img
+                      src={user?.avatar_url || defaultProfilePhoto}
+                      alt={patientName}
+                      className="size-14 sm:size-16 rounded-full border-2 border-[#22C55E]/60 object-cover shadow-lg shrink-0"
                     />
-                    <circle
-                      cx="56"
-                      cy="56"
-                      r="48"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="8"
-                      strokeLinecap="round"
-                      className="text-sky-400 transition-all duration-700 ease-out"
-                      strokeDasharray={`${2 * Math.PI * 48}`}
-                      strokeDashoffset={`${2 * Math.PI * 48 * (1 - Math.min(hydrationSummary.percent, 100) / 100)}`}
-                    />
-                  </svg>
-                  <span className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-2xl font-black text-cream leading-none">
-                      {Math.min(Math.round(hydrationSummary.percent), 999)}
-                    </span>
-                    <span className="text-xs font-bold text-sky-400 mt-0.5">%</span>
-                  </span>
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-3 text-xl font-extrabold uppercase text-sky-400">
-                    <Droplets size={28} aria-hidden="true" /> Stay Hydrated
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-3 py-0.5 text-xs font-semibold text-[#8A99A8]">
+                          <Sparkles size={12} className="text-[#22C55E]" /> {todayFormatted}
+                        </span>
+                      </div>
+                      <h1 className="font-serif text-4xl sm:text-5xl lg:text-5xl font-bold tracking-tight text-[#E8ECEF]">
+                        {t(greetingKey, { name: patientName })} <span aria-hidden="true">👋</span>
+                      </h1>
+                      <p className="text-base sm:text-lg text-[#8A99A8] font-medium leading-relaxed max-w-xl">
+                        {t("dashboard:subGreetingGentle")}
+                      </p>
+                    </div>
                   </div>
-                  <h2
-                    id="hydration-title"
-                    className="mt-2 font-display text-3xl font-bold text-cream sm:text-4xl"
-                  >
-                    {hydrationSummary.total_ml}{" "}
-                    <span className="text-xl font-bold text-cream/60">
-                      / {hydrationSummary.goal_ml} ml
-                    </span>
-                  </h2>
-                  <p className="mt-1 text-cream/70 text-base">
-                    {glassCount} {glassCount === 1 ? "glass" : "glasses"} today ·{" "}
-                    {hydrationSummary.logs.length}{" "}
-                    {hydrationSummary.logs.length === 1 ? "log" : "logs"}
-                  </p>
+
+                  {/* "Continue where you left off" Slim Featured Card */}
+                  <div className="rounded-2xl border border-white/8 bg-[#121D2B]/90 backdrop-blur-md p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md">
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#22C55E]">
+                        Featured Cognitive Exercise
+                      </span>
+                      <h3 className="font-display text-base sm:text-lg font-bold text-[#E8ECEF]">
+                        {t("dashboard:memoryMatch")} · {t("dashboard:brainChallenge")}
+                      </h3>
+                      <p className="text-xs text-[#8A99A8] line-clamp-1">
+                        {t("dashboard:memoryMatchDesc")}
+                      </p>
+                    </div>
+                    <Button
+                      asChild
+                      variant="default"
+                      size="default"
+                      className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-extrabold px-6 shrink-0 shadow-md"
+                    >
+                      <Link to="/games">
+                        <Play size={16} className="fill-current mr-1.5" />
+                        <span>{t("common:playNow")}</span>
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              </section>
 
-              {/* Right: Log Button */}
-              {user ? (
-                <Button
-                  type="button"
-                  variant="cream"
-                  size="touch"
-                  className="text-xl font-extrabold min-w-[200px]"
-                  disabled={isLogging}
-                  onClick={async () => {
-                    try {
-                      await logWater({ amount_ml: 250 });
-                      toast.success("💧 Glass logged! Keep hydrating.");
-                    } catch (err: unknown) {
-                      toast.error(formatApiError(err, "Could not log water"));
-                    }
-                  }}
-                >
-                  {isLogging ? "Logging…" : "Log a Glass 💧"}
-                </Button>
-              ) : (
-                <Link
-                  to="/login"
-                  className="inline-flex min-h-14 items-center gap-2 rounded-xl bg-cream text-ink px-6 text-lg font-bold hover:bg-cream/90 transition"
-                >
-                  Sign in to track 💧
-                </Link>
-              )}
-            </div>
-          </article>
-        </section>
+              {/* Quick Actions Row: 5 Soft Rounded Dark Cards with Rotating Badges */}
+              <section aria-label="Quick Actions" className="space-y-3.5">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-display text-xl sm:text-2xl font-bold text-[#E8ECEF]">
+                    Quick Care Shortcuts
+                  </h2>
+                </div>
 
-        {/* Real Backend Daily Routine Section */}
-        <section
-          className="mt-8 rounded-2xl bg-surface p-7 shadow-card sm:p-10 border border-clay"
-          aria-labelledby="routine-title"
-        >
-          <div className="flex flex-wrap items-end justify-between gap-5 pb-4 border-b border-clay/60">
-            <div>
-              <div className="flex items-center gap-3 text-xl font-extrabold uppercase text-sun">
-                <CalendarDays size={32} aria-hidden="true" /> {t("dashboard:yourDay")}
-              </div>
-              <h2 id="routine-title" className="mt-2 font-display text-4xl font-bold sm:text-5xl">
-                {t("dashboard:todaysRoutine")}
-              </h2>
-            </div>
-            <Link
-              to="/routine"
-              className="flex min-h-14 items-center gap-2 rounded-xl px-4 text-lg font-extrabold text-sun hover:bg-clay transition"
-            >
-              {t("dashboard:viewFullSchedule")} <ArrowRight aria-hidden="true" />
-            </Link>
-          </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+                  {[
+                    {
+                      to: "/medication",
+                      title: t("nav.medicine"),
+                      status: matchingSchedule ? `${matchingSchedule.medicine_name}` : "Check Schedule",
+                      icon: Pill,
+                      color: badgePalette[0],
+                    },
+                    {
+                      to: "/routine",
+                      title: "Hydration",
+                      status: `${hydrationSummary.total_ml} / ${hydrationSummary.goal_ml} ml`,
+                      icon: Droplets,
+                      color: badgePalette[1],
+                    },
+                    {
+                      to: "/routine",
+                      title: t("nav.routine"),
+                      status: `${completedTasksCount}/${totalTasksCount} tasks done`,
+                      icon: CalendarDays,
+                      color: badgePalette[2],
+                    },
+                    {
+                      to: "/calm",
+                      title: t("nav.calm"),
+                      status: "Breathwork & Sounds",
+                      icon: Sparkles,
+                      color: badgePalette[3],
+                    },
+                    {
+                      to: "/memories",
+                      title: t("nav.memories"),
+                      status: `${memories.length} memories saved`,
+                      icon: Heart,
+                      color: badgePalette[4],
+                    },
+                  ].map((act, idx) => {
+                    const Icon = act.icon;
+                    return (
+                      <Link
+                        key={idx}
+                        to={act.to}
+                        className="group flex flex-col justify-between p-5 rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md hover:border-white/15 hover:bg-[#152335] transition duration-200 shadow-md"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span
+                            className="flex size-12 items-center justify-center rounded-2xl text-white shadow-sm"
+                            style={{ backgroundColor: act.color }}
+                          >
+                            <Icon size={24} />
+                          </span>
+                          <ChevronRight
+                            size={16}
+                            className="text-[#8A99A8] group-hover:text-[#E8ECEF] group-hover:translate-x-0.5 transition"
+                          />
+                        </div>
+                        <div className="mt-4">
+                          <h3 className="text-sm sm:text-base font-bold text-[#E8ECEF] tracking-tight">
+                            {act.title}
+                          </h3>
+                          <p className="text-xs text-[#8A99A8] truncate mt-1 font-medium">
+                            {act.status}
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {tasksLoading ? (
-              <p className="col-span-full py-8 text-center text-cream/70 text-lg">
-                {t("dashboard:loadingSchedule")}
-              </p>
-            ) : todayTasks.length === 0 ? (
-              <p className="col-span-full py-8 text-center text-cream/70 text-lg">
-                {t("dashboard:noRoutineScheduled")}
-              </p>
-            ) : (
-              todayTasks.map((task) => {
-                const isDone = task.status === "completed";
-                return (
-                  <button
-                    key={task.id}
-                    type="button"
-                    onClick={() => handleToggleTask(task.id)}
-                    aria-pressed={isDone}
-                    className={`min-h-28 h-auto whitespace-normal rounded-xl border-2 p-4 text-left transition duration-200 ${
-                      isDone
-                        ? "border-tea-confirm bg-tea-confirm text-cream shadow-sm"
-                        : "border-clay bg-ink text-cream hover:border-sun/60"
-                    }`}
+              {/* Cognitive Games Featured Cards Section */}
+              <section aria-labelledby="games-section-title" className="space-y-3.5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2
+                      id="games-section-title"
+                      className="font-display text-xl sm:text-2xl font-bold text-[#E8ECEF]"
+                    >
+                      {t("dashboard:cognitiveCenter")}
+                    </h2>
+                    <p className="text-xs text-[#8A99A8] mt-0.5">
+                      Engaging brain exercises to stimulate memory, logic, and attention
+                    </p>
+                  </div>
+                  <Link
+                    to="/games"
+                    className="flex items-center gap-1 text-xs font-bold text-[#22C55E] hover:underline"
                   >
-                    <span className="flex w-full items-start gap-3">
-                      <span
-                        className={`flex size-10 shrink-0 items-center justify-center rounded-full border-2 transition ${
+                    <span>View All (22)</span>
+                    <ArrowRight size={14} />
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {featuredGames.map((game) => (
+                    <Link
+                      key={game.id}
+                      to="/games/$gameId"
+                      params={{ gameId: game.id }}
+                      className="group flex flex-col justify-between rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-5 sm:p-6 hover:border-white/15 hover:bg-[#152335] transition duration-200 shadow-md relative overflow-hidden"
+                    >
+                      {/* Tall Illustrated Top Banner (140-180px height per spec) */}
+                      <div
+                        className={`w-full h-40 sm:h-44 rounded-xl bg-gradient-to-br ${game.gradient} border border-white/5 flex items-center justify-center relative overflow-hidden mb-4`}
+                      >
+                        <span className="text-5xl sm:text-6xl filter drop-shadow-lg group-hover:scale-110 transition-transform">
+                          {game.icon}
+                        </span>
+                        <span
+                          className={`absolute top-3 right-3 px-3 py-1 rounded-full border text-xs font-bold ${game.diffColor}`}
+                        >
+                          {game.difficulty}
+                        </span>
+                      </div>
+
+                      <div className="space-y-1.5 flex-1">
+                        <h3 className="font-display text-lg sm:text-xl font-bold text-[#E8ECEF] group-hover:text-[#22C55E] transition">
+                          {game.title}
+                        </h3>
+                        <p className="text-sm text-[#8A99A8] line-clamp-2 leading-relaxed">
+                          {game.desc}
+                        </p>
+                      </div>
+
+                      <div className="mt-5 pt-3.5 border-t border-white/5 flex items-center justify-between">
+                        <span className="text-xs font-semibold text-[#8A99A8]">
+                          Recommended for today
+                        </span>
+                        {/* Prominent Teal-green circular play button */}
+                        <span className="flex size-10 items-center justify-center rounded-full bg-[#22C55E] text-[#0A1420] shadow-md group-hover:scale-105 transition-transform">
+                          <Play size={16} className="fill-current ml-0.5" />
+                        </span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+
+              {/* 1-Tap Emotional Mood Check-in Card */}
+              <section
+                className="rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-5 sm:p-6 shadow-md space-y-4"
+                aria-label="Daily Mood Check-in"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#22C55E]">
+                      <Heart size={14} aria-hidden="true" />
+                      <span>{t("dashboard:moodSectionTitle")}</span>
+                    </div>
+                    <h2 className="mt-1 font-display text-xl sm:text-2xl font-bold text-[#E8ECEF]">
+                      {t("dashboard:moodPrompt")}
+                    </h2>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowMoodNote(!showMoodNote)}
+                    className="text-xs font-bold text-[#22C55E] hover:underline self-start sm:self-auto cursor-pointer"
+                  >
+                    {showMoodNote ? t("dashboard:moodHideNote") : t("dashboard:moodAddNote")}
+                  </button>
+                </div>
+
+                {showMoodNote && (
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      value={moodNote}
+                      onChange={(e) => setMoodNote(e.target.value)}
+                      placeholder={t("dashboard:moodNotePlaceholder")}
+                      maxLength={200}
+                      className="w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[#E8ECEF] text-xs focus:outline-none focus:border-[#22C55E] placeholder:text-[#8A99A8]"
+                    />
+                  </div>
+                )}
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[
+                    {
+                      type: "happy" as MoodType,
+                      emoji: "😊",
+                      labelKey: "dashboard:moodHappy",
+                      border: "border-[#E0A23B]/30 hover:border-[#E0A23B]",
+                      bg: "bg-[#E0A23B]/10 hover:bg-[#E0A23B]/15",
+                      text: "text-[#E0A23B]",
+                    },
+                    {
+                      type: "calm" as MoodType,
+                      emoji: "😌",
+                      labelKey: "dashboard:moodCalm",
+                      border: "border-[#22C55E]/30 hover:border-[#22C55E]",
+                      bg: "bg-[#22C55E]/10 hover:bg-[#22C55E]/15",
+                      text: "text-[#22C55E]",
+                    },
+                    {
+                      type: "confused" as MoodType,
+                      emoji: "🤔",
+                      labelKey: "dashboard:moodConfused",
+                      border: "border-[#9B7FE0]/30 hover:border-[#9B7FE0]",
+                      bg: "bg-[#9B7FE0]/10 hover:bg-[#9B7FE0]/15",
+                      text: "text-[#9B7FE0]",
+                    },
+                    {
+                      type: "anxious" as MoodType,
+                      emoji: "😟",
+                      labelKey: "dashboard:moodAnxious",
+                      border: "border-[#E85D6B]/30 hover:border-[#E85D6B]",
+                      bg: "bg-[#E85D6B]/10 hover:bg-[#E85D6B]/15",
+                      text: "text-[#E85D6B]",
+                    },
+                  ].map((item) => {
+                    const isAcknowledged = recentMoodAcknowledged === item.type;
+                    return (
+                      <button
+                        key={item.type}
+                        type="button"
+                        onClick={() => handleTapMood(item.type)}
+                        disabled={isMoodLogging}
+                        className={`group relative flex flex-col items-center justify-center p-3.5 rounded-xl border ${item.border} ${item.bg} transition duration-200 text-center min-h-[95px] shadow-sm cursor-pointer`}
+                      >
+                        <span className="text-3xl transition-transform group-hover:scale-110">
+                          {item.emoji}
+                        </span>
+                        <span className={`mt-2 font-display text-xs font-bold ${item.text}`}>
+                          {t(item.labelKey)}
+                        </span>
+                        {isAcknowledged && (
+                          <span className="absolute top-2 right-2 flex size-4 items-center justify-center rounded-full bg-[#22C55E] text-[#0A1420] shadow-sm">
+                            <Check size={10} strokeWidth={3} />
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {recentMoodAcknowledged && (
+                  <div className="p-3 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#E8ECEF] text-xs font-medium flex items-center gap-2 animate-in fade-in">
+                    <Check size={16} className="text-[#22C55E] shrink-0" />
+                    <span>{t("dashboard:moodAcknowledged")}</span>
+                  </div>
+                )}
+              </section>
+
+              {/* Family Memories Showcase Card */}
+              <section aria-labelledby="memories-title">
+                <Link
+                  to="/memories"
+                  className="group flex flex-col sm:flex-row items-center justify-between rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-5 hover:border-white/15 hover:bg-[#152335] transition duration-200 shadow-md gap-4 overflow-hidden"
+                >
+                  <div className="space-y-1.5 flex-1 min-w-0">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#9B7FE0]">
+                      <Heart size={14} />
+                      <span>{t("dashboard:myMemories")}</span>
+                    </div>
+                    <h3 id="memories-title" className="font-display text-lg font-bold text-[#E8ECEF]">
+                      {hasMemories && latestMemory ? latestMemory.title : t("dashboard:memoriesSubtext")}
+                    </h3>
+                    <p className="text-xs text-[#8A99A8] line-clamp-1">
+                      {latestMemory?.description || t("dashboard:memoriesEmptyDesc")}
+                    </p>
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-[#22C55E] pt-1">
+                      <span>{hasMemories ? t("dashboard:exploreMemories") : t("dashboard:createFirstMemory")}</span>
+                      <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </div>
+
+                  {coverImage ? (
+                    <img
+                      src={coverImage}
+                      alt={latestMemory?.title || "Family photo"}
+                      className="size-20 sm:size-24 rounded-xl object-cover border border-white/10 shrink-0 shadow-sm"
+                    />
+                  ) : (
+                    <div className="size-20 sm:size-24 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                      <Heart size={28} className="text-[#9B7FE0]" />
+                    </div>
+                  )}
+                </Link>
+              </section>
+            </div>
+
+            {/* === RIGHT SIDEBAR PANEL === */}
+            <div className="space-y-6">
+              {/* Card 1: Your Progress with Circular Percentage Ring */}
+              <section
+                aria-label="Progress Summary"
+                className="rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-5 sm:p-6 shadow-md space-y-5"
+              >
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display text-base font-bold text-[#E8ECEF]">
+                    {t("nav.today")} Progress
+                  </h3>
+                  <span className="text-[11px] font-bold text-[#22C55E] px-2 py-0.5 rounded-full bg-[#22C55E]/10">
+                    Daily Score
+                  </span>
+                </div>
+
+                {/* Circular Percentage Ring */}
+                <div className="flex flex-col items-center justify-center py-2">
+                  <div className="relative flex size-32 items-center justify-center">
+                    <svg className="size-32 -rotate-90" viewBox="0 0 120 120">
+                      {/* Background circle */}
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="50"
+                        fill="none"
+                        stroke="rgba(255, 255, 255, 0.06)"
+                        strokeWidth="10"
+                      />
+                      {/* Active progress stroke */}
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="50"
+                        fill="none"
+                        stroke="#22C55E"
+                        strokeWidth="10"
+                        strokeLinecap="round"
+                        className="transition-all duration-700 ease-out"
+                        strokeDasharray={`${2 * Math.PI * 50}`}
+                        strokeDashoffset={`${2 * Math.PI * 50 * (1 - Math.min(progress, 100) / 100)}`}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                      <span className="font-display text-3xl font-black text-[#E8ECEF]">
+                        {progress}%
+                      </span>
+                      <span className="text-[10px] uppercase font-bold text-[#8A99A8] tracking-wider">
+                        Completed
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2x2 Grid of Stat Tiles with Prominent Font Sizes */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-white/5 bg-white/5 p-3.5 text-left">
+                    <span className="flex size-8 items-center justify-center rounded-lg bg-[#E0A23B]/15 text-[#E0A23B] mb-2">
+                      <Trophy size={16} />
+                    </span>
+                    <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#E8ECEF]">
+                      {gameSummary?.total_sessions || 0}
+                    </p>
+                    <p className="text-[11px] text-[#8A99A8] font-bold uppercase tracking-wider mt-1">
+                      Games Played
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-white/5 bg-white/5 p-3.5 text-left">
+                    <span className="flex size-8 items-center justify-center rounded-lg bg-[#22C55E]/15 text-[#22C55E] mb-2">
+                      <Brain size={16} />
+                    </span>
+                    <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#22C55E]">
+                      {Math.round(gameSummary?.average_accuracy || 0)}%
+                    </p>
+                    <p className="text-[11px] text-[#8A99A8] font-bold uppercase tracking-wider mt-1">
+                      Avg Accuracy
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-white/5 bg-white/5 p-3.5 text-left">
+                    <span className="flex size-8 items-center justify-center rounded-lg bg-[#9B7FE0]/15 text-[#9B7FE0] mb-2">
+                      <CalendarDays size={16} />
+                    </span>
+                    <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#E8ECEF]">
+                      {completedTasksCount}/{totalTasksCount}
+                    </p>
+                    <p className="text-[11px] text-[#8A99A8] font-bold uppercase tracking-wider mt-1">
+                      Tasks Done
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-white/5 bg-white/5 p-3.5 text-left">
+                    <span className="flex size-8 items-center justify-center rounded-lg bg-[#4DA3E0]/15 text-[#4DA3E0] mb-2">
+                      <Droplets size={16} />
+                    </span>
+                    <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#4DA3E0]">
+                      {glassCount}
+                    </p>
+                    <p className="text-[11px] text-[#8A99A8] font-bold uppercase tracking-wider mt-1">
+                      Glasses Water
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* Card 2: Today's Reminders List */}
+              <section
+                aria-label="Today's Reminders"
+                className="rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-5 sm:p-6 shadow-md space-y-4"
+              >
+                <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                  <div>
+                    <h3 className="font-display text-base font-bold text-[#E8ECEF]">
+                      {t("dashboard:todaysRoutine")}
+                    </h3>
+                    <p className="text-[11px] text-[#8A99A8]">Medicine and daily activities</p>
+                  </div>
+                  <Link
+                    to="/routine"
+                    className="text-xs font-bold text-[#22C55E] hover:underline"
+                  >
+                    View All
+                  </Link>
+                </div>
+
+                <div className="space-y-2.5">
+                  {/* Next Medication Item if exists */}
+                  {hasMedication && matchingSchedule && (
+                    <div
+                      className={`p-3 rounded-xl border flex items-center justify-between gap-3 transition ${
+                        isMedicineTaken
+                          ? "border-white/5 bg-white/5 text-[#8A99A8]"
+                          : "border-[#E85D6B]/30 bg-[#E85D6B]/5 text-[#E8ECEF]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#E85D6B] text-white shadow-sm">
+                          <Pill size={15} />
+                        </span>
+                        <div className="min-w-0">
+                          <p className={`text-xs font-bold truncate ${isMedicineTaken ? "line-through opacity-70" : ""}`}>
+                            {matchingSchedule.medicine_name}
+                          </p>
+                          <p className="text-[10px] text-[#8A99A8] truncate">
+                            {matchingSchedule.dosage} · {matchingSchedule.scheduled_time.slice(0, 5)}
+                          </p>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={handleToggleMedicine}
+                        className={`size-7 shrink-0 flex items-center justify-center rounded-lg transition cursor-pointer ${
+                          isMedicineTaken
+                            ? "bg-[#22C55E] text-[#0A1420]"
+                            : "border border-white/20 hover:border-[#22C55E] text-transparent"
+                        }`}
+                        title={isMedicineTaken ? "Marked taken" : "Mark as taken"}
+                      >
+                        <Check size={14} strokeWidth={3} className={isMedicineTaken ? "text-[#0A1420]" : "opacity-0"} />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Tasks List */}
+                  {todayTasks.slice(0, 4).map((task, idx) => {
+                    const isDone = task.status === "completed";
+                    const color = badgePalette[(idx + 1) % badgePalette.length];
+                    return (
+                      <div
+                        key={task.id}
+                        className={`p-3 rounded-xl border flex items-center justify-between gap-3 transition ${
                           isDone
-                            ? "border-cream bg-cream text-tea-confirm"
-                            : "border-cream/80 text-cream"
+                            ? "border-white/5 bg-white/5 text-[#8A99A8]"
+                            : "border-white/8 bg-white/5 text-[#E8ECEF]"
                         }`}
                       >
-                        {isDone ? (
-                          <Check size={22} strokeWidth={3} />
-                        ) : (
-                          <span className="size-2 rounded-full bg-cream" />
-                        )}
-                      </span>
-                      <span className="flex-1 min-w-0">
-                        <span
-                          className={`block text-lg font-bold truncate ${isDone ? "line-through opacity-85" : ""}`}
+                        <div className="flex items-center gap-3 min-w-0">
+                          <span
+                            className="flex size-8 shrink-0 items-center justify-center rounded-full text-white shadow-sm text-xs"
+                            style={{ backgroundColor: color }}
+                          >
+                            <CalendarDays size={14} />
+                          </span>
+                          <div className="min-w-0">
+                            <p className={`text-xs font-bold truncate ${isDone ? "line-through opacity-70" : ""}`}>
+                              {task.title}
+                            </p>
+                            <p className="text-[10px] text-[#8A99A8] truncate">
+                              {task.scheduled_time.slice(0, 5)}
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => handleToggleTask(task.id)}
+                          className={`size-7 shrink-0 flex items-center justify-center rounded-lg transition cursor-pointer ${
+                            isDone
+                              ? "bg-[#22C55E] text-[#0A1420]"
+                              : "border border-white/20 hover:border-[#22C55E] text-transparent"
+                          }`}
+                          title={isDone ? "Completed" : "Mark complete"}
                         >
-                          {task.title}
-                        </span>
-                        <span className="mt-1 block text-sm opacity-80 font-medium">
-                          {task.scheduled_time.slice(0, 5)}
-                        </span>
-                      </span>
-                    </span>
-                  </button>
-                );
-              })
-            )}
+                          <Check size={14} strokeWidth={3} className={isDone ? "text-[#0A1420]" : "opacity-0"} />
+                        </button>
+                      </div>
+                    );
+                  })}
+
+                  {todayTasks.length === 0 && !hasMedication && (
+                    <p className="text-center py-6 text-xs text-[#8A99A8]">
+                      {t("dashboard:noRoutineScheduled")}
+                    </p>
+                  )}
+                </div>
+              </section>
+
+              {/* Card 3: Quick Hydration Action */}
+              <section
+                aria-label="Hydration Quick Tracker"
+                className="rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-5 shadow-md flex items-center justify-between gap-4"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="flex size-10 items-center justify-center rounded-full bg-[#4DA3E0]/15 text-[#4DA3E0] shrink-0">
+                    <Droplets size={20} />
+                  </span>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-[#E8ECEF]">Stay Hydrated</h4>
+                    <p className="text-[11px] text-[#8A99A8] truncate">
+                      {hydrationSummary.total_ml} ml of {hydrationSummary.goal_ml} ml goal
+                    </p>
+                  </div>
+                </div>
+
+                {user ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={isLogging}
+                    onClick={async () => {
+                      try {
+                        await logWater({ amount_ml: 250 });
+                        toast.success("💧 Glass logged! Keep hydrating.");
+                      } catch (err: unknown) {
+                        toast.error(formatApiError(err, "Could not log water"));
+                      }
+                    }}
+                    className="rounded-full text-xs font-bold border-white/10 hover:border-[#4DA3E0] hover:bg-[#4DA3E0]/10 text-[#4DA3E0] shrink-0"
+                  >
+                    + 1 Glass 💧
+                  </Button>
+                ) : null}
+              </section>
+            </div>
           </div>
-        </section>
-      </main>
-    </div>
+        </div>
+    </AppShell>
   );
 }

@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import VisualSearch from "@/features/games/games/VisualSearch";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/visual-search")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/visual-search")({
 
 function VisualSearchPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("visual-search")!;
-  return (
-    <GameShell game={game} level={level}>
-      <VisualSearch level={level} />
-    </GameShell>
-  );
+  return <VisualSearch level={level} />;
 }

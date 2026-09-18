@@ -35,6 +35,29 @@ def create_notification(
     db.commit()
     db.refresh(notification)
 
+    # Real-time WebSocket delivery hook to caregiver dashboard (non-blocking)
+    try:
+        from app.core.websocket import broadcast_notification_to_caregivers
+        type_str = notification.type.value if hasattr(notification.type, "value") else str(notification.type)
+        is_high = (
+            notification.type in [NotificationType.MOOD_ALERT, NotificationType.MEDICATION]
+            or any(k in notification.title.lower() for k in ["missed", "distress", "fatigue", "alert", "urgent"])
+        )
+        notif_dict = {
+            "id": str(notification.id),
+            "patient_id": str(notification.patient_id),
+            "type": type_str,
+            "title": notification.title,
+            "message": notification.message,
+            "scheduled_for": notification.scheduled_for.isoformat() if notification.scheduled_for else None,
+            "status": notification.status.value if hasattr(notification.status, "value") else str(notification.status),
+            "priority": "HIGH" if is_high else "NORMAL",
+            "related_entity_id": str(notification.related_entity_id) if notification.related_entity_id else None,
+        }
+        broadcast_notification_to_caregivers(notif_dict, notification.patient_id, db=db)
+    except Exception:
+        pass
+
     return notification
 
 

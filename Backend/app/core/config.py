@@ -23,6 +23,10 @@ class Settings(BaseSettings):
 
     SARVAM_API_KEY: str | None = None
 
+    BHASHINI_API_KEY: str | None = None
+    BHASHINI_USER_ID: str | None = None
+    BHASHINI_PIPELINE_URL: str = "https://dhruva-api.bhashini.gov.in/services/inference/pipeline"
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

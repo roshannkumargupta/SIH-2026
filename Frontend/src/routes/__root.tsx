@@ -52,12 +52,12 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center py-12">
-        <h1 className="text-2xl font-bold tracking-tight text-cream">Unable to display page</h1>
-        <div className="mt-4 rounded-xl border border-fire/50 bg-fire/15 p-4 text-sm text-cream text-left">
+      <div className="max-w-md text-center py-12 glass-card p-8 rounded-3xl border border-white/60 shadow-card">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground font-display">Unable to display page</h1>
+        <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50/80 p-4 text-sm text-rose-800 text-left">
           {userFriendlyError}
         </div>
-        <p className="mt-3 text-sm text-cream/70">
+        <p className="mt-3 text-sm text-muted-foreground">
           You can try refreshing the view or return to the home companion.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -66,13 +66,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-xl bg-sun px-5 py-2.5 text-sm font-bold text-ink transition-colors hover:bg-sun/90 shadow-sm"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 shadow-sm"
           >
             Try again
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-xl border border-clay bg-surface px-5 py-2.5 text-sm font-bold text-cream transition-colors hover:bg-clay"
+            className="inline-flex items-center justify-center rounded-full border border-border bg-white/80 px-5 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-white shadow-sm"
           >
             Back Home
           </a>
@@ -145,12 +145,13 @@ function RootShell({ children }: { children: ReactNode }) {
 import { AuthProvider } from "../context/auth-context";
 import { LanguageProvider } from "../context/LanguageContext";
 import { Toaster } from "../components/ui/sonner";
-import { VoiceTriggerButton } from "@/features/voice/components/VoiceTriggerButton";
+import { useWakeWord } from "@/features/voice/hooks/useWakeWord";
 import { usePWA } from "@/hooks/use-pwa";
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   usePWA();
+  useWakeWord();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -158,7 +159,6 @@ function RootComponent() {
         <LanguageProvider>
           <BackendStatusBanner />
           <Outlet />
-          <VoiceTriggerButton />
           <Toaster position="bottom-right" />
         </LanguageProvider>
       </AuthProvider>

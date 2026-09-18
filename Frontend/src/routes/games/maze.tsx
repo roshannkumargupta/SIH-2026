@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import Maze from "@/features/games/games/Maze";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/maze")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -9,7 +7,7 @@ export const Route = createFileRoute("/games/maze")({
   }),
   head: () => ({
     meta: [
-      { title: "Maze | SmritiSetu" },
+      { title: "Pathway Maze | SmritiSetu" },
       { name: "description", content: "Cognitive training game on SmritiSetu." },
     ],
   }),
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/maze")({
 
 function MazePage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("maze")!;
-  return (
-    <GameShell game={game} level={level}>
-      <Maze level={level} />
-    </GameShell>
-  );
+  return <Maze level={level} />;
 }

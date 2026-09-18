@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 const MAZE_SIZES: Record<number, number> = {
@@ -112,92 +111,111 @@ export default function Maze({ level }: { level: number }) {
     return () => window.removeEventListener("keydown", handler);
   }, [pos, won, maze, moves]);
 
-  if (won)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.max(10, Math.min(100, Math.round(1000 / Math.max(1, moves))))}
-          accuracy={100}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName="Pathway Maze"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={reset}
-        />
-      </>
-    );
+  const finalScore = Math.max(10, Math.min(100, Math.round(1000 / Math.max(1, moves || 1))));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
 
   const cellSize = Math.min(28, Math.floor(350 / size));
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="flex gap-4 text-sm font-bold text-cream/70">
-        <span>
-          Moves: <span className="text-sun">{moves}</span>
-        </span>
-        <span className="text-cream/40">Reach the 🔴 goal</span>
-      </div>
+    <GameShell
+      gameId="maze"
+      level={level}
+      stats={[
+        { label: "Moves", value: moves, highlight: "sun" },
+        { label: "Grid Size", value: `${size}×${size}` },
+      ]}
+      instructionHint="Navigate the yellow dot to the red goal flag"
+      completed={won}
+      results={{
+        score: finalScore,
+        accuracy: 100,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={reset}
+    >
+      <div className="flex flex-col items-center gap-6">
+        <div className="border-4 border-clay rounded-2xl overflow-hidden shadow-card bg-ink/70 p-1">
+          {maze.map((row, r) => (
+            <div key={r} className="flex">
+              {row.map((cell, c) => {
+                const isPlayer = pos[0] === r && pos[1] === c;
+                const isGoal = r === size - 2 && c === size - 2;
+                const isStart = r === 1 && c === 1;
+                return (
+                  <div
+                    key={c}
+                    style={{ width: cellSize, height: cellSize }}
+                    className={`${
+                      cell === 1
+                        ? "bg-clay/80"
+                        : isPlayer
+                          ? "bg-sun shadow-sm"
+                          : isGoal
+                            ? "bg-fire animate-pulse"
+                            : isStart
+                              ? "bg-tea-confirm/40"
+                              : "bg-ink/30"
+                    } flex items-center justify-center transition-colors`}
+                  >
+                    {isPlayer && <span style={{ fontSize: cellSize * 0.6 }} className="text-ink">●</span>}
+                    {isGoal && !isPlayer && <span style={{ fontSize: cellSize * 0.6 }} className="text-cream">🏁</span>}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
 
-      <div className="border-2 border-clay rounded-xl overflow-hidden shadow-card">
-        {maze.map((row, r) => (
-          <div key={r} className="flex">
-            {row.map((cell, c) => {
-              const isPlayer = pos[0] === r && pos[1] === c;
-              const isGoal = r === size - 2 && c === size - 2;
-              const isStart = r === 1 && c === 1;
-              return (
-                <div
-                  key={c}
-                  style={{ width: cellSize, height: cellSize }}
-                  className={`${cell === 1 ? "bg-clay/80" : isPlayer ? "bg-sun" : isGoal ? "bg-fire" : isStart ? "bg-tea-confirm/40" : "bg-ink/30"} flex items-center justify-center`}
-                >
-                  {isPlayer && <span style={{ fontSize: cellSize * 0.6 }}>•</span>}
-                </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+        {/* Arrow controls for mobile & desktop touch */}
+        <div className="grid grid-cols-3 gap-2 mt-1">
+          <div />
+          <button
+            type="button"
+            onClick={() => move(-1, 0)}
+            className="min-w-[54px] min-h-[54px] rounded-2xl bg-clay text-cream font-black text-2xl hover:bg-clay/80 active:bg-sun active:text-ink active:scale-90 transition-all shadow-md touch-manipulation select-none flex items-center justify-center"
+            aria-label="Up"
+          >
+            ↑
+          </button>
+          <div />
+          <button
+            type="button"
+            onClick={() => move(0, -1)}
+            className="min-w-[54px] min-h-[54px] rounded-2xl bg-clay text-cream font-black text-2xl hover:bg-clay/80 active:bg-sun active:text-ink active:scale-90 transition-all shadow-md touch-manipulation select-none flex items-center justify-center"
+            aria-label="Left"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            onClick={() => move(1, 0)}
+            className="min-w-[54px] min-h-[54px] rounded-2xl bg-clay text-cream font-black text-2xl hover:bg-clay/80 active:bg-sun active:text-ink active:scale-90 transition-all shadow-md touch-manipulation select-none flex items-center justify-center"
+            aria-label="Down"
+          >
+            ↓
+          </button>
+          <button
+            type="button"
+            onClick={() => move(0, 1)}
+            className="min-w-[54px] min-h-[54px] rounded-2xl bg-clay text-cream font-black text-2xl hover:bg-clay/80 active:bg-sun active:text-ink active:scale-90 transition-all shadow-md touch-manipulation select-none flex items-center justify-center"
+            aria-label="Right"
+          >
+            →
+          </button>
+        </div>
 
-      {/* Arrow controls for mobile */}
-      <div className="grid grid-cols-3 gap-1 mt-1">
-        <div />
-        <button
-          onClick={() => move(-1, 0)}
-          className="px-4 py-2 rounded-lg bg-clay/60 text-cream font-bold hover:bg-clay transition"
-          aria-label="Up"
-        >
-          ↑
-        </button>
-        <div />
-        <button
-          onClick={() => move(0, -1)}
-          className="px-4 py-2 rounded-lg bg-clay/60 text-cream font-bold hover:bg-clay transition"
-          aria-label="Left"
-        >
-          ←
-        </button>
-        <button
-          onClick={() => move(1, 0)}
-          className="px-4 py-2 rounded-lg bg-clay/60 text-cream font-bold hover:bg-clay transition"
-          aria-label="Down"
-        >
-          ↓
-        </button>
-        <button
-          onClick={() => move(0, 1)}
-          className="px-4 py-2 rounded-lg bg-clay/60 text-cream font-bold hover:bg-clay transition"
-          aria-label="Right"
-        >
-          →
-        </button>
+        <div className="pt-1">
+          <button
+            type="button"
+            onClick={reset}
+            className="text-sm font-semibold text-cream/70 hover:text-cream underline min-h-[48px] min-w-[48px] inline-flex items-center justify-center px-4 py-2 rounded-lg active:scale-95 transition touch-manipulation"
+          >
+            Generate New Maze
+          </button>
+        </div>
       </div>
-
-      <button onClick={reset} className="text-xs text-cream/40 underline">
-        New Maze
-      </button>
-    </div>
+    </GameShell>
   );
 }

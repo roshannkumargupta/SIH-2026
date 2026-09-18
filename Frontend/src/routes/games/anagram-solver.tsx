@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import AnagramSolver from "@/features/games/games/AnagramSolver";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/anagram-solver")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/anagram-solver")({
 
 function AnagramSolverPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("anagram-solver")!;
-  return (
-    <GameShell game={game} level={level}>
-      <AnagramSolver level={level} />
-    </GameShell>
-  );
+  return <AnagramSolver level={level} />;
 }

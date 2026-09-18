@@ -38,78 +38,98 @@ export function GameDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Hero Header */}
-      <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-10 shadow-card">
-        <div className="flex flex-wrap items-center gap-5">
-          <span className="flex size-16 sm:size-20 items-center justify-center rounded-2xl bg-sun text-ink shadow-sm shrink-0">
-            <Brain size={40} />
-          </span>
-          <div>
-            <h1 className="font-display text-3xl sm:text-4xl font-bold text-cream">
-              {t("games:centerTitle")}
-            </h1>
-            <p className="mt-1 text-cream/70 max-w-xl text-sm sm:text-base">
-              {t("games:centerSubtitle")}
-            </p>
-          </div>
-        </div>
+      {/* Hero Header: Dark Navy Ambient Glass Banner */}
+      <div className="relative overflow-hidden rounded-3xl border border-white/8 bg-gradient-to-br from-[#13283E] via-[#0F2032] to-[#0A1420] p-6 sm:p-9 shadow-2xl">
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#22C55E]/10 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 -mb-20 size-64 rounded-full bg-[#2DD4BF]/10 blur-3xl pointer-events-none" />
 
-        {/* Summary Stats */}
-        {summary && (
-          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="rounded-xl border border-clay bg-ink/60 px-4 py-3 flex items-center gap-3">
-              <Award size={22} className="text-sun shrink-0" />
-              <div>
-                <p className="text-xs font-bold uppercase text-cream/50">
-                  {t("games:totalSessions")}
-                </p>
-                <p className="font-display text-2xl font-bold text-cream">
-                  {summary.total_sessions}
-                </p>
-              </div>
-            </div>
-            <div className="rounded-xl border border-clay bg-ink/60 px-4 py-3 flex items-center gap-3">
-              <CheckCircle2 size={22} className="text-tea-confirm shrink-0" />
-              <div>
-                <p className="text-xs font-bold uppercase text-cream/50">
-                  {t("games:avgAccuracy")}
-                </p>
-                <p className="font-display text-2xl font-bold text-cream">
-                  {Math.round(summary.average_accuracy)}%
-                </p>
-              </div>
-            </div>
-            <div className="rounded-xl border border-clay bg-ink/60 px-4 py-3 flex items-center gap-3">
-              <TrendingUp size={22} className="text-fire shrink-0" />
-              <div>
-                <p className="text-xs font-bold uppercase text-cream/50">{t("games:avgScore")}</p>
-                <p className="font-display text-2xl font-bold text-cream">
-                  {Math.round(summary.average_score)}
-                </p>
-              </div>
-            </div>
-            <div className="rounded-xl border border-clay bg-ink/60 px-4 py-3 flex items-center gap-3">
-              <Flame size={22} className="text-fire shrink-0" />
-              <div>
-                <p className="text-xs font-bold uppercase text-cream/50">{t("games:gamesTried")}</p>
-                <p className="font-display text-2xl font-bold text-cream">
-                  {summary.total_sessions}
-                </p>
-              </div>
+        <div className="relative z-10">
+          <div className="flex flex-wrap items-center gap-5">
+            <span className="flex size-14 sm:size-16 items-center justify-center rounded-2xl bg-[#22C55E] text-[#0A1420] shadow-md shrink-0">
+              <Brain size={32} />
+            </span>
+            <div>
+              <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#E8ECEF]">
+                {t("games:centerTitle")}
+              </h1>
+              <p className="mt-1 text-[#8A99A8] max-w-xl text-sm sm:text-base font-medium">
+                {t("games:centerSubtitle")}
+              </p>
             </div>
           </div>
-        )}
+
+          {/* Summary Stats with Large Prominent Numbers */}
+          {summary && (
+            <div className="mt-7 grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+              <div className="rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-4 flex items-center gap-3.5 shadow-md">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-[#E0A23B]/15 text-[#E0A23B] shrink-0">
+                  <Award size={22} />
+                </span>
+                <div>
+                  <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#E8ECEF]">
+                    {summary.total_sessions}
+                  </p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#8A99A8]">
+                    {t("games:totalSessions")}
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-4 flex items-center gap-3.5 shadow-md">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-[#22C55E]/15 text-[#22C55E] shrink-0">
+                  <CheckCircle2 size={22} />
+                </span>
+                <div>
+                  <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#22C55E]">
+                    {Math.round(summary.average_accuracy)}%
+                  </p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#8A99A8]">
+                    {t("games:avgAccuracy")}
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-4 flex items-center gap-3.5 shadow-md">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-[#4DA3E0]/15 text-[#4DA3E0] shrink-0">
+                  <TrendingUp size={22} />
+                </span>
+                <div>
+                  <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#E8ECEF]">
+                    {Math.round(summary.average_score)}
+                  </p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#8A99A8]">
+                    {t("games:avgScore")}
+                  </p>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-4 flex items-center gap-3.5 shadow-md">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-[#E85D6B]/15 text-[#E85D6B] shrink-0">
+                  <Flame size={22} />
+                </span>
+                <div>
+                  <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#E8ECEF]">
+                    {summary.total_sessions}
+                  </p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#8A99A8]">
+                    {t("games:gamesTried")}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Category Filter */}
-      <div className="flex flex-wrap gap-2">
+      {/* Category Filter Pills */}
+      <div className="flex flex-wrap gap-2.5">
         <button
           type="button"
           onClick={() => setFilter("all")}
-          className={`px-4 py-1.5 rounded-full text-sm font-bold border transition-colors ${
+          className={`px-4 py-2 rounded-full text-xs font-bold border transition-all cursor-pointer ${
             filter === "all"
-              ? "bg-sun text-ink border-sun"
-              : "bg-surface text-cream border-clay hover:border-sun/50"
+              ? "bg-[#22C55E] text-[#0A1420] border-[#22C55E] shadow-md"
+              : "bg-[#121D2B] text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-[#152335] border-white/8 shadow-sm"
           }`}
         >
           {t("games:all")} ({GAME_REGISTRY.length})
@@ -122,10 +142,10 @@ export function GameDashboard() {
               key={cat}
               type="button"
               onClick={() => setFilter(cat)}
-              className={`px-4 py-1.5 rounded-full text-sm font-bold border transition-colors capitalize ${
+              className={`px-4 py-2 rounded-full text-xs font-bold border transition-all capitalize cursor-pointer ${
                 filter === cat
-                  ? "bg-sun text-ink border-sun"
-                  : "bg-surface text-cream border-clay hover:border-sun/50"
+                  ? "bg-[#22C55E] text-[#0A1420] border-[#22C55E] shadow-md"
+                  : "bg-[#121D2B] text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-[#152335] border-white/8 shadow-sm"
               }`}
             >
               {label} ({count})
@@ -135,7 +155,7 @@ export function GameDashboard() {
       </div>
 
       {/* Game Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {displayed.map((game) => {
           const prog = progressMap.get(game.id);
           return (
@@ -151,33 +171,48 @@ export function GameDashboard() {
 
       {/* Recent Sessions */}
       {sessions.length > 0 && (
-        <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card">
-          <div className="flex items-center gap-2 text-lg font-bold text-sun mb-4">
-            <History size={20} /> {t("games:recentSessions", undefined) || "Recent Sessions"}
+        <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
+          <div className="flex items-center gap-2 text-base font-bold text-[#22C55E] mb-5">
+            <History size={20} />
+            <span className="font-display tracking-tight text-lg text-[#E8ECEF]">
+              {t("games:recentSessions") && t("games:recentSessions") !== "recentSessions"
+                ? t("games:recentSessions")
+                : "Recent Sessions"}
+            </span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-clay text-cream/60">
-                  <th className="pb-3 font-bold uppercase text-xs">
-                    {t("games:game", undefined) || "Game"}
+                <tr className="border-b border-white/10 text-[#8A99A8] text-xs">
+                  <th className="pb-3.5 font-bold uppercase tracking-wider">
+                    {t("games:game") && t("games:game") !== "game" ? t("games:game") : "Game"}
                   </th>
-                  <th className="pb-3 font-bold uppercase text-xs">
+                  <th className="pb-3.5 font-bold uppercase tracking-wider">
                     {t("games:level", { level: 1, maxLevel: 1 }).split(" ")[0] || "Level"}
                   </th>
-                  <th className="pb-3 font-bold uppercase text-xs">{t("games:score")}</th>
-                  <th className="pb-3 font-bold uppercase text-xs">{t("games:accuracy")}</th>
-                  <th className="pb-3 font-bold uppercase text-xs">{t("games:time")}</th>
+                  <th className="pb-3.5 font-bold uppercase tracking-wider">
+                    {t("games:score") && t("games:score") !== "score" ? t("games:score") : "Score"}
+                  </th>
+                  <th className="pb-3.5 font-bold uppercase tracking-wider">
+                    {t("games:accuracy") && t("games:accuracy") !== "accuracy"
+                      ? t("games:accuracy")
+                      : "Accuracy"}
+                  </th>
+                  <th className="pb-3.5 font-bold uppercase tracking-wider">
+                    {t("games:time") && t("games:time") !== "time" ? t("games:time") : "Time"}
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-clay/40">
+              <tbody className="divide-y divide-white/5">
                 {sessions.slice(0, 8).map((s) => (
-                  <tr key={s.id} className="text-cream">
-                    <td className="py-3 font-bold capitalize">{s.game_id.replace(/-/g, " ")}</td>
-                    <td className="py-3 text-cream/70">Lv {s.level_achieved}</td>
-                    <td className="py-3 font-bold text-sun">{s.score}</td>
-                    <td className="py-3 font-bold text-tea-confirm">{Math.round(s.accuracy)}%</td>
-                    <td className="py-3 text-cream/70">{s.duration_seconds}s</td>
+                  <tr key={s.id} className="text-xs sm:text-sm hover:bg-white/[0.02] transition-colors">
+                    <td className="py-3.5 font-bold capitalize text-[#E8ECEF]">
+                      {s.game_id.replace(/-/g, " ")}
+                    </td>
+                    <td className="py-3.5 text-[#8A99A8]">Lv {s.level_achieved}</td>
+                    <td className="py-3.5 font-bold text-[#22C55E]">{s.score}</td>
+                    <td className="py-3.5 font-bold text-[#22C55E]">{Math.round(s.accuracy)}%</td>
+                    <td className="py-3.5 text-[#8A99A8]">{s.duration_seconds}s</td>
                   </tr>
                 ))}
               </tbody>

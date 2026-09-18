@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 type Shape = "circle" | "square" | "triangle";
@@ -54,7 +53,7 @@ export default function VisualSearch({ level }: { level: number }) {
   const gameTarget = Math.max(3, Math.ceil(level / 2));
   const { submitResult } = useGameSession();
 
-  useEffect(() => {
+  const resetGame = () => {
     const p = generateProblem(level);
     setProblem(p);
     setFound(new Set());
@@ -65,6 +64,10 @@ export default function VisualSearch({ level }: { level: number }) {
     setOffline(false);
     saved.current = false;
     sessionStart.current = Date.now();
+  };
+
+  useEffect(() => {
+    resetGame();
   }, [level]);
 
   const handleClick = (idx: number) => {
@@ -110,84 +113,70 @@ export default function VisualSearch({ level }: { level: number }) {
     }
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.max(
-            10,
-            Math.min(100, Math.round((100 * targetCount) / Math.max(1, targetCount + wrongClicks))),
-          )}
-          accuracy={Math.max(
-            10,
-            Math.min(100, Math.round((100 * targetCount) / Math.max(1, targetCount + wrongClicks))),
-          )}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName="Visual Search"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            const p = generateProblem(level);
-            setProblem(p);
-            setFound(new Set());
-            setWrongClicks(0);
-            setScore(0);
-            setCompleted(false);
-            setSynced(false);
-            setOffline(false);
-            saved.current = false;
-            sessionStart.current = Date.now();
-          }}
-        />
-      </>
-    );
+  const finalAcc = Math.max(
+    10,
+    Math.min(100, Math.round((100 * targetCount) / Math.max(1, targetCount + wrongClicks))),
+  );
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
+  const size = 48;
 
-  const size = 40;
   return (
-    <div className="space-y-4">
-      <div className="flex gap-4 items-center flex-wrap">
-        <div className="flex items-center gap-2">
-          <p className="text-sm text-cream/60 font-bold">Find all:</p>
-          <svg
-            width={size}
-            height={size}
-            viewBox={`0 0 ${size} ${size}`}
-            className="border border-sun rounded-lg"
-          >
-            <ShapeSVG shape={target} color="#e9c46a" size={size} />
-          </svg>
-        </div>
-        <p className="text-sm text-cream/60">
-          Found:{" "}
-          <span className="text-sun font-bold">
-            {found.size}/{targetCount}
-          </span>
-        </p>
-        <p className="text-sm text-cream/60">
-          Round:{" "}
-          <span className="text-cream font-bold">
-            {score}/{gameTarget}
-          </span>
-        </p>
-      </div>
-
-      <div className="flex flex-wrap gap-2 p-3 rounded-xl border border-clay bg-ink/30">
-        {items.map((item, idx) => (
-          <button
-            key={idx}
-            type="button"
-            onClick={() => handleClick(idx)}
-            disabled={found.has(idx) || completed}
-            className={`rounded-lg border transition-all ${found.has(idx) ? "border-tea-confirm opacity-40" : "border-clay hover:border-sun/50 hover:scale-110"}`}
-          >
+    <GameShell
+      gameId="visual-search"
+      level={level}
+      score={score}
+      targetScore={gameTarget}
+      stats={[
+        { label: "Found", value: `${found.size}/${targetCount}`, highlight: "sun" },
+        { label: "Misses", value: wrongClicks, highlight: wrongClicks > 0 ? "fire" : undefined },
+      ]}
+      instructionHint={`Find and tap every ${target} in the grid.`}
+      completed={completed}
+      results={{
+        score: finalAcc,
+        accuracy: finalAcc,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+      onNextLevel={level < 10 ? () => { window.location.href = `/games/visual-search?level=${level + 1}`; } : undefined}
+    >
+      <div className="space-y-5">
+        <div className="flex items-center justify-center gap-3 p-3 bg-surface/60 rounded-xl border border-clay/60 max-w-xs mx-auto">
+          <span className="text-sm font-bold text-cream/70">Target Shape:</span>
+          <div className="p-1 border-2 border-sun rounded-xl bg-sun/10">
             <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-              <ShapeSVG shape={item.shape} color={item.color} size={size} />
+              <ShapeSVG shape={target} color="#e9c46a" size={size} />
             </svg>
-          </button>
-        ))}
+          </div>
+          <span className="text-xs uppercase tracking-wider text-sun font-bold">{target}</span>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-2.5 p-4 rounded-2xl border border-clay bg-ink/30 max-w-lg mx-auto">
+          {items.map((item, idx) => {
+            const isFound = found.has(idx);
+            return (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => handleClick(idx)}
+                disabled={isFound || completed}
+                aria-label={`${item.shape} ${item.color}${isFound ? " (found)" : ""}`}
+                className={`rounded-xl border-2 transition-all p-1 min-w-[52px] min-h-[52px] flex items-center justify-center touch-manipulation cursor-pointer select-none active:scale-95 ${
+                  isFound
+                    ? "border-tea-confirm bg-tea-confirm/15 opacity-40 scale-95"
+                    : "border-clay bg-surface/40 hover:border-sun/60 hover:bg-surface/80"
+                }`}
+              >
+                <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+                  <ShapeSVG shape={item.shape} color={item.color} size={size} />
+                </svg>
+              </button>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </GameShell>
   );
 }

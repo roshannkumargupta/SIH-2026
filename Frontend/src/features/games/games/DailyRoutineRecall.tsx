@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle, RefreshCw } from "lucide-react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -102,7 +101,10 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
 
   const saved = useRef(false);
   const startTime = useRef(Date.now());
-  const dragItemIndex = useRef<number | null>(null);
+  const [activeDragIndex, setActiveDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const dragStartPos = useRef<{ x: number; y: number; pointerId: number } | null>(null);
+  const hasDragged = useRef<boolean>(false);
 
   const initGame = useCallback(() => {
     const { targetItems: targets, distractors } = getLevelConfig(level);
@@ -127,6 +129,10 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
 
     setSelectedIndex(null);
     setSelectedPoolId(null);
+    setActiveDragIndex(null);
+    setDragOverIndex(null);
+    dragStartPos.current = null;
+    hasDragged.current = false;
     setMoves(0);
     setSubmitted(false);
     setCompleted(false);
@@ -219,28 +225,81 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
     setMoves((m) => m + 1);
   };
 
-  // Drag and drop handlers
-  const handleDragStart = (index: number) => {
+  // Touch-compatible Pointer Event Drag and Drop handlers
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>, index: number) => {
     if (submitted) return;
-    dragItemIndex.current = index;
+    dragStartPos.current = { x: e.clientX, y: e.clientY, pointerId: e.pointerId };
+    hasDragged.current = false;
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>, index: number) => {
+    if (submitted || !dragStartPos.current || dragStartPos.current.pointerId !== e.pointerId) return;
+
+    const dx = e.clientX - dragStartPos.current.x;
+    const dy = e.clientY - dragStartPos.current.y;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist > 8) {
+      if (!hasDragged.current) {
+        hasDragged.current = true;
+        setActiveDragIndex(index);
+      }
+
+      // Check which routine card is under pointer point
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const card = el?.closest("[data-routine-idx]");
+      if (card) {
+        const over = Number(card.getAttribute("data-routine-idx"));
+        if (!isNaN(over) && over >= 0 && over < items.length) {
+          setDragOverIndex(over);
+        }
+      }
+    }
   };
 
-  const handleDrop = (dropIndex: number) => {
-    if (submitted || dragItemIndex.current === null) return;
-    const dragIdx = dragItemIndex.current;
-    if (dragIdx === dropIndex) return;
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>, index: number) => {
+    if (!dragStartPos.current || dragStartPos.current.pointerId !== e.pointerId) return;
 
-    const next = [...items];
-    const item = next.splice(dragIdx, 1)[0]!;
-    next.splice(dropIndex, 0, item);
-    setItems(next);
-    dragItemIndex.current = null;
-    setSelectedIndex(null);
-    setMoves((m) => m + 1);
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+
+    if (
+      hasDragged.current &&
+      activeDragIndex !== null &&
+      dragOverIndex !== null &&
+      activeDragIndex !== dragOverIndex
+    ) {
+      const next = [...items];
+      const moved = next.splice(activeDragIndex, 1)[0];
+      if (moved) {
+        next.splice(dragOverIndex, 0, moved);
+        setItems(next);
+        setMoves((m) => m + 1);
+      }
+    } else if (!hasDragged.current) {
+      // Clean tap/click without dragging motion
+      handleCardClick(index);
+    }
+
+    setActiveDragIndex(null);
+    setDragOverIndex(null);
+    dragStartPos.current = null;
+    hasDragged.current = false;
+  };
+
+  const handlePointerCancel = () => {
+    setActiveDragIndex(null);
+    setDragOverIndex(null);
+    dragStartPos.current = null;
+    hasDragged.current = false;
   };
 
   // Evaluation and submission
@@ -285,28 +344,26 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
     });
   };
 
-  if (completed) {
-    const total = targetItems.length;
-    const correct = Math.round((accuracy / 100) * total);
-    return (
-      <>
-        <CelebrationAnimation show={accuracy >= 60} />
-        <GameResults
-          score={accuracy}
-          accuracy={accuracy}
-          durationSeconds={Math.round((Date.now() - startTime.current) / 1000)}
-          level={level}
-          gameName={t("games:dailyRoutineRecallTitle")}
-          synced={synced}
-          offline={offline}
-          onPlayAgain={initGame}
-        />
-      </>
-    );
-  }
-
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
+    <GameShell
+      gameId="daily-routine-recall"
+      level={level}
+      stats={[
+        { label: "Moves", value: moves },
+        { label: "Items", value: targetItems.length, highlight: "tea" },
+      ]}
+      instructionHint="Drag or tap cards to arrange activities in chronological order"
+      completed={completed}
+      results={{
+        score: accuracy,
+        accuracy: accuracy,
+        durationSeconds: Math.round((Date.now() - startTime.current) / 1000),
+        synced,
+        offline,
+      }}
+      onPlayAgain={initGame}
+    >
+      <div className="space-y-6 max-w-2xl mx-auto">
       {/* Header and prompt */}
       <div className="text-center space-y-1">
         <p className="text-cream/80 text-sm font-medium">{t("games:swapTip")}</p>
@@ -317,25 +374,32 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
       <div className="space-y-2.5">
         {items.map((item, idx) => {
           const isSelected = selectedIndex === idx;
+          const isBeingDragged = activeDragIndex === idx;
+          const isDragTarget = dragOverIndex === idx && activeDragIndex !== null && activeDragIndex !== idx;
           const isCorrectPosition = submitted && targetItems[idx]?.id === item.id;
           const isWrongPosition = submitted && targetItems[idx]?.id !== item.id;
 
           return (
             <div
               key={item.id}
-              draggable={!submitted}
-              onDragStart={() => handleDragStart(idx)}
-              onDragOver={handleDragOver}
-              onDrop={() => handleDrop(idx)}
-              onClick={() => handleCardClick(idx)}
-              className={`flex items-center justify-between p-3.5 sm:p-4 rounded-2xl border-2 transition-all cursor-pointer select-none shadow-sm ${
-                isSelected
-                  ? "border-sun bg-sun/20 shadow-md ring-2 ring-sun/30 scale-[1.01]"
-                  : isCorrectPosition
-                    ? "border-tea-confirm bg-tea-confirm/15"
-                    : isWrongPosition
-                      ? "border-fire/60 bg-fire/10"
-                      : "border-clay bg-ink/60 hover:border-sun/40 hover:bg-clay/20"
+              data-routine-idx={idx}
+              onPointerDown={(e) => handlePointerDown(e, idx)}
+              onPointerMove={(e) => handlePointerMove(e, idx)}
+              onPointerUp={(e) => handlePointerUp(e, idx)}
+              onPointerCancel={handlePointerCancel}
+              style={{ touchAction: activeDragIndex !== null ? "none" : "manipulation" }}
+              className={`flex items-center justify-between p-3.5 sm:p-4 rounded-2xl border-2 transition-all cursor-grab active:cursor-grabbing select-none shadow-sm touch-manipulation active:scale-[0.99] ${
+                isBeingDragged
+                  ? "border-sun bg-sun/30 ring-4 ring-sun/40 shadow-xl scale-[1.02] opacity-80 z-20"
+                  : isDragTarget
+                    ? "border-sun bg-sun/15 ring-2 ring-sun/60 scale-[1.01]"
+                    : isSelected
+                      ? "border-sun bg-sun/20 shadow-md ring-2 ring-sun/30 scale-[1.01]"
+                      : isCorrectPosition
+                        ? "border-tea-confirm bg-tea-confirm/15"
+                        : isWrongPosition
+                          ? "border-fire/60 bg-fire/10"
+                          : "border-clay bg-ink/60 hover:border-sun/40 hover:bg-clay/20"
               }`}
               role="button"
               tabIndex={0}
@@ -372,9 +436,12 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
                 </div>
               </div>
 
-              {/* Accessible Earlier/Later nudge buttons */}
+              {/* Accessible Earlier/Later nudge buttons (min 44x44px elderly accessibility) */}
               {!submitted && (
-                <div className="flex items-center gap-1.5 shrink-0">
+                <div
+                  className="flex items-center gap-1.5 shrink-0"
+                  onPointerDown={(e) => e.stopPropagation()}
+                >
                   <button
                     type="button"
                     onClick={(e) => {
@@ -382,11 +449,11 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
                       moveCard(idx, -1);
                     }}
                     disabled={idx === 0}
-                    className="p-2 rounded-xl border border-clay bg-ink hover:bg-clay/40 text-cream/80 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                    className="size-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border border-clay bg-ink hover:bg-clay/40 text-cream/80 disabled:opacity-30 disabled:cursor-not-allowed transition touch-manipulation active:scale-90"
                     title={t("games:moveEarlier")}
                     aria-label={t("games:moveEarlier")}
                   >
-                    <ArrowLeft size={16} />
+                    <ArrowLeft size={18} />
                   </button>
                   <button
                     type="button"
@@ -395,11 +462,11 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
                       moveCard(idx, 1);
                     }}
                     disabled={idx === items.length - 1}
-                    className="p-2 rounded-xl border border-clay bg-ink hover:bg-clay/40 text-cream/80 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                    className="size-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border border-clay bg-ink hover:bg-clay/40 text-cream/80 disabled:opacity-30 disabled:cursor-not-allowed transition touch-manipulation active:scale-90"
                     title={t("games:moveLater")}
                     aria-label={t("games:moveLater")}
                   >
-                    <ArrowRight size={16} />
+                    <ArrowRight size={18} />
                   </button>
                 </div>
               )}
@@ -422,7 +489,7 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
                   key={poolItem.id}
                   type="button"
                   onClick={() => handlePoolCardClick(poolItem)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-xl border transition ${
+                  className={`flex items-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl border transition touch-manipulation active:scale-95 ${
                     isSelected
                       ? "border-sun bg-sun/20 text-sun font-bold"
                       : "border-clay bg-ink text-cream/80 hover:border-sun/40"
@@ -443,7 +510,7 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
           type="button"
           onClick={initGame}
           disabled={submitted}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-clay text-cream/70 hover:text-cream hover:bg-clay/30 transition text-sm font-semibold"
+          className="flex items-center gap-2 px-4 py-3 min-h-[44px] min-w-[44px] rounded-xl border border-clay text-cream/70 hover:text-cream hover:bg-clay/30 transition text-sm font-semibold touch-manipulation active:scale-95"
         >
           <RefreshCw size={16} />
           Reset
@@ -453,11 +520,12 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
           type="button"
           onClick={checkSequence}
           disabled={submitted}
-          className="px-7 py-3 rounded-xl bg-sun text-ink font-extrabold text-base hover:opacity-90 active:scale-95 transition shadow-card flex items-center gap-2"
+          className="px-7 py-3 min-h-[44px] rounded-xl bg-sun text-ink font-extrabold text-base hover:opacity-90 active:scale-95 transition shadow-card flex items-center gap-2 touch-manipulation"
         >
           ✓ {t("games:checkOrder")}
         </button>
       </div>
-    </div>
+      </div>
+    </GameShell>
   );
 }

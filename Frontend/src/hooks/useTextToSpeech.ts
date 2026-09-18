@@ -88,12 +88,15 @@ export function useTextToSpeech() {
       stop();
       setIsSpeaking(true);
 
-      // Check if language is directly supported by Sarvam Bulbul v3
-      const sarvamSupportedLanguages = new Set([
+      // Check if language is supported by Cloud TTS (Sarvam / Bhashini)
+      const cloudSupportedLanguages = new Set([
         "en-IN",
         "hi-IN",
         "bn-IN",
         "as-IN",
+        "mni-IN",
+        "brx-IN",
+        "ne-IN",
         "ta-IN",
         "te-IN",
         "kn-IN",
@@ -104,7 +107,7 @@ export function useTextToSpeech() {
         "od-IN",
       ]);
 
-      if (sarvamSupportedLanguages.has(languageCode)) {
+      if (cloudSupportedLanguages.has(languageCode)) {
         try {
           const res = await voiceApi.synthesize(text, languageCode);
           const audioB64 = res.audio_base64 || res.audio;

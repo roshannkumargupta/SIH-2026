@@ -1,9 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
-
-import type { ReactNode } from "react";
 
 const SHAPES = ["circle", "square", "triangle", "star", "diamond"] as const;
 type Shape = (typeof SHAPES)[number];
@@ -57,7 +54,7 @@ const generateProblem = (level: number): DualTaskProblem => {
 };
 
 export default function DualTask({ level }: { level: number }) {
-  const [problem, setProblem] = useState<DualTaskProblem>(() => generateProblem(level));
+  const [problem, setProblem] = useState(() => generateProblem(level));
   const [shapeInput, setShapeInput] = useState("");
   const [mathInput, setMathInput] = useState("");
   const [score, setScore] = useState(0);
@@ -67,46 +64,51 @@ export default function DualTask({ level }: { level: number }) {
   const [offline, setOffline] = useState(false);
   const saved = useRef(false);
   const sessionStart = useRef(Date.now());
-  const target = Math.max(3, Math.ceil(level / 2));
+  const target = Math.max(3, Math.min(8, level + 2));
   const { submitResult } = useGameSession();
 
   useEffect(() => {
-    setProblem(generateProblem(level));
     setScore(0);
-    setFeedback("");
     setCompleted(false);
     setSynced(false);
     setOffline(false);
     saved.current = false;
     sessionStart.current = Date.now();
+    setProblem(generateProblem(level));
+    setShapeInput("");
+    setMathInput("");
+    setFeedback("");
   }, [level]);
 
   const submit = () => {
-    const shapeOk = parseInt(shapeInput, 10) === problem.shapeCount;
-    const mathOk = parseInt(mathInput, 10) === problem.mathAnswer;
-    if (shapeOk && mathOk) {
-      const newScore = score + 1;
-      setScore(newScore);
+    const sAns = parseInt(shapeInput, 10);
+    const mAns = parseInt(mathInput, 10);
+    const correct = sAns === problem.shapeCount && mAns === problem.mathAnswer;
+
+    if (correct) {
+      setScore((s) => {
+        const next = s + 1;
+        if (!saved.current && next >= target) {
+          saved.current = true;
+          const acc = Math.min(100, Math.round((next / target) * 100));
+          const dur = Math.round((Date.now() - sessionStart.current) / 1000);
+          submitResult({
+            gameId: "dual-task",
+            gameType: "dual_task",
+            score: acc,
+            accuracy: acc,
+            durationSeconds: Math.max(5, dur),
+            level,
+            difficulty: String(level),
+          }).then((r) => {
+            setSynced(r.success);
+            setOffline(r.offline);
+            setCompleted(true);
+          });
+        }
+        return next;
+      });
       setFeedback("✓ Both correct!");
-      if (newScore >= target && !saved.current) {
-        saved.current = true;
-        const acc = Math.min(100, Math.round((newScore / target) * 100));
-        const dur = Math.round((Date.now() - sessionStart.current) / 1000);
-        submitResult({
-          gameId: "dual-task",
-          gameType: "dual_task",
-          score: acc,
-          accuracy: acc,
-          durationSeconds: Math.max(5, dur),
-          level,
-          difficulty: String(level),
-        }).then((r) => {
-          setSynced(r.success);
-          setOffline(r.offline);
-          setCompleted(true);
-        });
-        return;
-      }
       setTimeout(() => {
         setProblem(generateProblem(level));
         setShapeInput("");
@@ -124,98 +126,91 @@ export default function DualTask({ level }: { level: number }) {
     }
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((score / target) * 100))}
-          accuracy={Math.min(100, Math.round((score / target) * 100))}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName="Dual Task Challenge"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setCompleted(false);
-            setScore(0);
-            saved.current = false;
-            setSynced(false);
-            setOffline(false);
-            setProblem(generateProblem(level));
-            sessionStart.current = Date.now();
-          }}
-        />
-      </>
-    );
+  const finalAccuracy = Math.min(100, Math.round((score / target) * 100));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
+
+  const resetGame = () => {
+    setCompleted(false);
+    setScore(0);
+    saved.current = false;
+    setSynced(false);
+    setOffline(false);
+    setProblem(generateProblem(level));
+    sessionStart.current = Date.now();
+  };
 
   return (
-    <div className="space-y-5">
-      <p className="text-center text-cream/50 text-xs uppercase font-bold">
-        Score: {score}/{target} · Do both tasks simultaneously!
-      </p>
-
-      {/* Shapes area */}
-      <div className="rounded-xl border border-clay bg-ink/40 p-4">
-        <p className="text-xs text-cream/60 mb-2 font-bold">
-          Count the <span className="text-sun capitalize">{problem.targetShape}s</span>:
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {problem.shapes.map((item, i) => (
-            <svg key={i} width="40" height="40" viewBox="0 0 40 40">
-              {SHAPE_SVG[item.shape](item.color)}
-            </svg>
-          ))}
+    <GameShell
+      gameId="dual-task"
+      level={level}
+      score={score}
+      targetScore={target}
+      feedback={feedback}
+      instructionHint="Count the target shapes AND solve the arithmetic question"
+      completed={completed}
+      results={{
+        score: finalAccuracy,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+    >
+      <div className="space-y-6 max-w-xl mx-auto">
+        {/* Shapes area */}
+        <div className="rounded-2xl border-2 border-clay bg-ink/50 p-5 shadow-sm">
+          <p className="text-sm text-cream/80 mb-3 font-bold">
+            Count the <span className="text-sun capitalize font-black text-base">{problem.targetShape}s</span>:
+          </p>
+          <div className="flex flex-wrap gap-2.5 justify-center sm:justify-start">
+            {problem.shapes.map((item, i) => (
+              <svg key={i} width="44" height="44" viewBox="0 0 40 40" className="drop-shadow-sm">
+                {SHAPE_SVG[item.shape](item.color)}
+              </svg>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Math area */}
-      <div className="rounded-xl border border-clay bg-ink/40 p-4 text-center">
-        <p className="text-xs text-cream/60 mb-2 font-bold">Solve the math:</p>
-        <span className="font-display text-3xl font-black text-fire">{problem.math} = ?</span>
-      </div>
+        {/* Math area */}
+        <div className="rounded-2xl border-2 border-clay bg-ink/50 p-5 text-center shadow-sm">
+          <p className="text-xs font-bold uppercase tracking-wider text-cream/50 mb-1">Solve the calculation:</p>
+          <span className="font-display text-4xl sm:text-5xl font-black text-fire">{problem.math} = ?</span>
+        </div>
 
-      {/* Answers */}
-      <div className="flex gap-3 flex-wrap justify-center">
-        <div className="flex flex-col items-center gap-1">
-          <label className="text-xs text-sun font-bold">Shape count</label>
-          <input
-            type="number"
-            value={shapeInput}
-            onChange={(e) => setShapeInput(e.target.value)}
-            className="w-20 rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-xl py-2 focus:border-sun focus:outline-none"
-            placeholder="?"
-          />
-        </div>
-        <div className="flex flex-col items-center gap-1">
-          <label className="text-xs text-fire font-bold">Math answer</label>
-          <input
-            type="number"
-            value={mathInput}
-            onChange={(e) => setMathInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") submit();
-            }}
-            className="w-20 rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-xl py-2 focus:border-sun focus:outline-none"
-            placeholder="?"
-          />
-        </div>
-        <div className="flex items-end">
+        {/* Inputs */}
+        <div className="flex gap-4 flex-wrap justify-center items-end pt-1">
+          <div className="flex flex-col items-center gap-1.5">
+            <label className="text-xs text-sun font-bold uppercase tracking-wider">Shape Count</label>
+            <input
+              type="number"
+              value={shapeInput}
+              onChange={(e) => setShapeInput(e.target.value)}
+              className="w-24 rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-2xl py-2.5 focus:border-sun focus:outline-none min-h-[48px]"
+              placeholder="?"
+            />
+          </div>
+          <div className="flex flex-col items-center gap-1.5">
+            <label className="text-xs text-fire font-bold uppercase tracking-wider">Math Answer</label>
+            <input
+              type="number"
+              value={mathInput}
+              onChange={(e) => setMathInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") submit();
+              }}
+              className="w-24 rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-2xl py-2.5 focus:border-sun focus:outline-none min-h-[48px]"
+              placeholder="?"
+            />
+          </div>
           <button
             onClick={submit}
-            className="px-5 py-2.5 rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 transition shadow"
+            className="px-7 py-3 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center text-base"
           >
             Submit Both
           </button>
         </div>
       </div>
-      {feedback && (
-        <p
-          className={`text-center text-sm font-bold ${feedback.startsWith("✓") ? "text-tea-confirm" : "text-fire"}`}
-        >
-          {feedback}
-        </p>
-      )}
-    </div>
+    </GameShell>
   );
 }

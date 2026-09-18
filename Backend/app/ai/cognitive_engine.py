@@ -21,15 +21,20 @@ class CognitiveEngine:
         self._load_external_model()
 
     def _load_external_model(self):
-        model_path = settings.ML_MODEL_PATH
-        if os.path.exists(model_path):
-            try:
-                # If custom scikit-learn / joblib model exists, load it
-                logger.info(f"Checking for ML model weights at {model_path}")
-            except Exception as e:
-                logger.warning(f"Could not load ML model from {model_path}: {e}. Using clinical heuristic engine.")
-        else:
-            logger.info(f"No custom ML model file found at {model_path}. Using resilient clinical heuristic engine.")
+        try:
+            from app.ai.ml_difficulty import resolve_model_file
+            import joblib
+
+            model_file = resolve_model_file()
+            if model_file and os.path.isfile(model_file):
+                self.model = joblib.load(model_file)
+                logger.info(f"Loaded trained ML adaptive difficulty model from {model_file}")
+            else:
+                self.model = None
+                logger.info("No trained ML model file found. Using resilient clinical heuristic engine.")
+        except Exception as e:
+            logger.warning(f"Could not load ML model: {e}. Using clinical heuristic engine.")
+            self.model = None
 
     def evaluate_cognition(
         self,
@@ -218,6 +223,7 @@ class CognitiveEngine:
                     ),
                     "based_on_sessions": 0,
                     "ai_difficulty_enabled": ai_enabled,
+                    "model_type": "heuristic",
                 }
 
             # General sessions fallback weighted lower
@@ -238,6 +244,7 @@ class CognitiveEngine:
                 "rationale": rationale,
                 "based_on_sessions": len(all_recent_sessions),
                 "ai_difficulty_enabled": ai_enabled,
+                "model_type": "heuristic",
             }
 
         # 4. We have specific sessions for this game
@@ -276,6 +283,25 @@ class CognitiveEngine:
             if latest_acc < avg_prev - 15.0 or len(recent_day_sessions) >= 4:
                 fatigue_detected = True
 
+        # Check if trained ML difficulty model is active
+        if self.model is not None:
+            try:
+                from app.ai.ml_difficulty import predict_adaptive_level
+                ml_res = predict_adaptive_level(
+                    model=self.model,
+                    accuracy=rolling_acc,
+                    duration_seconds=specific_sessions[0].duration_seconds,
+                    level_achieved=current_level,
+                    game_type=norm_game_id,
+                    n_sessions=n_sessions,
+                    fatigue_detected=fatigue_detected,
+                    max_level=max_level,
+                )
+                ml_res["ai_difficulty_enabled"] = ai_enabled
+                return ml_res
+            except Exception as e:
+                logger.warning(f"ML adaptive difficulty inference error: {e}. Falling back to clinical rules.")
+
         # Heuristic adjustment
         adjustment = 0
         if fatigue_detected:
@@ -307,6 +333,7 @@ class CognitiveEngine:
             "rationale": rationale,
             "based_on_sessions": n_sessions,
             "ai_difficulty_enabled": ai_enabled,
+            "model_type": "heuristic",
         }
 
 

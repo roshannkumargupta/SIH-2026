@@ -1,13 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 import { useLanguage } from "@/context/LanguageContext";
 import { getGameWordPool, scrambleWord } from "../data/wordPools";
 import { GameVoiceInputButton } from "../components/GameVoiceInputButton";
 
 export default function WordScramble({ level }: { level: number }) {
-  const { shortLang, t } = useLanguage();
+  const { shortLang } = useLanguage();
   const tierIndex = Math.min(Math.floor((level - 1) / 2.5), 3);
 
   const pool = useMemo(() => {
@@ -39,14 +38,18 @@ export default function WordScramble({ level }: { level: number }) {
     setFeedback("");
   };
 
-  useEffect(() => {
-    setScore(0);
+  const resetGame = () => {
     setCompleted(false);
+    setScore(0);
+    saved.current = false;
     setSynced(false);
     setOffline(false);
-    saved.current = false;
     sessionStart.current = Date.now();
     pick();
+  };
+
+  useEffect(() => {
+    resetGame();
   }, [level, pool]);
 
   const submitGuess = (overrideGuess?: string) => {
@@ -86,82 +89,82 @@ export default function WordScramble({ level }: { level: number }) {
     }
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((score / target) * 100))}
-          accuracy={Math.min(100, Math.round((score / target) * 100))}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName={t("games:wordScrambleTitle", { defaultValue: "Word Scramble" })}
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setCompleted(false);
-            setScore(0);
-            saved.current = false;
-            setSynced(false);
-            setOffline(false);
-            sessionStart.current = Date.now();
-            pick();
-          }}
-        />
-      </>
-    );
+  const finalScore = Math.min(100, Math.round((score / target) * 100));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
 
   return (
-    <div className="space-y-6 text-center">
-      <p className="text-cream/50 text-xs uppercase font-bold">
-        Score: {score}/{target}
-      </p>
-      <div className="mx-auto inline-block rounded-2xl border-4 border-sun bg-ink px-10 py-6 shadow-card">
-        <span className="font-display text-5xl sm:text-6xl font-black text-sun tracking-widest">
-          {scr.toUpperCase()}
-        </span>
-      </div>
+    <GameShell
+      gameId="word-scramble"
+      level={level}
+      score={score}
+      targetScore={target}
+      feedback={
+        feedback
+          ? {
+              text: feedback,
+              type: feedback.startsWith("✓") ? "success" : "error",
+            }
+          : undefined
+      }
+      instructionHint="Unscramble the letters into a meaningful word. Type your answer or tap the microphone to speak."
+      completed={completed}
+      results={{
+        score: finalScore,
+        accuracy: finalScore,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+      onNextLevel={level < 10 ? () => { window.location.href = `/games/word-scramble?level=${level + 1}`; } : undefined}
+    >
+      <div className="space-y-6 text-center max-w-md mx-auto">
+        <div className="inline-block rounded-2xl border-4 border-sun bg-ink px-8 py-5 shadow-card">
+          <span className="font-display text-4xl sm:text-5xl font-black text-sun tracking-widest">
+            {scr.toUpperCase()}
+          </span>
+        </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") submitGuess();
-          }}
-          className="rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-2xl font-bold py-3 px-4 w-full max-w-xs focus:border-sun focus:outline-none"
-          placeholder="Type or speak answer…"
-          disabled={completed}
-          autoFocus
-        />
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => submitGuess()}
-            disabled={completed}
-            className="px-6 py-3 rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 disabled:opacity-40 transition shadow"
-          >
-            ✓ Submit
-          </button>
-          <GameVoiceInputButton
-            onTranscript={(spoken) => {
-              setInput(spoken);
-              submitGuess(spoken);
+        <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") submitGuess();
             }}
+            className="rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-2xl font-bold py-3 px-4 w-full focus:border-sun focus:outline-none"
+            placeholder="Type or speak answer…"
             disabled={completed}
+            autoFocus
           />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => submitGuess()}
+              disabled={completed}
+              className="px-6 py-3 min-h-[48px] rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 active:scale-95 disabled:opacity-40 transition shadow touch-manipulation cursor-pointer"
+            >
+              ✓ Submit
+            </button>
+            <GameVoiceInputButton
+              onTranscript={(spoken) => {
+                setInput(spoken);
+                submitGuess(spoken);
+              }}
+              disabled={completed}
+            />
+          </div>
+        </div>
+
+        <div className="pt-2">
+          <button
+            onClick={pick}
+            className="text-xs text-cream/50 underline min-h-[44px] px-4 py-2 rounded-lg hover:text-cream active:scale-95 transition touch-manipulation cursor-pointer"
+          >
+            Skip this word →
+          </button>
         </div>
       </div>
-      {feedback && (
-        <p
-          className={`text-sm font-bold ${feedback.startsWith("✓") ? "text-tea-confirm" : "text-fire"}`}
-        >
-          {feedback}
-        </p>
-      )}
-      <button onClick={pick} className="text-xs text-cream/40 underline">
-        Skip word
-      </button>
-    </div>
+    </GameShell>
   );
 }

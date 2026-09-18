@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/context/LanguageContext";
 import type { VoiceLanguageCode, VoiceStatusState, InterpretResult } from "../types/voice.types";
 import { voiceApi } from "../services/voiceApi";
+import { ttsCache, prewarmTtsCache } from "../utils/ttsCache";
 
 export const VOICE_LOCALE_MAP: Record<
   VoiceLanguageCode,
@@ -184,8 +185,10 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
     onresult: ((event: unknown) => void) | null;
     onerror: ((event: unknown) => void) | null;
     onend: (() => void) | null;
+    onspeechstart?: (() => void) | null;
     start: () => void;
     abort: () => void;
+    stop: () => void;
   } | null>(null);
   const nativeTranscriptRef = useRef<string>("");
   const streamRef = useRef<MediaStream | null>(null);
@@ -194,25 +197,203 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
   const maxTimerRef = useRef<number | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+  const isSpeakingRef = useRef<boolean>(false);
 
   const shortLang = (language.includes("-") ? language.split("-")[0] : language).toLowerCase();
 
+  // Initialize background cache pre-warming
+  useEffect(() => {
+    prewarmTtsCache(voiceApi.synthesizeSpeech);
+  }, []);
+
+  /**
+   * Stop any active audio/speech synthesis playback immediately (Barge-in helper)
+   */
+  const stopSpeaking = useCallback(() => {
+    isSpeakingRef.current = false;
+    if (currentAudioRef.current) {
+      try {
+        currentAudioRef.current.pause();
+        currentAudioRef.current.currentTime = 0;
+      } catch {
+        // ignore
+      }
+      currentAudioRef.current = null;
+    }
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
+
+  /**
+   * Browser SpeechSynthesis Fallback Chain (Guarantees audible sound)
+   * 1. Try matching native/regional voice on device.
+   * 2. If no voice found -> fall back to English voice audio cue so user always hears sound!
+   */
+  const speakBrowserFallback = useCallback(
+    (text: string, langCode: VoiceLanguageCode): Promise<void> => {
+      return new Promise((resolve) => {
+        if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+          setStatus("idle");
+          isSpeakingRef.current = false;
+          resolve();
+          return;
+        }
+
+        try {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          const localeConfig = VOICE_LOCALE_MAP[langCode] || {
+            ttsLocale: langCode,
+            fallbackTts: "en-IN",
+          };
+          utterance.lang = localeConfig.ttsLocale;
+          utterance.rate = 0.92;
+
+          const voices = window.speechSynthesis.getVoices();
+          let matchedVoice: SpeechSynthesisVoice | undefined;
+
+          if (voices && voices.length > 0) {
+            const targetLang = localeConfig.ttsLocale.toLowerCase();
+            const fallbackLang = localeConfig.fallbackTts.toLowerCase();
+            const langPrefix = langCode.slice(0, 2).toLowerCase();
+
+            // 1. Direct or regional voice match
+            matchedVoice =
+              voices.find((v) => v.lang.toLowerCase() === targetLang) ||
+              voices.find((v) => v.lang.toLowerCase() === fallbackLang) ||
+              voices.find((v) => v.lang.toLowerCase().startsWith(langPrefix));
+
+            if (matchedVoice) {
+              console.warn(
+                `[Voice] Browser SpeechSynthesis: using device voice '${matchedVoice.name}' (${matchedVoice.lang}) for ${langCode}`,
+              );
+              utterance.voice = matchedVoice;
+            } else {
+              // 2. Fallback to English voice audio cue so user never experiences total silence!
+              const englishVoice =
+                voices.find((v) => v.lang.toLowerCase().includes("en-in")) ||
+                voices.find((v) => v.lang.toLowerCase().includes("en-us")) ||
+                voices.find((v) => v.lang.toLowerCase().startsWith("en")) ||
+                voices[0];
+
+              if (englishVoice) {
+                console.warn(
+                  `[Voice] No device voice for ${langCode}. Falling back to English voice audio cue: '${englishVoice.name}' (${englishVoice.lang})`,
+                );
+                utterance.voice = englishVoice;
+                utterance.lang = englishVoice.lang || "en-IN";
+              }
+            }
+          }
+
+          let synthDone = false;
+          const finishSynth = () => {
+            if (synthDone) return;
+            synthDone = true;
+            isSpeakingRef.current = false;
+            setStatus("idle");
+            resolve();
+          };
+
+          const synthSafety = window.setTimeout(finishSynth, 10000);
+
+          utterance.onend = () => {
+            clearTimeout(synthSafety);
+            finishSynth();
+          };
+          utterance.onerror = (err) => {
+            console.warn("[Voice] Browser speech synthesis error:", err);
+            clearTimeout(synthSafety);
+            finishSynth();
+          };
+
+          isSpeakingRef.current = true;
+          window.speechSynthesis.speak(utterance);
+        } catch (err) {
+          console.warn("[Voice] SpeechSynthesis exception:", err);
+          isSpeakingRef.current = false;
+          setStatus("idle");
+          resolve();
+        }
+      });
+    },
+    [],
+  );
+
+  /**
+   * Main Tiered Speak Function:
+   * - TIER 1: Instant cache (near-0ms)
+   * - TIER 2: Live Sarvam API (with 4s timeout)
+   * - TIER 3 / Fallback: Browser SpeechSynthesis 3-level chain
+   */
   const speak = useCallback(
     async (text: string) => {
       if (!text || !text.trim()) return;
 
-      if (currentAudioRef.current) {
+      stopSpeaking();
+      setStatus("speaking");
+      isSpeakingRef.current = true;
+
+      // ==========================================
+      // TIER 1 — Instant Cache (Near 0ms, No Network)
+      // ==========================================
+      const cachedB64 = ttsCache.get(text, language);
+      if (cachedB64) {
+        console.log(`[Voice] Tier 1 (cache) hit for [${language}]: "${text.slice(0, 30)}…"`);
         try {
-          currentAudioRef.current.pause();
-        } catch {
-          // ignore
+          const binary = atob(cachedB64);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+          }
+          const blob = new Blob([bytes], { type: "audio/wav" });
+          const url = URL.createObjectURL(blob);
+          const audio = new Audio(url);
+          currentAudioRef.current = audio;
+
+          return await new Promise<void>((resolve) => {
+            let isDone = false;
+            const finish = () => {
+              if (isDone) return;
+              isDone = true;
+              isSpeakingRef.current = false;
+              if (currentAudioRef.current === audio) {
+                currentAudioRef.current = null;
+              }
+              setStatus("idle");
+              resolve();
+            };
+
+            const safetyTimeout = window.setTimeout(finish, 12000);
+            audio.onended = () => {
+              clearTimeout(safetyTimeout);
+              finish();
+            };
+            audio.onerror = () => {
+              clearTimeout(safetyTimeout);
+              console.warn("[Voice] Cached audio playback error. Falling back to browser voice.");
+              finish();
+              speakBrowserFallback(text, language);
+            };
+
+            audio.play().catch(() => {
+              finish();
+              speakBrowserFallback(text, language);
+            });
+          });
+        } catch (err) {
+          console.warn("[Voice] Error playing cached audio:", err);
         }
-        currentAudioRef.current = null;
       }
 
-      setStatus("speaking");
-
-      // 1. Try Sarvam TTS first for supported natural Indic languages
+      // ==========================================
+      // TIER 2 — Live Sarvam API (for supported langs)
+      // ==========================================
       const sarvamTtsLanguages = new Set([
         "en-IN",
         "hi-IN",
@@ -225,12 +406,17 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
         "gu-IN",
         "pa-IN",
         "od-IN",
+        "as-IN",
       ]);
 
       if (sarvamTtsLanguages.has(language)) {
         try {
           const audioB64 = await voiceApi.synthesizeSpeech(text, language);
           if (audioB64 && audioB64.length > 500) {
+            console.log(`[Voice] Tier 2 (Sarvam) synthesis completed for [${language}]`);
+            // Cache for subsequent instant Tier 1 hits
+            ttsCache.set(text, language, audioB64);
+
             const binary = atob(audioB64);
             const bytes = new Uint8Array(binary.length);
             for (let i = 0; i < binary.length; i++) {
@@ -241,92 +427,59 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
             const audio = new Audio(url);
             currentAudioRef.current = audio;
 
-            let isDone = false;
-            const finish = () => {
-              if (isDone) return;
-              isDone = true;
-              if (currentAudioRef.current === audio) {
-                currentAudioRef.current = null;
-              }
-              setStatus("idle");
-            };
+            return await new Promise<void>((resolve) => {
+              let isDone = false;
+              const finish = () => {
+                if (isDone) return;
+                isDone = true;
+                isSpeakingRef.current = false;
+                if (currentAudioRef.current === audio) {
+                  currentAudioRef.current = null;
+                }
+                setStatus("idle");
+                resolve();
+              };
 
-            const safetyTimeout = window.setTimeout(finish, 14000);
+              const safetyTimeout = window.setTimeout(finish, 14000);
 
-            audio.onended = () => {
-              clearTimeout(safetyTimeout);
-              finish();
-            };
-            audio.onerror = () => {
-              clearTimeout(safetyTimeout);
-              finish();
-            };
+              audio.onended = () => {
+                clearTimeout(safetyTimeout);
+                finish();
+              };
+              audio.onerror = () => {
+                clearTimeout(safetyTimeout);
+                console.warn(
+                  `[Voice] Audio element error during Sarvam playback for [${language}]. Falling back to browser voice.`,
+                );
+                finish();
+                speakBrowserFallback(text, language);
+              };
 
-            await audio.play();
-            return;
+              audio.play().catch(() => {
+                finish();
+                speakBrowserFallback(text, language);
+              });
+            });
+          } else {
+            console.warn(
+              `[Voice] Sarvam TTS returned empty or short audio for [${language}]. Falling back to browser voice.`,
+            );
           }
-        } catch {
-          // fallback to browser speech synthesis
-        }
-      }
-
-      // 2. Browser SpeechSynthesis fallback
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        try {
-          window.speechSynthesis.cancel();
-          const utterance = new SpeechSynthesisUtterance(text);
-          const localeConfig = VOICE_LOCALE_MAP[language] || {
-            ttsLocale: language,
-            fallbackTts: "en-IN",
-          };
-          utterance.lang = localeConfig.ttsLocale;
-          utterance.rate = 0.92;
-
-          const voices = window.speechSynthesis.getVoices();
-          if (voices && voices.length > 0) {
-            const targetLang = localeConfig.ttsLocale.toLowerCase();
-            const fallbackLang = localeConfig.fallbackTts.toLowerCase();
-            const langPrefix = language.slice(0, 2).toLowerCase();
-
-            const matchedVoice =
-              voices.find((v) => v.lang.toLowerCase() === targetLang) ||
-              voices.find((v) => v.lang.toLowerCase() === fallbackLang) ||
-              voices.find((v) => v.lang.toLowerCase().startsWith(langPrefix)) ||
-              voices.find((v) => v.lang.toLowerCase().startsWith("hi")) ||
-              voices.find((v) => v.lang.toLowerCase().startsWith("en"));
-
-            if (matchedVoice) {
-              utterance.voice = matchedVoice;
-            }
-          }
-
-          let synthDone = false;
-          const finishSynth = () => {
-            if (synthDone) return;
-            synthDone = true;
-            setStatus("idle");
-          };
-
-          const synthSafety = window.setTimeout(finishSynth, 10000);
-
-          utterance.onend = () => {
-            clearTimeout(synthSafety);
-            finishSynth();
-          };
-          utterance.onerror = () => {
-            clearTimeout(synthSafety);
-            finishSynth();
-          };
-
-          window.speechSynthesis.speak(utterance);
-        } catch {
-          setStatus("idle");
+        } catch (err) {
+          console.warn(`[Voice] Sarvam TTS call failed for [${language}]:`, err);
         }
       } else {
-        setStatus("idle");
+        console.warn(
+          `[Voice] Language '${language}' not supported by Sarvam TTS. Routing directly to browser speech synthesis.`,
+        );
       }
+
+      // ==========================================
+      // TIER 3 / Sound Safety Fallback: Browser Voice
+      // ==========================================
+      await speakBrowserFallback(text, language);
     },
-    [language],
+    [language, speakBrowserFallback, stopSpeaking],
   );
 
   const VOICE_PROMPTS: Record<string, Record<string, string>> = {
@@ -344,95 +497,109 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
       en: "Opening Cognitive Training Centre with 22 exercises.",
     },
     OPEN_PROGRESS: {
-      hi: "एआई कॉग्निटिव एनालिटिक्स और प्रोग्रेस रिपोर्ट खोल रहा हूँ।",
-      te: "మీ ప్రగతి నివేదిక తెరుస్తున్నాను.",
-      ta: "உங்கள் முன்னேற்ற அறிக்கை திறக்கப்படுகிறது.",
+      hi: "आपकी संज्ञानात्मक प्रगति रिपोर्ट खोल रहा हूँ।",
+      te: "మీ జ్ఞాపకశక్తి మరియు ఆలోచనా సామర్థ్య నివేదికను తెరుస్తున్నాను.",
+      ta: "உங்கள் அறிவாற்றல் முன்னேற்ற அறிக்கை திறக்கப்படுகிறது.",
       mr: "तुमचा प्रगती अहवाल उघडत आहे.",
       gu: "તમારો પ્રગતિ અહેવાલ ખોલી રહ્યો છું.",
-      bn: "কগনিটিভ অ্যানালিটিক্স রিপোর্ট খুলছি।",
-      as: "প্ৰগতি আৰু এনালাইটিক্স ৰিপোৰ্ট খুলি আছোঁ।",
-      ne: "तपाईंको प्रगति विवरण खोल्दैछु।",
+      bn: "আপনার জ্ঞানীয় প্রগ্রেস রিপোর্ট খুলছি।",
+      as: "আপোনাৰ জ্ঞানীয় প্ৰগতি ৰিপোৰ্ট খুলি আছোঁ।",
+      ne: "तपाईंको प्रगति रिपोर्ट खोल्दैछु।",
       mni: "নহাক্কী চাউখৎপগী ৱাফম হাংদোক্লি।",
-      brx: "नोंथांनि दावगानाय दिन्थिबाय।",
-      en: "Opening AI Cognitive Analytics dashboard.",
+      brx: "नोंथांनि दावगानाय फोरमायथि खेवबाय।",
+      en: "Opening your cognitive performance and memory analytics.",
     },
     OPEN_MEMORIES: {
-      hi: "पारिवारिक यादें और एल्बम खोल रहा हूँ।",
-      te: "మీ జ్ఞాపకాల గ్యాలరీని తెరుస్తున్నాను.",
-      ta: "உங்கள் நினைவுகள் கேலரி திறக்கப்படுகிறது.",
-      mr: "तुमचा आठवणींचा संग्रह उघडत आहे.",
-      gu: "તમારો સ્મૃતિઓનો સંગ્રહ ખોલી રહ્યો છું.",
-      bn: "স্মৃতি ও অ্যালবাম খুলছি।",
-      as: "স্মৃতি আৰু ফটো এলবাম খুলি আছোঁ।",
-      ne: "तपाईंका सम्झनाहरू खोल्दैछु।",
-      mni: "নহাক্কী নীংশিংবা হাংদোক্লি।",
-      brx: "नोंथांनि गोसोखांथि खेवबाय।",
-      en: "Opening your family memories album.",
-    },
-    DEFAULT_ROUTINE: {
-      hi: "आज के रिमाइंडर और दवा का शेड्यूल खोल रहा हूँ।",
-      te: "నేటి దినచర్య మరియు మందుల వివరాలు తెరుస్తున్నాను.",
-      ta: "இன்றைய நினைவூட்டல்கள் மற்றும் மருந்துகள் திறக்கப்படுகிறது.",
-      mr: "आजचे रिमाइंडर्स आणि औषधांचे वेळापत्रक उघडत आहे.",
-      gu: "આજના રિમાઇન્ડર્સ અને દવાઓનું શેડ્યૂલ ખોલી રહ્યો છું.",
-      bn: "আজকের রিমাইন্ডার ও ওষুধ তালিকা খুলছি।",
-      as: "আজিৰ সোঁৱৰণী আৰু ঔষধ তালিকা খুলি আছোঁ।",
-      ne: "आजका रिमाइन्डर र औषधि तालिका खोल्दैछु।",
-      mni: "ঙসিগী থবক অমসুং হিদাক্কী মতৌ হাংদোক্লি।",
-      brx: "दिनैनि खामानि आरो मुलिनी सम खेवबाय।",
-      en: "Opening your schedule and medication reminders.",
-    },
-    HELP: {
-      hi: "आप कह सकते हैं: गेम खेलो, वॉटर जग खोलो, मेरे रिमाइंडर दिखाओ, या प्रोग्रेस दिखाओ।",
-      te: "మీరు చెప్పవచ్చు: ఆటలు ఆడు, మందులు చూపించు, లేదా నా ప్రగతి చూపించు.",
-      ta: "நீங்கள் சொல்லலாம்: விளையாட்டு விளையாடு, மருந்துகளைக் காட்டு, அல்லது முன்னேற்றத்தைக் காட்டு.",
-      mr: "तुम्ही म्हणू शकता: खेळ खेळा, औषधे दाखवा, किंवा प्रगती दाखवा.",
-      gu: "તમે કહી શકો છો: રમત રમો, દવાઓ બતાવો, અથવા પ્રગતિ બતાવો.",
-      bn: "আপনি বলতে পারেন: গেম খেলুন, ওষুধ দেখান, বা প্রোগ্রেস দেখান।",
-      as: "আপুনি ক'ব পাৰে: খেল খোলক, সোঁৱৰণী দেখুওৱা, বা প্ৰগতি দেখুওৱা।",
-      ne: "तपाईं भन्न सक्नुहुन्छ: खेल खेल्नुहोस्, औषधि देखाउनुहोस्, वा प्रगति देखाउनुहोस्।",
-      mni: "নহাক্না হায়বা য়াগনি: খেল শানৌ, হিদাক উৎলু, নত্রগা চাউখৎপা উৎলু।",
-      brx: "नोंथां बुंनो हागौ: गेले, मुली दिन्थि, एबा दावगानाय दिन्थि।",
-      en: "You can say: play games, open water jugs, show my reminders, or show my progress.",
-    },
-    UNKNOWN: {
-      hi: "क्षमा करें, मैं समझ नहीं पाया। आप 'गेम खेलो' या 'रिमाइंडर दिखाओ' कह सकते हैं।",
-      te: "క్షమించండి, అర్థం కాలేదు. 'ఆటలు ఆడు' లేదా 'రిమైండర్లు చూపించు' అని చెప్పండి.",
-      ta: "மன்னிக்கவும், புரியவில்லை. 'விளையாடு' அல்லது 'நினைவூட்டல் காட்டு' என்று சொல்லுங்கள்.",
-      mr: "क्षमस्व, मला समजले नाही. तुम्ही 'खेळ खेळा' किंवा 'रिमाइंडर्स दाखवा' म्हणू शकता.",
-      gu: "માફ કરશો, સમજાયું નથી. તમે 'રમત રમો' અથવા 'રિમાઇન્ડર બતાવો' કહી શકો છો.",
-      bn: "বুঝতে পারিনি। 'গেম খেলুন' বা 'রিমাইন্ডার দেখান' বলতে পারেন।",
-      as: "মই বুজি নাপালোঁ। 'খেল খোলক' বা 'সোঁৱৰণী দেখুওৱা' বুলি ক'ব পাৰে।",
-      ne: "माफ गर्नुहोस्, बुझिन। 'खेल खेल्नुहोस्' वा 'रिमाइन्डर देखाउनुहोस्' भन्नुहोस्।",
-      mni: "ঙাকপীয়ু, খংবা ঙমদে। 'খেল শানৌ' নত্রগা 'থবক উৎলু' হায়বীয়ু।",
-      brx: "निमाहा बिनो, बुजियाखै। 'गेले' एबा 'खामानि दिन्थि' बुं।",
-      en: "I didn't quite catch that. Try saying 'play games' or 'show my reminders'.",
+      hi: "आपकी पारिवारिक यादें और तस्वीरें खोल रहा हूँ।",
+      te: "మీ కుటుంబ జ్ఞాపకాలు మరియు ఫోటోలను తెరుస్తున్నాను.",
+      ta: "உங்கள் குடும்ப நினைவுகள் மற்றும் புகைப்படங்கள் திறக்கப்படுகிறது.",
+      mr: "तुमच्या कौटुंबिक आठवणी उघडत आहे.",
+      gu: "તમારી પારિવારિક સ્મૃતિઓ ખોલી રહ્યો છું.",
+      bn: "আপনার পারিবারিক স্মৃতি ও ছবির অ্যালবাম খুলছি।",
+      as: "আপোনাৰ পৰিয়ালৰ স্মৃতি আৰু আলোকচিত্ৰ খুলি আছোঁ।",
+      ne: "तपाईंको पारिवारिक सम्झनाहरू खोल्दैछु।",
+      mni: "ইমুংগী নীংশিংবা ফোটো হাংদোক্লি।",
+      brx: "नोंथांनि नखरनि गोसोखांथि खेवबाय।",
+      en: "Opening your family album and cherished memories.",
     },
     OPEN_CAREGIVER: {
-      hi: "केयरगिवर मॉनिटरिंग डैशबोर्ड खोल रहा हूँ।",
-      te: "సంరక్షకుల పర్యవేక్షణ డ్యాష్‌బోర్డ్ తెరుస్తున్నాను.",
-      ta: "பராமரிப்பாளர் கண்காணிப்பு பலகை திறக்கப்படுகிறது.",
+      hi: "केयरगिवर डैशबोर्ड खोल रहा हूँ।",
+      te: "సంరక్షకుల డ్యాష్‌బోర్డ్‌ను తెరుస్తున్నాను.",
+      ta: "பராமரிப்பாளர் டாஷ்போர்டு திறக்கப்படுகிறது.",
       mr: "केअरगिव्हर डॅशबोर्ड उघडत आहे.",
       gu: "સંભાળ રાખનાર ડેશબોર્ડ ખોલી રહ્યો છું.",
       bn: "কেয়ারগিভার ড্যাশবোর্ড খুলছি।",
-      as: "কেয়াৰগিভাৰ ডেচবৰ্ড খুলি আছোঁ।",
-      ne: "हेरचाहकर्ता ड्यासबोर्ड खोल्दैछु।",
+      as: "যত্নলোৱা ডেচব'ৰ্ড খুলি আছোঁ।",
+      ne: "केयरगिभर ड्यासबोर्ड खोल्दैछु।",
       mni: "কেয়ারগিভার ড্যাশবোর্ড হাংদোক্লি।",
-      brx: "केयारगिभार डेशबोर्ड खेवबाय।",
+      brx: "केयारगिभार देसबर्ड खेवबाय।",
       en: "Opening Caregiver monitoring dashboard.",
     },
+    OPEN_MEDICATIONS: {
+      hi: "दवाइयों का समय और सूची खोल रहा हूँ।",
+      te: "మందుల సమయం మరియు జాబితాను తెరుస్తున్నాను.",
+      ta: "மருந்து அட்டவணை மற்றும் பட்டியல் திறக்கப்படுகிறது.",
+      mr: "औषधांचे वेळापत्रक उघडत आहे.",
+      gu: "દવાઓનું સમયપત્રક ખોલી રહ્યો છું.",
+      bn: "ওষুধের তালিকা ও সময়সূচি খুলছি।",
+      as: "ঔষধৰ তালিকা আৰু সময়সূচী খুলি আছোঁ।",
+      ne: "औषधिको समय र सूची खोल्दैछु।",
+      mni: "হিদাক্কী মতম উৎলি।",
+      brx: "मुलीनि सम आरो फारिलाइ खेवबाय।",
+      en: "Opening your medications and prescription schedule.",
+    },
+    OPEN_REMINDERS: {
+      hi: "आज के रिमाइंडर और दिनचर्या खोल रहा हूँ।",
+      te: "ఈ రోజు పనుల జాబితాను తెరుస్తున్నాను.",
+      ta: "இன்றைய நினைவூட்டல்கள் திறக்கப்படுகிறது.",
+      mr: "आजचे रिमाइंडर्स उघडत आहे.",
+      gu: "આજના રિમાઇન્ડર ખોલી રહ્યો છું.",
+      bn: "আজকের রুটিন এবং রিমাইন্ডার খুলছি।",
+      as: "আজিৰ দিনচৰ্যা আৰু সোঁৱৰণী তালিকা খুলি আছোঁ।",
+      ne: "आजका रिमाइन्डरहरू खोल्दैछु।",
+      mni: "ঙসিগী নীংশিংবা থবকশিং হাংদোক্লি।",
+      brx: "दिनैनि गोसोखांथि खेवबाय।",
+      en: "Opening daily routine and medicine reminders.",
+    },
+    HELP: {
+      hi: "मैं आपकी क्या मदद कर सकता हूँ? आप गेम खेलने, रिमाइंडर देखने, या दवाइयों के बारे में पूछ सकते हैं।",
+      te: "నేను మీకు ఎలా సహాయపడగలను? ఆటలు ఆడటం లేదా పనులు చూడటం అడగవచ్చు.",
+      ta: "நான் உங்களுக்கு எப்படி உதவ முடியும்? விளையாட்டுகள் விளையாட அல்லது மருந்துகளை பார்க்க கேட்கலாம்.",
+      mr: "मी तुम्हाला कशी मदत करू शकतो? तुम्ही गेम खेळण्यासाठी किंवा औषधांसाठी विचारू शकता.",
+      gu: "હું તમારી કેવી રીતે મદદ કરી શકું? તમે રમતો રમવા કે દવાઓ જોવા માટે કહી શકો છો.",
+      bn: "আমি কীভাবে সাহায্য করতে পারি? আপনি গেম খেলতে, রিমাইন্ডার দেখতে বা ওষুধের কথা বলতে পারেন।",
+      as: "মই আপোনাক কেনেকৈ সহায় কৰিব পাৰোঁ? আপুনি খেল খেলিবলৈ বা সোঁৱৰণী চাবলৈ ক'ব পাৰে।",
+      ne: "म तपाईंलाई कसरी मद्दत गर्न सक्छु? तपाईं खेल खेल्न वा रिमाइन्डर हेर्न भन्न सक्नुहुन्छ।",
+      mni: "ঐহাক্না কমদৌনা মতেং পাংগদগে? খেল শানবা নত্রগা থবক য়েংবা য়াই।",
+      brx: "आं नोंथांखौ माबोरै हेफाजाब होनो हागौ? नोंथाङा गेलेनो एबा खामानि नायनो बुंनो हागौ।",
+      en: "How can I help you? You can ask to play games, see reminders, or check your medications.",
+    },
+    UNKNOWN: {
+      hi: "माफ़ कीजिए, मैं समझ नहीं पाया। कृपया दोबारा बोलें, या नीचे दिए गए विकल्पों में से चुनें।",
+      te: "క్షమించండి, నాకు అర్థం కాలేదు. దయచేసి మళ్లీ చెప్పండి.",
+      ta: "மன்னிக்கவும், எனக்கு புரியவில்லை. தயவுசெய்து மீண்டும் சொல்லுங்கள்.",
+      mr: "क्षमस्व, मला समजले नाही. कृपया पुन्हा बोला.",
+      gu: "માફ કરશો, હું સમજી શક્યો નથી. કૃપા કરીને ફરીથી બોલો.",
+      bn: "দুঃখিত, বুঝতে পারিনি। অনুগ্রহ করে আবার বলুন বা নিচের বিকল্পগুলি দেখুন।",
+      as: "ক্ষমা কৰিব, বুজি নাপালোঁ। অনুগ্ৰহ কৰি আকৌ কওক বা তলৰ বিকল্প বাছক।",
+      ne: "माफ गर्नुहोस्, मैले बुझिनँ। कृपया फेरि भन्नुहोस्।",
+      mni: "ঙাকপীয়ু, ঐ খঙবা ঙমদ্রে। অমুক হন্না হায়বীয়ু।",
+      brx: "निमाहा बिनि, आं बुझियाखै। अननानै आरोबाव बुं।",
+      en: "I did not understand that command. Please try again or tap help.",
+    },
+    DEFAULT_ROUTINE: {
+      hi: "यहाँ आपके आज के रिमाइंडर और कार्य हैं।",
+      as: "আজিৰ বাবে আপোনাৰ সোঁৱৰণী তালিকা এইখন।",
+      bn: "এখানে আপনার আজকের কাজের তালিকা।",
+      ne: "यहाँ तपाईंका आजका रिमाइन्डरहरू छन्।",
+      en: "Here is your routine schedule for today.",
+    },
     NO_PENDING_TASKS: {
-      hi: "आज के लिए आपका कोई और बाकी काम नहीं है।",
-      te: "ఈ రోజుకి మీకు ఇకపై పెండింగ్ పనులు ఏవీ లేవు.",
-      ta: "இன்று உங்களுக்கு வேறு நிலுவையில் உள்ள பணிகள் எதுவும் இல்லை.",
-      mr: "आज तुमच्यासाठी कोणतेही प्रलंबित काम उरलेले नाही.",
-      gu: "આજે તમારા માટે કોઈ બાકી કાર્યો નથી.",
-      bn: "আজকের জন্য আপনার আর কোনো বকেয়া কাজ নেই।",
-      as: "আজিলৈ আপোনাৰ কোনো বাকী থকা কাম নাই।",
-      ne: "आजको लागि तपाईंको कुनै बाँकी काम छैन।",
-      mni: "ঙসিগীদমক অতোপ্পা থবক লৈতরে।",
-      brx: "दिनैनि थाखाय आरो खामानि गैया।",
-      en: "You have no more pending tasks scheduled for today.",
+      hi: "बधाई हो! आज के सभी कार्य पूरे हो चुके हैं।",
+      as: "অভিনন্দন! আজিৰ সকলো কাম সম্পূৰ্ণ হ'ল।",
+      bn: "অভিনন্দন! আজকের সমস্ত কাজ সম্পন্ন হয়েছে।",
+      ne: "बधाई छ! आजका सबै काम सम्पन्न भएका छन्।",
+      en: "Great job! All tasks for today are completed.",
     },
   };
 
@@ -442,6 +609,23 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
       const l = shortLang;
 
       switch (result.intent) {
+        case "GO_HOME": {
+          const resp =
+            l === "hi"
+              ? "होम डैशबोर्ड पर वापस जा रहे हैं।"
+              : l === "as"
+                ? "মুখ্য পৃষ্ঠালৈ ঘূৰি গৈ আছোঁ।"
+                : l === "bn"
+                  ? "হোম ড্যাশবোর্ডে ফিরে যাচ্ছি।"
+                  : "Returning to home dashboard.";
+          setLastResponse(resp);
+          setStatusMessage(resp);
+          navigate({ to: "/" });
+          triggerAutoClose();
+          await speak(resp);
+          break;
+        }
+
         case "OPEN_GAMES": {
           const resp = VOICE_PROMPTS.OPEN_GAMES[l] || VOICE_PROMPTS.OPEN_GAMES.en;
           setLastResponse(resp);
@@ -452,52 +636,90 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           break;
         }
 
-        case "OPEN_GAME": {
-          const entity = result.entity || "WATER_JUGS";
-          const route = ENTITY_ROUTE_MAP[entity] || "/games/water-jugs";
-          const names = ENTITY_NAME_MAP[entity] || { en: "Selected Game", hi: "चुना गया खेल" };
-          const name = names[l] || names["en"] || "Game";
+        case "NEXT_GAME": {
+          const gameRoutes = [
+            "/games/water-jugs",
+            "/games/tower-of-hanoi",
+            "/games/ball-sort",
+            "/games/card-matching",
+            "/games/number-sequence",
+            "/games/word-scramble",
+            "/games/maze",
+            "/games/stroop",
+            "/games/quick-math",
+          ];
+          const randomRoute = gameRoutes[Math.floor(Math.random() * gameRoutes.length)]!;
           const resp =
             l === "hi"
-              ? `${name} गेम खोल रहा हूँ।`
+              ? "नया दिमाग का खेल शुरू कर रहे हैं।"
               : l === "as"
-                ? `${name} খুলি আছোঁ।`
+                ? "নতুন খেল আৰম্ভ কৰি আছোঁ।"
                 : l === "bn"
-                  ? `${name} গেম খুলছি।`
-                  : l === "ne"
-                    ? `${name} खेल खोल्दैछु।`
-                    : `Opening ${name}.`;
+                  ? "নতুন গেম শুরু করছি।"
+                  : "Opening next brain training game.";
           setLastResponse(resp);
           setStatusMessage(resp);
-          navigate({ to: route as never });
+          navigate({ to: randomRoute });
           triggerAutoClose();
           await speak(resp);
           break;
         }
 
-        case "NEXT_GAME": {
-          const gameList = Object.keys(ENTITY_ROUTE_MAP);
-          const randomGame = gameList[Math.floor(Math.random() * gameList.length)] || "WATER_JUGS";
-          const route = ENTITY_ROUTE_MAP[randomGame];
-          const names = ENTITY_NAME_MAP[randomGame] || { en: "Selected Game", hi: "चुना गया खेल" };
-          const name = names[l] || names["en"] || "Game";
-          const resp =
-            l === "hi" ? `अगला खेल: ${name} खोल रहा हूँ।` : `Opening next game: ${name}.`;
+        case "OPEN_GAME": {
+          const entity = result.entity?.toUpperCase() || "";
+          const targetRoute = ENTITY_ROUTE_MAP[entity];
+          const gameNames = ENTITY_NAME_MAP[entity] || {};
+          const localizedName = gameNames[l] || gameNames.en || "game";
+
+          if (targetRoute) {
+            const resp =
+              l === "hi"
+                ? `${localizedName} गेम खोल रहा हूँ।`
+                : l === "as"
+                  ? `${localizedName} খেল খোলক।`
+                  : l === "bn"
+                    ? `${localizedName} গেমটি খুলছি।`
+                    : `Opening ${localizedName} game.`;
+            setLastResponse(resp);
+            setStatusMessage(resp);
+            navigate({ to: targetRoute });
+            triggerAutoClose();
+            await speak(resp);
+          } else {
+            const resp = VOICE_PROMPTS.OPEN_GAMES[l] || VOICE_PROMPTS.OPEN_GAMES.en;
+            setLastResponse(resp);
+            setStatusMessage(resp);
+            navigate({ to: "/games" });
+            triggerAutoClose();
+            await speak(resp);
+          }
+          break;
+        }
+
+        case "OPEN_MEDICATIONS": {
+          const resp = VOICE_PROMPTS.OPEN_MEDICATIONS[l] || VOICE_PROMPTS.OPEN_MEDICATIONS.en;
           setLastResponse(resp);
           setStatusMessage(resp);
-          navigate({ to: route as never });
+          navigate({ to: "/medication" });
           triggerAutoClose();
           await speak(resp);
           break;
         }
 
-        case "OPEN_REMINDERS":
+        case "OPEN_REMINDERS": {
+          const resp = VOICE_PROMPTS.OPEN_REMINDERS[l] || VOICE_PROMPTS.OPEN_REMINDERS.en;
+          setLastResponse(resp);
+          setStatusMessage(resp);
+          navigate({ to: "/routine" });
+          triggerAutoClose();
+          await speak(resp);
+          break;
+        }
+
         case "TODAY_REMINDERS": {
-          // 1. Immediately navigate to the routine page so the user sees their schedule
           navigate({ to: "/routine" });
           triggerAutoClose();
 
-          // 2. Fetch live reminders dictation in the user's selected language
           setStatus("processing");
           setStatusMessage(
             l === "hi"
@@ -725,6 +947,12 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
       return;
     }
 
+    // Barge-in: if the assistant is currently speaking when listening begins, cut off playback
+    if (isSpeakingRef.current || status === "speaking") {
+      console.log("[Voice] Barge-in on startListening: interrupting active speech playback.");
+      stopSpeaking();
+    }
+
     cleanup();
     nativeTranscriptRef.current = "";
 
@@ -738,13 +966,22 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
     }
 
     try {
-      // 1. Immediately request microphone access (direct user gesture)
+      // 1. Immediately request microphone access
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true },
       });
       streamRef.current = stream;
 
-      // 2. Dual Engine Part A: Start browser Web Speech Recognition for instant 0ms real-time feedback
+      // Remember mic permission granted for wake word hook
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("smritisetu:mic_permission_granted", "true");
+        } catch {
+          // ignore
+        }
+      }
+
+      // 2. Dual Engine Part A: Start browser Web Speech Recognition for instant real-time feedback
       const win = window as unknown as {
         SpeechRecognition?: new () => NonNullable<typeof recognitionRef.current>;
         webkitSpeechRecognition?: new () => NonNullable<typeof recognitionRef.current>;
@@ -762,7 +999,20 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           rec.interimResults = true;
           rec.maxAlternatives = 1;
 
+          rec.onspeechstart = () => {
+            // Barge-in: cut off any audio if user speaks
+            if (isSpeakingRef.current) {
+              console.log("[Voice] Barge-in: user began speaking. Stopping TTS playback.");
+              stopSpeaking();
+            }
+          };
+
           rec.onresult = (event: unknown) => {
+            // Barge-in safeguard
+            if (isSpeakingRef.current) {
+              stopSpeaking();
+            }
+
             const evt = event as {
               resultIndex: number;
               results: Array<Array<{ transcript: string }> & { isFinal?: boolean }>;
@@ -786,8 +1036,20 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
             }
           };
 
-          rec.onerror = () => {
-            // Non-fatal: MediaRecorder + Sarvam STT runs concurrently as resilient backbone
+          rec.onerror = (event: unknown) => {
+            const err = event as { error?: string };
+            if (
+              err?.error === "language-not-supported" &&
+              localeConfig.fallbackStt &&
+              rec.lang !== localeConfig.fallbackStt
+            ) {
+              try {
+                rec.lang = localeConfig.fallbackStt;
+                rec.start();
+              } catch {
+                // Non-fatal: MediaRecorder + Bhashini/Sarvam STT runs concurrently
+              }
+            }
           };
 
           rec.onend = () => {
@@ -798,8 +1060,9 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           };
 
           rec.start();
+          recognitionRef.current = rec;
         } catch {
-          // Native speech recognition unavailable or blocked, fallback cleanly to MediaRecorder + Sarvam
+          // Native speech recognition unavailable or blocked, fallback cleanly to MediaRecorder
         }
       }
 
@@ -880,7 +1143,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
               : "Listening… Speak now, then tap microphone to stop.",
       );
 
-      // 4. Web Audio API energy monitoring with elder-friendly voice threshold
+      // 4. Web Audio API energy monitoring with elder-friendly voice threshold & barge-in detection
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
@@ -907,6 +1170,12 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
 
           // Comfortable voice energy threshold (average > 2.2) to capture elder speech
           if (average > 2.2) {
+            // Barge-in: if audio is speaking when energy is detected, interrupt it immediately
+            if (isSpeakingRef.current) {
+              console.log("[Voice] Barge-in: Audio energy detected voice input. Interrupting playback.");
+              stopSpeaking();
+            }
+
             if (!heardSpeech) {
               speechStartTime = Date.now();
             }
@@ -926,7 +1195,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
         // fallback to timer
       }
 
-      // 5. 12-second max duration hard safety timeout (matches Project B standard)
+      // 5. 12-second max duration hard safety timeout
       maxTimerRef.current = window.setTimeout(() => {
         stopListening();
       }, 12000);
@@ -941,16 +1210,14 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
       );
       toast.error(isDenied ? "Microphone permission denied" : "Microphone access error");
     }
-  }, [cleanup, language, processTextInput, shortLang, status, stopListening]);
+  }, [cleanup, language, processTextInput, shortLang, status, stopListening, stopSpeaking]);
 
   useEffect(() => {
     return () => {
       cleanup();
-      if (currentAudioRef.current) {
-        currentAudioRef.current.pause();
-      }
+      stopSpeaking();
     };
-  }, [cleanup]);
+  }, [cleanup, stopSpeaking]);
 
   return {
     language,
@@ -964,6 +1231,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
     setShowHelp,
     startListening,
     stopListening,
+    stopSpeaking,
     processTextInput,
     speak,
     triggerAutoClose,

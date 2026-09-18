@@ -14,7 +14,7 @@ import {
   CheckCircle2,
   Calendar,
 } from "lucide-react";
-import { NavigationHeader } from "@/components/navigation-header";
+import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -142,258 +142,253 @@ function AddPatientPage() {
   };
 
   const fieldClass =
-    "bg-ink border-clay text-cream mt-1 h-12 rounded-xl px-4 text-base focus-visible:ring-sun";
+    "bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] mt-1 h-12 rounded-2xl px-4 text-base focus-visible:ring-[#22C55E] shadow-sm";
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <NavigationHeader />
+    <AppShell className="p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto space-y-6">
+      {/* Back navigation */}
+      <div>
+        <Button asChild variant="outline" className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold">
+          <Link to="/caregiver">
+            <ArrowLeft size={18} className="mr-2 text-[#22C55E]" /> Back to Caregiver Hub
+          </Link>
+        </Button>
+      </div>
 
-      <main className="flex-1 mx-auto max-w-3xl px-5 py-8 sm:px-8 sm:py-12 w-full">
-        {/* Back navigation */}
-        <div className="mb-6">
-          <Button asChild variant="cream" size="touch">
-            <Link to="/caregiver">
-              <ArrowLeft size={20} className="mr-2" /> Back to Caregiver Hub
-            </Link>
+      {/* Page Header */}
+      <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
+        <div className="flex items-center gap-4">
+          <span className="flex size-14 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] shadow-inner flex-shrink-0">
+            <UserPlus size={30} />
+          </span>
+          <div>
+            <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#E8ECEF]">
+              Add / Connect Patient
+            </h1>
+            <p className="text-[#8A99A8] text-sm mt-1 font-medium">
+              Enter the patient's account credentials, demographic details, and medical contact
+              information. Medications, tasks, and memory photos can be managed immediately after
+              connecting.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Streamlined Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Section 1: Account & Credentials */}
+        <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl space-y-5">
+          <div className="flex items-center gap-2 text-[#22C55E] font-bold text-lg border-b border-white/10 pb-3">
+            <Key size={20} /> Account & Login Credentials
+          </div>
+          <p className="text-xs text-[#8A99A8] font-medium">
+            Enter the patient's Gmail / email identifier. If the patient already has an account,
+            entering their email will connect them to your dashboard. If registering a new
+            patient, provide an initial password for their login.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
+                <Mail size={15} className="text-[#22C55E]" /> Patient Email / Gmail *
+              </Label>
+              <Input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="e.g., patient@gmail.com"
+                className={fieldClass}
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
+                <Key size={15} className="text-[#22C55E]" /> Initial Password (for new patient)
+              </Label>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="e.g., •••••••• (min 4 chars)"
+                className={fieldClass}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Section 2: Personal Demographics */}
+        <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl space-y-5">
+          <div className="flex items-center gap-2 text-[#22C55E] font-bold text-lg border-b border-white/10 pb-3">
+            <User size={20} /> Patient Demographics
+          </div>
+
+          <div>
+            <Label className="text-sm font-bold text-[#E8ECEF]">Full Name *</Label>
+            <Input
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g., Savitri Devi"
+              className={fieldClass}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
+                <Calendar size={15} className="text-[#22C55E]" /> Age / DOB
+              </Label>
+              <Input
+                type="number"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                placeholder="e.g., 72"
+                className={fieldClass}
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm font-bold text-[#E8ECEF]">Gender</Label>
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="flex w-full h-12 rounded-2xl border border-white/10 bg-[#0A1420] text-[#E8ECEF] px-4 text-base mt-1 shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22C55E]"
+              >
+                <option value="Female">Female</option>
+                <option value="Male">Male</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
+                <Phone size={15} className="text-[#22C55E]" /> Phone Number
+              </Label>
+              <Input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+91 98765 43210"
+                className={fieldClass}
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
+              <MapPin size={15} className="text-[#22C55E]" /> Residential Address
+            </Label>
+            <Input
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="e.g., 14 MG Road, Guwahati, Assam"
+              className={fieldClass}
+            />
+          </div>
+        </div>
+
+        {/* Section 3: Emergency Contact & Doctor */}
+        <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl space-y-5">
+          <div className="flex items-center gap-2 text-[#22C55E] font-bold text-lg border-b border-white/10 pb-3">
+            <Heart size={20} /> Emergency Contacts & Care
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <Label className="text-sm font-bold text-[#E8ECEF]">Emergency Contact Name</Label>
+              <Input
+                value={emergencyName}
+                onChange={(e) => setEmergencyName(e.target.value)}
+                placeholder="e.g., Priya Sharma (Daughter)"
+                className={fieldClass}
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm font-bold text-[#E8ECEF]">Emergency Phone Number</Label>
+              <Input
+                type="tel"
+                value={emergencyPhone}
+                onChange={(e) => setEmergencyPhone(e.target.value)}
+                placeholder="+91 98765 43211"
+                className={fieldClass}
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
+              <Stethoscope size={15} className="text-[#22C55E]" /> Assigned Doctor Name (Optional)
+            </Label>
+            <Input
+              value={doctorName}
+              onChange={(e) => setDoctorName(e.target.value)}
+              placeholder="e.g., Dr. Anil Baruah"
+              className={fieldClass}
+            />
+          </div>
+        </div>
+
+        {/* Section 4: Preferred Language */}
+        <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl space-y-5">
+          <div className="flex items-center gap-2 text-[#22C55E] font-bold text-lg border-b border-white/10 pb-3">
+            <Globe size={20} /> Preferred Language
+          </div>
+          <p className="text-xs text-[#8A99A8] font-medium">
+            The Voice Assistant, dashboard interface, and reminders will automatically adapt to
+            this language.
+          </p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {LANGUAGES.map((lang) => {
+              const selected = preferredLanguage === lang.code;
+              return (
+                <button
+                  key={lang.code}
+                  type="button"
+                  onClick={() => setPreferredLanguage(lang.code)}
+                  className={`p-3.5 rounded-2xl border text-left transition-all duration-200 ${
+                    selected
+                      ? "border-[#22C55E] bg-[#22C55E]/15 shadow-sm"
+                      : "border-white/8 bg-[#0A1420]/60 hover:bg-[#0A1420] hover:border-white/15"
+                  }`}
+                >
+                  <p className={`text-sm font-bold ${selected ? "text-[#22C55E]" : "text-[#E8ECEF]"}`}>
+                    {lang.label}
+                  </p>
+                  {selected && (
+                    <span className="text-[11px] font-bold text-[#22C55E] flex items-center gap-1 mt-1">
+                      <CheckCircle2 size={12} /> Active
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-4 pt-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="touch"
+            className="flex-1 rounded-full border-white/10 text-[#8A99A8] hover:text-[#E8ECEF] bg-[#121D2B]"
+            onClick={() => navigate({ to: "/caregiver" })}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            size="touch"
+            className="flex-1 font-bold rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-sm"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Connecting Patient..." : "✓ Save & Connect Patient"}
           </Button>
         </div>
-
-        {/* Page Header */}
-        <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card mb-8">
-          <div className="flex items-center gap-4">
-            <span className="flex size-14 items-center justify-center rounded-2xl bg-sun text-ink shadow-sm flex-shrink-0">
-              <UserPlus size={32} />
-            </span>
-            <div>
-              <h1 className="font-display text-2xl sm:text-3xl font-bold text-cream">
-                Add / Connect Patient
-              </h1>
-              <p className="text-cream/80 text-sm mt-1">
-                Enter the patient's account credentials, demographic details, and medical contact
-                information. Medications, tasks, and memory photos can be managed immediately after
-                connecting.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Streamlined Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Section 1: Account & Credentials */}
-          <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card space-y-5">
-            <div className="flex items-center gap-2 text-sun font-bold text-lg border-b border-clay/40 pb-3">
-              <Key size={20} /> Account & Login Credentials
-            </div>
-            <p className="text-xs text-cream/70">
-              Enter the patient's Gmail / email identifier. If the patient already has an account,
-              entering their email will connect them to your dashboard. If registering a new
-              patient, provide an initial password for their login.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-sm font-bold text-cream flex items-center gap-1.5">
-                  <Mail size={15} className="text-sun" /> Patient Email / Gmail *
-                </Label>
-                <Input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g., patient@gmail.com"
-                  className={fieldClass}
-                />
-              </div>
-
-              <div>
-                <Label className="text-sm font-bold text-cream flex items-center gap-1.5">
-                  <Key size={15} className="text-sun" /> Initial Password (for new patient)
-                </Label>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="e.g., •••••••• (min 4 chars)"
-                  className={fieldClass}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Section 2: Personal Demographics */}
-          <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card space-y-5">
-            <div className="flex items-center gap-2 text-sun font-bold text-lg border-b border-clay/40 pb-3">
-              <User size={20} /> Patient Demographics
-            </div>
-
-            <div>
-              <Label className="text-sm font-bold text-cream">Full Name *</Label>
-              <Input
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., Savitri Devi"
-                className={fieldClass}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <Label className="text-sm font-bold text-cream flex items-center gap-1.5">
-                  <Calendar size={15} className="text-sun" /> Age / DOB
-                </Label>
-                <Input
-                  type="number"
-                  value={age}
-                  onChange={(e) => setAge(e.target.value)}
-                  placeholder="e.g., 72"
-                  className={fieldClass}
-                />
-              </div>
-
-              <div>
-                <Label className="text-sm font-bold text-cream">Gender</Label>
-                <select
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="flex w-full h-12 rounded-xl border border-clay bg-ink text-cream px-4 text-base mt-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sun"
-                >
-                  <option value="Female">Female</option>
-                  <option value="Male">Male</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-
-              <div>
-                <Label className="text-sm font-bold text-cream flex items-center gap-1.5">
-                  <Phone size={15} className="text-sun" /> Phone Number
-                </Label>
-                <Input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+91 98765 43210"
-                  className={fieldClass}
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label className="text-sm font-bold text-cream flex items-center gap-1.5">
-                <MapPin size={15} className="text-sun" /> Residential Address
-              </Label>
-              <Input
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="e.g., 14 MG Road, Guwahati, Assam"
-                className={fieldClass}
-              />
-            </div>
-          </div>
-
-          {/* Section 3: Emergency Contact & Doctor */}
-          <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card space-y-5">
-            <div className="flex items-center gap-2 text-sun font-bold text-lg border-b border-clay/40 pb-3">
-              <Heart size={20} /> Emergency Contacts & Care
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <Label className="text-sm font-bold text-cream">Emergency Contact Name</Label>
-                <Input
-                  value={emergencyName}
-                  onChange={(e) => setEmergencyName(e.target.value)}
-                  placeholder="e.g., Priya Sharma (Daughter)"
-                  className={fieldClass}
-                />
-              </div>
-
-              <div>
-                <Label className="text-sm font-bold text-cream">Emergency Phone Number</Label>
-                <Input
-                  type="tel"
-                  value={emergencyPhone}
-                  onChange={(e) => setEmergencyPhone(e.target.value)}
-                  placeholder="+91 98765 43211"
-                  className={fieldClass}
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label className="text-sm font-bold text-cream flex items-center gap-1.5">
-                <Stethoscope size={15} className="text-sun" /> Assigned Doctor Name (Optional)
-              </Label>
-              <Input
-                value={doctorName}
-                onChange={(e) => setDoctorName(e.target.value)}
-                placeholder="e.g., Dr. Anil Baruah"
-                className={fieldClass}
-              />
-            </div>
-          </div>
-
-          {/* Section 4: Preferred Language */}
-          <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card space-y-5">
-            <div className="flex items-center gap-2 text-sun font-bold text-lg border-b border-clay/40 pb-3">
-              <Globe size={20} /> Preferred Language
-            </div>
-            <p className="text-xs text-cream/70">
-              The Voice Assistant, dashboard interface, and reminders will automatically adapt to
-              this language.
-            </p>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {LANGUAGES.map((lang) => {
-                const selected = preferredLanguage === lang.code;
-                return (
-                  <button
-                    key={lang.code}
-                    type="button"
-                    onClick={() => setPreferredLanguage(lang.code)}
-                    className={`p-3.5 rounded-xl border text-left transition-all duration-200 ${
-                      selected
-                        ? "border-sun bg-sun/20 shadow-sm"
-                        : "border-clay bg-ink hover:border-cream/40"
-                    }`}
-                  >
-                    <p className={`text-sm font-bold ${selected ? "text-sun" : "text-cream"}`}>
-                      {lang.label}
-                    </p>
-                    {selected && (
-                      <span className="text-[11px] font-bold text-tea-confirm flex items-center gap-1 mt-1">
-                        <CheckCircle2 size={12} /> Active
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex gap-4 pt-2">
-            <Button
-              type="button"
-              variant="cream"
-              size="touch"
-              className="flex-1"
-              onClick={() => navigate({ to: "/caregiver" })}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              variant="sun"
-              size="touch"
-              className="flex-1 font-bold text-ink"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Connecting Patient..." : "✓ Save & Connect Patient"}
-            </Button>
-          </div>
-        </form>
-      </main>
-    </div>
+      </form>
+    </AppShell>
   );
 }

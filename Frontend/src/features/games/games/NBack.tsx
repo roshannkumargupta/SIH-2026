@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 export type NBackProps = { level: number };
@@ -87,73 +86,73 @@ export default function NBack({ level }: NBackProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [score, target]);
 
-  if (completed) {
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((score / target) * 100))}
-          accuracy={Math.min(100, Math.round((score / target) * 100))}
-          durationSeconds={Math.round((Date.now() - startTime.current) / 1000)}
-          level={level}
-          gameName="N-Back"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setCompleted(false);
-            saved.current = false;
-            setScore(0);
-            setSequence([]);
-            setSynced(false);
-            setOffline(false);
-          }}
-        />
-      </>
-    );
-  }
+  const finalAccuracy = Math.min(100, Math.round((score / target) * 100));
+  const finalDuration = Math.round((Date.now() - startTime.current) / 1000);
+
+  const resetGame = () => {
+    setCompleted(false);
+    saved.current = false;
+    setScore(0);
+    setSequence([]);
+    setSynced(false);
+    setOffline(false);
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <p className="text-cream/70 text-sm">
-          {level === 10 ? "🎯 Dual N-Back Mode!" : `Remember ${n} step${n > 1 ? "s" : ""} back!`}
-        </p>
-        <div className="mt-4 mx-auto w-40 h-40 flex items-center justify-center rounded-2xl border-4 border-sun bg-ink shadow-card">
+    <GameShell
+      gameId="n-back"
+      level={level}
+      score={score}
+      targetScore={target}
+      stats={[
+        { label: "N-Steps", value: `${n} back`, highlight: "sun" },
+        { label: "Status", value: running ? "Running" : "Paused", highlight: running ? "tea" : "cream" },
+      ]}
+      instructionHint={`Press "Match" when the letter matches the one shown ${n} step${n > 1 ? "s" : ""} ago`}
+      completed={completed}
+      results={{
+        score: finalAccuracy,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+    >
+      <div className="space-y-6 max-w-md mx-auto text-center">
+        <div className="mx-auto w-44 h-44 flex items-center justify-center rounded-3xl border-4 border-sun/60 bg-ink shadow-card">
           <span className="font-display text-8xl font-black text-sun animate-pulse">
             {sequence[sequence.length - 1] ?? "—"}
           </span>
         </div>
-        <div className="mt-4 text-cream/70 text-sm font-semibold">
-          Score: <span className="text-sun font-bold text-xl">{score}</span> / {target}
+
+        <div className="flex flex-wrap gap-3 justify-center pt-2">
+          <button
+            type="button"
+            onClick={start}
+            disabled={running}
+            className="px-6 py-3.5 min-h-[48px] min-w-[48px] rounded-xl bg-tea-confirm text-cream font-black text-lg disabled:opacity-40 hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center gap-2"
+          >
+            ▶ Start
+          </button>
+          <button
+            type="button"
+            onClick={stop}
+            disabled={!running}
+            className="px-6 py-3.5 min-h-[48px] min-w-[48px] rounded-xl bg-clay text-cream font-black text-lg disabled:opacity-40 hover:bg-clay/80 active:scale-95 active:bg-clay/60 transition shadow-md touch-manipulation flex items-center justify-center gap-2"
+          >
+            ⏸ Pause
+          </button>
+          <button
+            type="button"
+            onClick={pressMatch}
+            disabled={!running}
+            className="px-8 py-3.5 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-black text-lg disabled:opacity-40 hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center gap-2"
+          >
+            ✨ Match!
+          </button>
         </div>
       </div>
-
-      <div className="flex flex-wrap gap-3 justify-center">
-        <button
-          onClick={start}
-          disabled={running}
-          className="px-6 py-3 rounded-xl bg-tea-confirm text-cream font-bold text-lg disabled:opacity-40 hover:opacity-90 transition shadow"
-        >
-          ▶ Start
-        </button>
-        <button
-          onClick={stop}
-          disabled={!running}
-          className="px-6 py-3 rounded-xl bg-clay text-cream font-bold text-lg disabled:opacity-40 hover:bg-clay/80 transition shadow"
-        >
-          ⏸ Stop
-        </button>
-        <button
-          onClick={pressMatch}
-          className="px-6 py-3 rounded-xl bg-sun text-ink font-bold text-lg hover:opacity-90 transition shadow"
-        >
-          ✨ Match!
-        </button>
-      </div>
-
-      <div className="rounded-xl border border-sun/30 bg-sun/10 px-4 py-3 text-center text-sm text-sun font-semibold">
-        Press "Match" when the current letter matches the one shown {n} step{n > 1 ? "s" : ""} ago.
-      </div>
-    </div>
+    </GameShell>
   );
 }

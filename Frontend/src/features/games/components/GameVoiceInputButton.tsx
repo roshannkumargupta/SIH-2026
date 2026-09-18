@@ -107,7 +107,7 @@ export function GameVoiceInputButton({
       }
       aria-pressed={isRecording}
       title={isRecording ? "Listening… click to finish" : "Tap to speak your answer"}
-      className={`relative inline-flex items-center justify-center rounded-2xl font-bold transition-all shrink-0 ${sizeClasses} ${
+      className={`relative inline-flex items-center justify-center rounded-2xl font-bold transition-all shrink-0 touch-manipulation ${sizeClasses} ${
         isRecording
           ? "bg-fire text-cream ring-4 ring-fire/40 scale-105 animate-pulse shadow-lg"
           : isTranscribing

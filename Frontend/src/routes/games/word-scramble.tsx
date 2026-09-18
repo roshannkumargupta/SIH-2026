@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import WordScramble from "@/features/games/games/WordScramble";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/word-scramble")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/word-scramble")({
 
 function WordScramblePage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("word-scramble")!;
-  return (
-    <GameShell game={game} level={level}>
-      <WordScramble level={level} />
-    </GameShell>
-  );
+  return <WordScramble level={level} />;
 }

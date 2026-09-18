@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import CardMatching from "@/features/games/games/CardMatching";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/card-matching")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/card-matching")({
 
 function CardMatchingPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("card-matching")!;
-  return (
-    <GameShell game={game} level={level}>
-      <CardMatching level={level} />
-    </GameShell>
-  );
+  return <CardMatching level={level} />;
 }

@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
-// Simple SVG shape generation for mental rotation
 type Shape = { points: string; mirrored: boolean; rotation: number };
 
 const POLYGON_SETS = [
@@ -79,107 +77,101 @@ export default function MentalRotation({ level }: { level: number }) {
     }, 900);
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((score / target) * 100))}
-          accuracy={Math.min(100, Math.round((score / target) * 100))}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName="Mental Rotation"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setCompleted(false);
-            setScore(0);
-            saved.current = false;
-            setSynced(false);
-            setOffline(false);
-            setShape(generateShape(level));
-            sessionStart.current = Date.now();
-          }}
-        />
-      </>
-    );
+  const finalAccuracy = Math.min(100, Math.round((score / target) * 100));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
+
+  const resetGame = () => {
+    setCompleted(false);
+    setScore(0);
+    saved.current = false;
+    setSynced(false);
+    setOffline(false);
+    setShape(generateShape(level));
+    sessionStart.current = Date.now();
+  };
 
   return (
-    <div className="space-y-6 text-center">
-      <p className="text-cream/50 text-xs uppercase font-bold">
-        Score: {score}/{target}
-      </p>
-      <p className="text-cream/60 text-sm">
-        Are these two shapes the same (just rotated) or is the right one mirrored?
-      </p>
-
-      <div className="flex items-center justify-center gap-8">
-        {/* Reference shape */}
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-xs text-cream/50 font-bold">Reference</p>
-          <svg
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-            className="rounded-xl border border-clay bg-ink/40"
-          >
-            <polygon
-              points={shape.points}
-              fill="#e9c46a"
-              stroke="#e9c46a"
-              strokeWidth="2"
-              opacity="0.9"
-            />
-          </svg>
-        </div>
-
-        <span className="text-2xl text-cream/40">vs</span>
-
-        {/* Rotated/mirrored shape */}
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-xs text-cream/50 font-bold">Compare</p>
-          <svg
-            width="100"
-            height="100"
-            viewBox="0 0 100 100"
-            className="rounded-xl border border-clay bg-ink/40"
-          >
-            <g
-              transform={`rotate(${displayRotation}, 50, 50) ${shape.mirrored ? "scale(-1,1) translate(-100,0)" : ""}`}
+    <GameShell
+      gameId="mental-rotation"
+      level={level}
+      score={score}
+      targetScore={target}
+      feedback={feedback}
+      instructionHint="Is the right shape identical (rotated) or mirrored?"
+      completed={completed}
+      results={{
+        score: finalAccuracy,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+    >
+      <div className="space-y-8 text-center max-w-xl mx-auto">
+        <div className="flex items-center justify-center gap-8 sm:gap-12">
+          {/* Reference shape */}
+          <div className="flex flex-col items-center gap-2.5">
+            <span className="text-xs text-cream/60 font-bold uppercase tracking-wider">Reference</span>
+            <svg
+              width="120"
+              height="120"
+              viewBox="0 0 100 100"
+              className="rounded-2xl border-2 border-clay bg-ink/60 shadow-card"
             >
               <polygon
                 points={shape.points}
-                fill="#52b788"
-                stroke="#52b788"
+                fill="#e9c46a"
+                stroke="#e9c46a"
                 strokeWidth="2"
                 opacity="0.9"
               />
-            </g>
-          </svg>
+            </svg>
+          </div>
+
+          <span className="text-2xl font-bold text-cream/40">vs</span>
+
+          {/* Rotated/mirrored shape */}
+          <div className="flex flex-col items-center gap-2.5">
+            <span className="text-xs text-cream/60 font-bold uppercase tracking-wider">Compare</span>
+            <svg
+              width="120"
+              height="120"
+              viewBox="0 0 100 100"
+              className="rounded-2xl border-2 border-clay bg-ink/60 shadow-card"
+            >
+              <g
+                transform={`rotate(${displayRotation}, 50, 50) ${shape.mirrored ? "scale(-1,1) translate(-100,0)" : ""}`}
+              >
+                <polygon
+                  points={shape.points}
+                  fill="#52b788"
+                  stroke="#52b788"
+                  strokeWidth="2"
+                  opacity="0.9"
+                />
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div className="flex gap-4 justify-center flex-wrap pt-2">
+          <button
+            type="button"
+            onClick={() => answer(false)}
+            className="px-7 py-3.5 min-h-[48px] min-w-[48px] rounded-xl bg-tea-confirm text-cream font-extrabold text-base hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center gap-2"
+          >
+            <span>🔄 Same (Rotated)</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => answer(true)}
+            className="px-7 py-3.5 min-h-[48px] min-w-[48px] rounded-xl bg-fire text-cream font-extrabold text-base hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center gap-2"
+          >
+            <span>🪞 Mirrored</span>
+          </button>
         </div>
       </div>
-
-      <div className="flex gap-4 justify-center">
-        <button
-          onClick={() => answer(false)}
-          className="px-6 py-3 rounded-xl bg-tea-confirm/80 text-cream font-bold text-lg hover:opacity-90 transition shadow"
-        >
-          🔄 Same (Rotated)
-        </button>
-        <button
-          onClick={() => answer(true)}
-          className="px-6 py-3 rounded-xl bg-fire/80 text-cream font-bold text-lg hover:opacity-90 transition shadow"
-        >
-          🪞 Mirrored
-        </button>
-      </div>
-      {feedback && (
-        <p
-          className={`text-sm font-bold ${feedback.startsWith("✓") ? "text-tea-confirm" : "text-fire"}`}
-        >
-          {feedback}
-        </p>
-      )}
-    </div>
+    </GameShell>
   );
 }

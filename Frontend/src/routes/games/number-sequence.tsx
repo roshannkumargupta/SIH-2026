@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import NumberSequence from "@/features/games/games/NumberSequence";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/number-sequence")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/number-sequence")({
 
 function NumberSequencePage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("number-sequence")!;
-  return (
-    <GameShell game={game} level={level}>
-      <NumberSequence level={level} />
-    </GameShell>
-  );
+  return <NumberSequence level={level} />;
 }

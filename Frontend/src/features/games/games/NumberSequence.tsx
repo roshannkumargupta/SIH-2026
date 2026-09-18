@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 type Sequence = { numbers: number[]; answer: number; type: string };
@@ -63,12 +62,15 @@ export default function NumberSequence({ level }: { level: number }) {
   }, [level]);
 
   const handleSubmit = () => {
-    const answer = Number(input);
-    if (answer === seq.answer) {
+    const val = parseInt(input, 10);
+    if (isNaN(val)) return;
+
+    if (val === seq.answer) {
       const newScore = score + 1;
       setScore(newScore);
       setFeedback("✓ Correct!");
-      if (!saved.current && newScore >= target) {
+
+      if (newScore >= target && !saved.current) {
         saved.current = true;
         const acc = Math.min(100, Math.round((newScore / target) * 100));
         const dur = Math.round((Date.now() - sessionStart.current) / 1000);
@@ -85,13 +87,13 @@ export default function NumberSequence({ level }: { level: number }) {
           setOffline(r.offline);
           setCompleted(true);
         });
-      } else {
-        setTimeout(() => {
-          setSeq(generateSequence(level));
-          setInput("");
-          setFeedback("");
-        }, 1000);
+        return;
       }
+      setTimeout(() => {
+        setSeq(generateSequence(level));
+        setInput("");
+        setFeedback("");
+      }, 800);
     } else {
       setFeedback(`✗ Answer was ${seq.answer}`);
       setTimeout(() => {
@@ -102,77 +104,74 @@ export default function NumberSequence({ level }: { level: number }) {
     }
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((score / target) * 100))}
-          accuracy={Math.min(100, Math.round((score / target) * 100))}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName="Number Sequence"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setCompleted(false);
-            setScore(0);
-            saved.current = false;
-            setSynced(false);
-            setOffline(false);
-            setSeq(generateSequence(level));
-            setInput("");
-            sessionStart.current = Date.now();
-          }}
-        />
-      </>
-    );
+  const finalAccuracy = Math.min(100, Math.round((score / target) * 100));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
+
+  const resetGame = () => {
+    setCompleted(false);
+    setScore(0);
+    saved.current = false;
+    setSynced(false);
+    setOffline(false);
+    setSeq(generateSequence(level));
+    setInput("");
+    sessionStart.current = Date.now();
+  };
 
   return (
-    <div className="space-y-6 text-center">
-      <p className="text-cream/50 text-xs uppercase font-bold">
-        Score: {score}/{target}
-      </p>
-      <div className="flex items-center justify-center gap-3 flex-wrap">
-        {seq.numbers.map((n, i) => (
-          <div key={i} className="flex items-center gap-3">
-            <span className="px-5 py-3 rounded-xl bg-sun/20 border border-sun/40 font-display text-2xl font-black text-sun">
-              {n}
-            </span>
-            <span className="text-cream/40">→</span>
-          </div>
-        ))}
-        <span className="px-5 py-3 rounded-xl bg-fire/20 border-2 border-fire font-display text-2xl font-black text-fire animate-pulse">
-          ?
-        </span>
-      </div>
+    <GameShell
+      gameId="number-sequence"
+      level={level}
+      score={score}
+      targetScore={target}
+      feedback={feedback}
+      instructionHint="Study the sequence and enter the next number"
+      completed={completed}
+      results={{
+        score: finalAccuracy,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+    >
+      <div className="space-y-8 text-center max-w-xl mx-auto">
+        <div className="flex items-center justify-center gap-3 sm:gap-4 flex-wrap p-3">
+          {seq.numbers.map((n, i) => (
+            <div key={i} className="flex items-center gap-2 sm:gap-3">
+              <span className="px-5 py-3.5 rounded-2xl bg-sun/15 border-2 border-sun/40 font-display text-2xl sm:text-3xl font-black text-sun shadow-sm">
+                {n}
+              </span>
+              <span className="text-cream/40 font-bold text-xl">→</span>
+            </div>
+          ))}
+          <span className="px-6 py-3.5 rounded-2xl bg-fire/20 border-2 border-fire font-display text-2xl sm:text-3xl font-black text-fire animate-pulse shadow-sm">
+            ?
+          </span>
+        </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-        <input
-          type="number"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handleSubmit();
-          }}
-          className="w-32 rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-3xl font-bold py-3 focus:border-sun focus:outline-none"
-          placeholder="?"
-          autoFocus
-        />
-        <button
-          onClick={handleSubmit}
-          className="px-6 py-3 rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 transition shadow"
-        >
-          Submit
-        </button>
+        <div className="flex flex-col sm:flex-row gap-3 items-center justify-center pt-2">
+          <input
+            type="number"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSubmit();
+            }}
+            className="w-36 rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-3xl font-bold py-3 px-4 focus:border-sun focus:outline-none min-h-[48px]"
+            placeholder="?"
+            autoFocus
+          />
+          <button
+            type="button"
+            onClick={handleSubmit}
+            className="px-7 py-3 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-black text-base hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center"
+          >
+            Submit Number
+          </button>
+        </div>
       </div>
-      {feedback && (
-        <p
-          className={`text-sm font-bold ${feedback.startsWith("✓") ? "text-tea-confirm" : "text-fire"}`}
-        >
-          {feedback}
-        </p>
-      )}
-    </div>
+    </GameShell>
   );
 }

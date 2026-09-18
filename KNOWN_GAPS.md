@@ -16,13 +16,10 @@ This document catalogs technical gaps, external vendor limitations, and planned 
 
 ---
 
-## 3. Sarvam AI Indic TTS API Limitations
-- **Current State**: Sarvam AI provides robust speech-to-text (ASR) transcription across Northeast Indic languages. However, their cloud text-to-speech (TTS) API endpoint currently does not support voice synthesis models for:
-  - `as-IN` (Assamese)
-  - `mni-IN` (Manipuri)
-  - `brx-IN` (Bodo)
-- **Mitigation**: The voice assistant in `useVoiceAssistant.ts` gracefully catches unsupported language responses from the Sarvam TTS endpoint and falls back to the client's local browser `window.speechSynthesis` API without crashing or displaying error banners.
-- **Resolution Path**: Integrate upcoming Sarvam Indic voice models when released, or bridge via open-source Coqui/Bhashini Indic TTS microservices.
+## 3. Northeast Indic TTS Provider Chain (Sarvam Bulbul -> Bhashini Dhruva -> Browser Fallback)
+- **Architecture**: Sarvam Bulbul v3 supports 11 Indian languages (Hindi, Bengali, Tamil, Telugu, etc.) but does not yet support `as-IN` (Assamese), `mni-IN` (Manipuri), and `brx-IN` (Bodo).
+- **Secondary Provider**: Integrated Government of India's **Bhashini (ULCA / Dhruva inference pipeline)** as the secondary provider in `voice_service.py` specifically for `as-IN`, `mni-IN`, and `brx-IN`.
+- **Graceful Safety Net**: If Bhashini API credentials are not configured or if an upstream timeout occurs, the pipeline gracefully returns an empty base64 audio payload, allowing the client's `useVoiceAssistant.ts` to seamlessly speak via the local browser's `window.speechSynthesis` API without crashing or displaying error banners.
 
 ---
 

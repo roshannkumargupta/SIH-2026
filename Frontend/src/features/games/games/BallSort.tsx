@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 type Tube = string[];
@@ -140,19 +139,20 @@ export default function BallSort({ level }: { level: number }) {
     setSelected(null);
   };
 
+  const finalScore = Math.max(10, Math.min(100, 100 - moves + cfg.colors.length * 5));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
+
   useEffect(() => {
     if (!won && isSolved(tubes, cfg)) {
       setWon(true);
       if (!saved.current) {
         saved.current = true;
-        const score = Math.max(10, Math.min(100, 100 - moves + cfg.colors.length * 5));
-        const dur = Math.round((Date.now() - sessionStart.current) / 1000);
         submitResult({
           gameId: "ball-sort",
           gameType: "ball_sort",
-          score,
+          score: finalScore,
           accuracy: 100,
-          durationSeconds: Math.max(5, dur),
+          durationSeconds: Math.max(5, finalDuration),
           level,
           difficulty: String(level),
         }).then((r) => {
@@ -161,63 +161,57 @@ export default function BallSort({ level }: { level: number }) {
         });
       }
     }
-  }, [tubes, won, moves, cfg]);
-
-  if (won)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.max(10, Math.min(100, 100 - moves + cfg.colors.length * 5))}
-          accuracy={100}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName="Ball Sort"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={reset}
-        />
-      </>
-    );
+  }, [tubes, won, moves, cfg, finalScore, finalDuration, level, submitResult]);
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-4 justify-center text-sm font-bold text-cream/70">
-        <span>
-          Moves: <span className="text-sun">{moves}</span>
-        </span>
-        <span className="text-cream/40">Sort each color into its own tube</span>
-      </div>
+    <GameShell
+      gameId="ball-sort"
+      level={level}
+      stats={[
+        { label: "Moves", value: moves, highlight: "sun" },
+        { label: "Colors", value: cfg.colors.length, highlight: "tea" },
+      ]}
+      instructionHint="Tap a tube to pick a ball, tap another to place it"
+      completed={won}
+      results={{
+        score: finalScore,
+        accuracy: 100,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={reset}
+    >
+      <div className="space-y-6">
+        <div className="flex gap-2.5 flex-wrap justify-center p-2">
+          {tubes.map((tube, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => handleTubeClick(idx)}
+              className={`flex flex-col-reverse items-center justify-start gap-1 w-14 sm:w-16 min-h-[140px] sm:min-h-[160px] rounded-2xl border-2 p-1.5 transition-all touch-manipulation select-none active:scale-[0.98]
+                ${selected === idx ? "border-sun ring-4 ring-sun/30 bg-sun/10" : "border-clay hover:border-clay/80 active:border-sun/60 bg-ink/50"}`}
+              aria-label={`Tube ${idx + 1}${selected === idx ? " (selected)" : ""}`}
+            >
+              {tube.map((ball, bi) => (
+                <div
+                  key={bi}
+                  className={`w-9 h-9 rounded-full shadow-md ${COLOR_MAP[ball] ?? "bg-clay"} border border-white/20`}
+                />
+              ))}
+            </button>
+          ))}
+        </div>
 
-      <div className="flex gap-2 flex-wrap justify-center">
-        {tubes.map((tube, idx) => (
+        <div className="flex justify-center pt-2">
           <button
-            key={idx}
-            type="button"
-            onClick={() => handleTubeClick(idx)}
-            className={`flex flex-col-reverse items-center justify-start gap-0.5 w-14 min-h-[140px] rounded-xl border-2 p-1.5 transition-all
-              ${selected === idx ? "border-sun ring-2 ring-sun/40" : "border-clay hover:border-clay/60"}
-              bg-ink/40`}
-            aria-label={`Tube ${idx + 1}${selected === idx ? " (selected)" : ""}`}
+            onClick={reset}
+            className="min-h-[48px] min-w-[48px] px-6 py-2.5 rounded-xl border border-clay text-cream/90 text-sm font-bold hover:bg-clay active:scale-95 active:bg-clay/50 transition touch-manipulation flex items-center justify-center gap-2 shadow-sm"
           >
-            {tube.map((ball, bi) => (
-              <div
-                key={bi}
-                className={`w-8 h-8 rounded-full shadow ${COLOR_MAP[ball] ?? "bg-clay"} border border-white/20`}
-              />
-            ))}
+            <span>🔄 Reset Round</span>
           </button>
-        ))}
+        </div>
       </div>
-
-      <div className="flex justify-center">
-        <button
-          onClick={reset}
-          className="px-5 py-2 rounded-xl border border-clay text-cream/70 text-sm hover:bg-clay transition"
-        >
-          🔄 Reset
-        </button>
-      </div>
-    </div>
+    </GameShell>
   );
 }

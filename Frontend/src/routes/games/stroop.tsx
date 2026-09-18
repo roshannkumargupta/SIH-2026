@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import Stroop from "@/features/games/games/Stroop";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/stroop")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/stroop")({
 
 function StroopPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("stroop")!;
-  return (
-    <GameShell game={game} level={level}>
-      <Stroop level={level} />
-    </GameShell>
-  );
+  return <Stroop level={level} />;
 }

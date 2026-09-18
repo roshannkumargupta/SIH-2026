@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import MentalRotation from "@/features/games/games/MentalRotation";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/mental-rotation")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/mental-rotation")({
 
 function MentalRotationPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("mental-rotation")!;
-  return (
-    <GameShell game={game} level={level}>
-      <MentalRotation level={level} />
-    </GameShell>
-  );
+  return <MentalRotation level={level} />;
 }

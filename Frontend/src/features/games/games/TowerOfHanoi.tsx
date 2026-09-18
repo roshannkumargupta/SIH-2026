@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 const disksForLevel = (l: number) => (l <= 8 ? 2 + l : l === 9 ? 5 : 6);
@@ -42,7 +41,7 @@ export default function TowerOfHanoi({ level }: { level: number }) {
   const sessionStart = useRef(Date.now());
   const { submitResult } = useGameSession();
 
-  useEffect(() => {
+  const resetGame = () => {
     setRods(initialRods);
     setSelected(null);
     setMoves(0);
@@ -51,6 +50,10 @@ export default function TowerOfHanoi({ level }: { level: number }) {
     setOffline(false);
     saved.current = false;
     sessionStart.current = Date.now();
+  };
+
+  useEffect(() => {
+    resetGame();
   }, [initialRods]);
 
   const handleRodClick = (idx: number) => {
@@ -97,7 +100,7 @@ export default function TowerOfHanoi({ level }: { level: number }) {
           gameId: "tower-of-hanoi",
           gameType: "tower_of_hanoi",
           score,
-          accuracy: score,
+          accuracy: 100,
           durationSeconds: Math.max(5, dur),
           level,
           difficulty: String(level),
@@ -107,85 +110,78 @@ export default function TowerOfHanoi({ level }: { level: number }) {
         });
       }
     }
-  }, [rods, diskCount, level, won, moves, optimalMoves]);
+  }, [rods, diskCount, level, won, moves, optimalMoves, submitResult]);
 
-  if (won)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.max(10, Math.round((optimalMoves / Math.max(moves, optimalMoves)) * 100))}
-          accuracy={100}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName="Tower of Hanoi"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setRods(initialRods);
-            setSelected(null);
-            setMoves(0);
-            setWon(false);
-            setSynced(false);
-            setOffline(false);
-            saved.current = false;
-            sessionStart.current = Date.now();
-          }}
-        />
-      </>
-    );
+  const finalScore = Math.max(10, Math.round((optimalMoves / Math.max(moves, optimalMoves)) * 100));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-4 justify-center text-sm font-bold text-cream/70">
-        <span>
-          Disks: <span className="text-sun">{diskCount}</span>
-        </span>
-        <span>
-          Moves: <span className="text-cream">{moves}</span>
-        </span>
-        <span>
-          Optimal: <span className="text-cream/50">{optimalMoves}</span>
-        </span>
-      </div>
+    <GameShell
+      gameId="tower-of-hanoi"
+      level={level}
+      stats={[
+        { label: "Moves", value: moves, highlight: "cream" },
+        { label: "Optimal", value: optimalMoves },
+        { label: "Disks", value: diskCount },
+      ]}
+      instructionHint="Tap a tower to select its top disk, then tap another tower to move it. A larger disk cannot be placed on a smaller disk."
+      completed={won}
+      results={{
+        score: finalScore,
+        accuracy: 100,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+      onNextLevel={level < 10 ? () => { window.location.href = `/games/tower-of-hanoi?level=${level + 1}`; } : undefined}
+    >
+      <div className="space-y-6">
+        <div className="flex gap-4 justify-center">
+          {rods.map((rod, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => handleRodClick(idx)}
+              className={`flex-1 min-h-[220px] rounded-2xl border-2 transition-all flex flex-col justify-end items-center p-3 relative cursor-pointer touch-manipulation select-none active:scale-[0.98]
+                ${selected === idx ? "border-[#E0A23B] ring-2 ring-[#E0A23B]/50 bg-[#E0A23B]/10 shadow-lg shadow-[#E0A23B]/10" : "border-white/10 bg-[#0A1420]/70 hover:border-white/20 active:border-[#E0A23B]/60 shadow-inner"}`}
+              aria-label={`Tower ${idx + 1}${selected === idx ? " (selected)" : ""}`}
+            >
+              {/* Target indicator */}
+              {(level === 9 ? idx === 0 : idx === 2) && (
+                <span className="absolute top-2 text-[10px] uppercase font-bold tracking-wider text-[#E0A23B] bg-[#E0A23B]/15 border border-[#E0A23B]/30 px-2.5 py-0.5 rounded-full shadow-xs">
+                  Target
+                </span>
+              )}
+              {/* Pole */}
+              <div className="absolute top-8 bottom-6 w-2.5 bg-white/20 rounded-full left-1/2 -translate-x-1/2 shadow-xs" />
+              {/* Disks */}
+              <div className="relative z-10 w-full flex flex-col gap-1.5 items-center">
+                {[...rod].reverse().map((disk) => (
+                  <div
+                    key={disk}
+                    className={`h-6 rounded-full ${DISK_COLORS[(disk - 1) % DISK_COLORS.length]} text-white text-xs font-bold flex items-center justify-center shadow-md`}
+                    style={{ width: `${Math.max(32, 40 + disk * 8)}%` }}
+                  >
+                    {disk}
+                  </div>
+                ))}
+              </div>
+              <span className="text-xs text-[#E8ECEF]/80 mt-3 font-bold tracking-wide">Tower {idx + 1}</span>
+            </button>
+          ))}
+        </div>
 
-      <div className="flex gap-3 justify-center">
-        {rods.map((rod, idx) => (
-          <button
-            key={idx}
-            type="button"
-            onClick={() => handleRodClick(idx)}
-            className={`flex-1 min-h-[200px] rounded-2xl border-2 transition-all flex flex-col justify-end items-center p-2 relative cursor-pointer
-              ${selected === idx ? "border-sun ring-2 ring-sun/50 bg-sun/5" : "border-clay bg-ink/40 hover:border-clay/80"}`}
-            aria-label={`Tower ${idx + 1}${selected === idx ? " (selected)" : ""}`}
-          >
-            {/* Pole */}
-            <div className="absolute top-4 bottom-5 w-2 bg-clay/60 rounded-full left-1/2 -translate-x-1/2" />
-            {/* Disks */}
-            <div className="relative z-10 w-full flex flex-col gap-1 items-center">
-              {[...rod].reverse().map((disk) => (
-                <div
-                  key={disk}
-                  className={`h-5 rounded-full ${DISK_COLORS[(disk - 1) % DISK_COLORS.length]} text-white text-xs font-bold flex items-center justify-center`}
-                  style={{ width: `${Math.max(30, 40 + disk * 8)}%` }}
-                >
-                  {disk}
-                </div>
-              ))}
-            </div>
-            <span className="text-xs text-cream/40 mt-2 font-bold">{idx + 1}</span>
-          </button>
-        ))}
+        {selected !== null ? (
+          <p className="text-sm text-[#E0A23B] text-center font-bold animate-pulse">
+            Tower {selected + 1} selected — tap destination tower to move disk
+          </p>
+        ) : (
+          <p className="text-xs sm:text-sm text-[#8A99A8] text-center font-medium">
+            Tap a tower to pick up its top disk
+          </p>
+        )}
       </div>
-
-      <p className="text-xs text-cream/50 text-center">
-        Click a tower to select top disk, then click another to move it.
-      </p>
-      {selected !== null && (
-        <p className="text-xs text-sun text-center font-bold">
-          Tower {selected + 1} selected — click destination tower
-        </p>
-      )}
-    </div>
+    </GameShell>
   );
 }

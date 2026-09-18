@@ -26,10 +26,12 @@ from app.routers.sync import router as sync_router
 from app.routers.tasks import router as tasks_router
 from app.routers.translation import router as translation_router
 from app.routers.voice import router as voice_router
+from app.routers.websocket import router as ws_router
 
 api_router = APIRouter(prefix="/api/v1")
 
 # Sub-routers merged into the centralized v1 router
+api_router.include_router(ws_router)
 api_router.include_router(auth_router)
 api_router.include_router(relationships_router)
 api_router.include_router(doctors_router)

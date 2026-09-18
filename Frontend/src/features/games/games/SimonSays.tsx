@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 const COLORS = ["red", "blue", "green", "yellow"] as const;
@@ -58,40 +57,39 @@ export default function SimonSays({ level }: { level: number }) {
   };
 
   const startGame = () => {
-    const seq: Color[] = Array.from(
-      { length: seqLength },
-      () => COLORS[Math.floor(Math.random() * COLORS.length)]!,
-    );
-    setSequence(seq);
+    const newSeq: Color[] = [];
+    for (let i = 0; i < seqLength; i++) {
+      newSeq.push(COLORS[Math.floor(Math.random() * COLORS.length)]!);
+    }
+    setSequence(newSeq);
     setPlayerSeq([]);
     setFeedback(null);
-    void playSequence(seq);
+    playSequence(newSeq);
   };
 
-  const handleColorClick = (color: Color) => {
+  const handleColorClick = (c: Color) => {
     if (!isPlayerTurn || isPlaying) return;
-    const newSeq = [...playerSeq, color];
-    setPlayerSeq(newSeq);
-    setActiveColor(color);
-    setTimeout(() => setActiveColor(null), 200);
+    const nextPlayer = [...playerSeq, c];
+    setPlayerSeq(nextPlayer);
 
-    const idx = newSeq.length - 1;
-    if (newSeq[idx] !== sequence[idx]) {
-      setIsPlayerTurn(false);
-      setPlayerSeq([]);
+    const idx = nextPlayer.length - 1;
+    if (nextPlayer[idx] !== sequence[idx]) {
       setFeedback("wrong");
+      setIsPlayerTurn(false);
       setTimeout(() => {
+        setPlayerSeq([]);
         setFeedback(null);
-        void playSequence(sequence);
-      }, 1500);
+        playSequence(sequence);
+      }, 1200);
       return;
     }
-    if (newSeq.length === sequence.length) {
+
+    if (nextPlayer.length === sequence.length) {
+      setFeedback("correct");
+      setIsPlayerTurn(false);
       const newScore = score + 1;
       setScore(newScore);
-      setIsPlayerTurn(false);
-      setPlayerSeq([]);
-      setFeedback("correct");
+
       if (newScore >= target && !saved.current) {
         saved.current = true;
         const acc = Math.min(100, Math.round((newScore / target) * 100));
@@ -115,82 +113,81 @@ export default function SimonSays({ level }: { level: number }) {
     }
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((score / target) * 100))}
-          accuracy={Math.min(100, Math.round((score / target) * 100))}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName="Simon Says"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setCompleted(false);
-            setScore(0);
-            saved.current = false;
-            setSynced(false);
-            setOffline(false);
-            sessionStart.current = Date.now();
-          }}
-        />
-      </>
-    );
+  const finalAccuracy = Math.min(100, Math.round((score / target) * 100));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
+
+  const resetGame = () => {
+    setCompleted(false);
+    setScore(0);
+    saved.current = false;
+    setSynced(false);
+    setOffline(false);
+    sessionStart.current = Date.now();
+  };
+
+  const feedbackText =
+    feedback === "correct"
+      ? "✓ Correct sequence!"
+      : feedback === "wrong"
+        ? "✗ Mistake! Watch the sequence again…"
+        : isPlaying
+          ? "👀 Watch the flashing sequence carefully…"
+          : isPlayerTurn
+            ? `👆 Your turn! (${playerSeq.length} / ${sequence.length})`
+            : null;
 
   return (
-    <div className="space-y-5">
-      <div className="flex gap-4 justify-center text-sm font-bold text-cream/70">
-        <span>
-          Round:{" "}
-          <span className="text-sun">
-            {score}/{target}
-          </span>
-        </span>
-        <span>
-          Sequence length: <span className="text-cream">{seqLength}</span>
-        </span>
-      </div>
+    <GameShell
+      gameId="simon-says"
+      level={level}
+      score={score}
+      targetScore={target}
+      stats={[
+        { label: "Sequence Length", value: sequence.length || seqLength, highlight: "sun" },
+        { label: "Turn", value: isPlaying ? "Watching" : isPlayerTurn ? "Your Turn" : "Ready", highlight: isPlayerTurn ? "tea" : "cream" },
+      ]}
+      feedback={feedbackText}
+      instructionHint="Watch the colors flash, then tap them in the exact same order"
+      completed={completed}
+      results={{
+        score: finalAccuracy,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+    >
+      <div className="space-y-6 max-w-sm mx-auto">
+        <div className="grid grid-cols-2 gap-4">
+          {COLORS.map((c) => (
+            <button
+              key={c}
+              onClick={() => handleColorClick(c)}
+              disabled={!isPlayerTurn || isPlaying}
+              className={`h-32 rounded-3xl font-black text-xl text-white capitalize shadow-card transition-all touch-manipulation select-none ${COLOR_CLASSES[c]} ${
+                activeColor === c ? "ring-8 ring-white scale-90 brightness-150 shadow-2xl" : ""
+              } ${
+                !isPlayerTurn || isPlaying
+                  ? "opacity-60 cursor-not-allowed"
+                  : "hover:scale-105 active:scale-95 active:brightness-125"
+              }`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
 
-      <div className="grid grid-cols-2 gap-4 max-w-xs mx-auto">
-        {COLORS.map((c) => (
+        <div className="flex justify-center pt-2">
           <button
-            key={c}
-            onClick={() => handleColorClick(c)}
-            disabled={!isPlayerTurn || isPlaying}
-            className={`h-28 rounded-2xl font-bold text-lg text-white capitalize shadow-card transition-all ${COLOR_CLASSES[c]} ${activeColor === c ? "ring-8 ring-white scale-90 brightness-150" : ""} ${!isPlayerTurn || isPlaying ? "opacity-50 cursor-not-allowed" : "hover:scale-105"}`}
+            onClick={startGame}
+            disabled={isPlaying || isPlayerTurn}
+            className="px-8 py-3.5 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-black text-base hover:opacity-90 active:scale-95 disabled:opacity-40 transition shadow-md touch-manipulation"
           >
-            {c}
+            {score === 0 && sequence.length === 0 ? "🎬 Start Round" : "🔄 Replay Sequence"}
           </button>
-        ))}
+        </div>
       </div>
-
-      {isPlaying && (
-        <p className="text-center text-cream/70 text-sm animate-pulse">👀 Watch the sequence…</p>
-      )}
-      {isPlayerTurn && (
-        <p className="text-center text-sun text-sm font-bold">
-          👆 Your turn! ({playerSeq.length}/{sequence.length})
-        </p>
-      )}
-      {feedback && (
-        <p
-          className={`text-center text-sm font-bold ${feedback === "correct" ? "text-tea-confirm" : "text-fire"}`}
-        >
-          {feedback === "correct" ? "✅ Perfect! Next round…" : "❌ Wrong! Watch again…"}
-        </p>
-      )}
-
-      <div className="flex justify-center">
-        <button
-          onClick={startGame}
-          disabled={isPlaying || isPlayerTurn}
-          className="px-6 py-3 rounded-xl bg-sun text-ink font-bold hover:opacity-90 disabled:opacity-40 transition"
-        >
-          {score === 0 ? "🎬 Start Game" : "🔄 New Round"}
-        </button>
-      </div>
-    </div>
+    </GameShell>
   );
 }

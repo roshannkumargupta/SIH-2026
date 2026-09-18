@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import NBack from "@/features/games/games/NBack";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/n-back")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -9,7 +7,7 @@ export const Route = createFileRoute("/games/n-back")({
   }),
   head: () => ({
     meta: [
-      { title: "N Back | SmritiSetu" },
+      { title: "N-Back | SmritiSetu" },
       { name: "description", content: "Cognitive training game on SmritiSetu." },
     ],
   }),
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/n-back")({
 
 function NBackPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("n-back")!;
-  return (
-    <GameShell game={game} level={level}>
-      <NBack level={level} />
-    </GameShell>
-  );
+  return <NBack level={level} />;
 }

@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import DualTask from "@/features/games/games/DualTask";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/dual-task")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/dual-task")({
 
 function DualTaskPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("dual-task")!;
-  return (
-    <GameShell game={game} level={level}>
-      <DualTask level={level} />
-    </GameShell>
-  );
+  return <DualTask level={level} />;
 }

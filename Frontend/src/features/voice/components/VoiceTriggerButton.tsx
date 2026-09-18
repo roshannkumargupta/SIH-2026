@@ -22,6 +22,7 @@ export function VoiceTriggerButton({ className = "", defaultLanguage }: VoiceTri
   useEffect(() => {
     const handleOpenEvent = () => {
       setIsOpen(true);
+      assistant.startListening();
     };
     const handleCloseEvent = () => {
       setIsOpen(false);
@@ -33,11 +34,12 @@ export function VoiceTriggerButton({ className = "", defaultLanguage }: VoiceTri
       window.removeEventListener("smritisetu:open-voice", handleOpenEvent);
       window.removeEventListener("smritisetu:close-voice", handleCloseEvent);
     };
-  }, []);
+  }, [assistant]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsOpen(true);
+    assistant.startListening();
   };
 
   // Voice Assistant is exclusively for Patients (hidden for Caregivers and Doctors)
@@ -49,39 +51,54 @@ export function VoiceTriggerButton({ className = "", defaultLanguage }: VoiceTri
 
   return (
     <>
-      {/* The Single Floating Hover Voice Companion Button */}
-      <div
-        className={`fixed bottom-6 right-6 z-50 flex items-center justify-end group ${className}`}
-      >
-        <button
-          type="button"
-          onClick={handleClick}
-          className={`relative flex items-center gap-2.5 rounded-full p-3.5 sm:px-5 sm:py-3.5 shadow-2xl transition-all duration-300 transform active:scale-95 cursor-pointer border-2 ${
-            isListening
-              ? "border-fire bg-fire text-cream shadow-fire/40 animate-pulse ring-4 ring-fire/30"
-              : "border-sun bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-400 text-ink shadow-amber-500/30 hover:scale-105 hover:shadow-sun/50 hover:border-yellow-300 ring-2 ring-sun/20"
-          }`}
-          aria-label="Open voice assistant"
-          title="SmritiSetu Multilingual Voice Assistant"
+      {/* Floating Action Button (Collapsed State) */}
+      {!isOpen && (
+        <div
+          className={`fixed bottom-6 right-6 z-50 flex items-center justify-end group ${className}`}
         >
-          {/* Pulsing indicator badge */}
-          <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-fire text-[9px] font-bold text-cream shadow-sm">
-            <Sparkles size={10} />
-          </span>
-
-          <Mic
-            size={26}
-            className={`transition-transform duration-300 ${
-              isListening ? "animate-bounce" : "group-hover:scale-110"
+          <button
+            type="button"
+            onClick={handleClick}
+            className={`relative flex items-center gap-3 rounded-full pl-2 pr-5 py-2 backdrop-blur-xl shadow-2xl transition-all duration-300 transform active:scale-95 cursor-pointer border ${
+              isListening
+                ? "border-[#22C55E] bg-[#121D2B] text-[#E8ECEF] shadow-[#22C55E]/20 animate-pulse ring-4 ring-[#22C55E]/30"
+                : "border-white/10 bg-[#121D2B]/95 text-[#E8ECEF] hover:scale-105 hover:border-[#22C55E]/40"
             }`}
-          />
+            aria-label="Open voice assistant"
+            title="SmritiSetu Multilingual Voice Assistant (or say 'Hey Setu')"
+          >
+            {/* Teal-green circular mic badge */}
+            <span
+              className={`flex size-10 items-center justify-center rounded-full transition-transform ${
+                isListening ? "bg-[#22C55E] text-[#0A1420] animate-pulse" : "bg-[#22C55E] text-[#0A1420] group-hover:scale-105"
+              }`}
+            >
+              <Mic size={20} className={isListening ? "animate-bounce" : ""} />
+            </span>
 
-          <span className="hidden sm:inline font-extrabold text-sm tracking-wide select-none">
-            {isListening ? "Listening…" : "Voice Assistant"}
-          </span>
-        </button>
-      </div>
+            <div className="flex flex-col text-left select-none">
+              <span className="text-xs font-bold text-[#E8ECEF] tracking-tight">
+                {isListening ? "Listening…" : "Voice Assistant"}
+              </span>
+              <span className="text-[10px] text-[#8A99A8] font-medium">
+                {isListening ? "Tap to pause" : "Say 'Hey Setu'"}
+              </span>
+            </div>
 
+            {/* Waveform animation bars when listening */}
+            {isListening && (
+              <div className="flex items-center gap-0.5 h-4 ml-1">
+                <span className="w-1 bg-[#22C55E] rounded-full animate-bounce [animation-delay:-0.3s] h-3" />
+                <span className="w-1 bg-[#22C55E] rounded-full animate-bounce [animation-delay:-0.15s] h-4" />
+                <span className="w-1 bg-[#2DD4BF] rounded-full animate-bounce h-2" />
+                <span className="w-1 bg-[#22C55E] rounded-full animate-bounce [animation-delay:-0.4s] h-3" />
+              </div>
+            )}
+          </button>
+        </div>
+      )}
+
+      {/* Floating Panel (Expanded State - No dark backdrop overlay) */}
       <VoiceAssistantModal
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}

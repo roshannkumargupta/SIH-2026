@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 import { useLanguage } from "@/context/LanguageContext";
 import { getGameWordPool } from "../data/wordPools";
@@ -67,21 +66,14 @@ export default function DelayedRecall({ level }: { level: number }) {
     };
   }, [phase, distractTime]);
 
-  const addWord = (overrideWord?: string) => {
-    const raw = overrideWord !== undefined ? overrideWord : input;
-    const trimmed = raw.trim().normalize("NFC").toLowerCase();
-    if (!trimmed) {
-      setInput("");
-      return;
+  const addWord = (overrideInput?: string) => {
+    const rawWord = overrideInput !== undefined ? overrideInput : input;
+    const cleanWord = rawWord.trim();
+    if (!cleanWord) return;
+
+    if (!recalled.some((w) => w.toLowerCase() === cleanWord.toLowerCase())) {
+      setRecalled((r) => [...r, cleanWord]);
     }
-    const alreadyRecalled = recalled.some(
-      (w) => w.trim().normalize("NFC").toLowerCase() === trimmed,
-    );
-    if (alreadyRecalled) {
-      setInput("");
-      return;
-    }
-    setRecalled((r) => [...r, trimmed]);
     setInput("");
   };
 
@@ -93,9 +85,10 @@ export default function DelayedRecall({ level }: { level: number }) {
       normalizedTargets.includes(w.trim().normalize("NFC").toLowerCase()),
     ).length;
     const acc = Math.round((correct / wordCount) * 100);
+    const dur = Math.round((Date.now() - sessionStart.current) / 1000);
+
     if (!saved.current) {
       saved.current = true;
-      const dur = Math.round((Date.now() - sessionStart.current) / 1000);
       submitResult({
         gameId: "delayed-recall",
         gameType: "delayed_recall",
@@ -112,109 +105,140 @@ export default function DelayedRecall({ level }: { level: number }) {
     }
   };
 
-  if (completed) {
-    const normalizedTargets = words.map((w) => w.trim().normalize("NFC").toLowerCase());
-    const correct = recalled.filter((w) =>
-      normalizedTargets.includes(w.trim().normalize("NFC").toLowerCase()),
-    ).length;
-    const acc = Math.round((correct / wordCount) * 100);
-    return (
-      <>
-        <CelebrationAnimation show={acc >= 60} />
-        <GameResults
-          score={acc}
-          accuracy={acc}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName={t("games:delayedRecallTitle", { defaultValue: "Delayed Recall" })}
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => window.location.reload()}
-        />
-      </>
-    );
-  }
+  const normalizedTargets = words.map((w) => w.trim().normalize("NFC").toLowerCase());
+  const correct = recalled.filter((w) =>
+    normalizedTargets.includes(w.trim().normalize("NFC").toLowerCase()),
+  ).length;
+  const finalAccuracy = Math.round((correct / (wordCount || 1)) * 100);
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
+
+  const resetGame = () => {
+    setWords([...wordList].sort(() => Math.random() - 0.5).slice(0, wordCount));
+    setPhase("study");
+    setDistractNum(1);
+    setInput("");
+    setRecalled([]);
+    setSubmitted(false);
+    setCompleted(false);
+    setSynced(false);
+    setOffline(false);
+    saved.current = false;
+    sessionStart.current = Date.now();
+  };
+
+  const phaseLabel =
+    phase === "study"
+      ? "Phase 1: Memorise"
+      : phase === "distract"
+        ? "Phase 2: Distractor"
+        : "Phase 3: Recall";
 
   return (
-    <div className="space-y-5">
-      {phase === "study" && (
-        <div className="text-center space-y-4">
-          <p className="text-cream/60 text-sm">Memorise these {wordCount} words:</p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            {words.map((w) => (
-              <span
-                key={w}
-                className="px-4 py-2 rounded-xl border border-sun bg-sun/10 font-display text-xl font-bold text-sun"
-              >
-                {w}
-              </span>
-            ))}
+    <GameShell
+      gameId="delayed-recall"
+      level={level}
+      stats={[
+        { label: "Phase", value: phaseLabel, highlight: phase === "recall" ? "tea" : "sun" },
+        { label: "Target Words", value: wordCount },
+        ...(phase === "recall" ? [{ label: "Recalled", value: recalled.length, highlight: "sun" as const }] : []),
+      ]}
+      instructionHint={
+        phase === "study"
+          ? "Memorise the words before time runs out"
+          : phase === "distract"
+            ? "Follow along with the counter"
+            : "Type or speak the words you remember"
+      }
+      completed={completed}
+      results={{
+        score: finalAccuracy,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+    >
+      <div className="space-y-6">
+        {phase === "study" && (
+          <div className="text-center space-y-5 py-4">
+            <p className="text-cream/80 text-base font-medium">Memorise these {wordCount} words:</p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {words.map((w) => (
+                <span
+                  key={w}
+                  className="px-5 py-3 rounded-2xl border-2 border-sun bg-sun/15 font-display text-2xl font-black text-sun shadow-sm"
+                >
+                  {w}
+                </span>
+              ))}
+            </div>
+            <p className="text-sm text-cream/50 animate-pulse font-medium">
+              Study carefully: moving to distractor task in a moment…
+            </p>
           </div>
-          <p className="text-xs text-cream/40 animate-pulse">
-            Study time: moving to distractor task soon…
-          </p>
-        </div>
-      )}
+        )}
 
-      {phase === "distract" && (
-        <div className="text-center space-y-4">
-          <p className="text-cream/60 text-sm">Count along: (this is your distractor task)</p>
-          <p className="font-display text-7xl font-black text-fire animate-pulse">{distractNum}</p>
-          <p className="text-xs text-cream/40 animate-pulse">Remember the words you saw…</p>
-        </div>
-      )}
+        {phase === "distract" && (
+          <div className="text-center space-y-5 py-6">
+            <p className="text-cream/80 text-base font-medium">Count along: (this is your distractor task)</p>
+            <p className="font-display text-8xl font-black text-fire animate-pulse">{distractNum}</p>
+            <p className="text-sm text-cream/50 animate-pulse font-medium">Hold the words in your memory…</p>
+          </div>
+        )}
 
-      {phase === "recall" && !submitted && (
-        <div className="space-y-4">
-          <p className="text-cream/60 text-sm text-center">
-            Type or speak all the words you remember, one at a time:
-          </p>
-          <div className="flex gap-2 flex-wrap justify-center">
-            {recalled.map((w) => (
-              <span
-                key={w}
-                className="px-3 py-1.5 rounded-lg border border-tea-confirm bg-tea-confirm/10 text-tea-confirm font-bold text-sm"
+        {phase === "recall" && !submitted && (
+          <div className="space-y-6 max-w-lg mx-auto py-2">
+            <p className="text-cream/80 text-base font-medium text-center">
+              Type or speak all the words you remember, one by one:
+            </p>
+            <div className="flex gap-2 flex-wrap justify-center min-h-[44px]">
+              {recalled.map((w) => (
+                <span
+                  key={w}
+                  className="px-3.5 py-1.5 rounded-xl border border-tea-confirm bg-tea-confirm/15 text-tea-confirm font-bold text-base shadow-sm"
+                >
+                  {w}
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2.5 justify-center items-center">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") addWord();
+                }}
+                className="rounded-xl border-2 border-clay bg-ink text-cream font-bold py-3 px-4 w-60 focus:border-sun focus:outline-none text-lg min-h-[48px]"
+                placeholder="Type a word…"
+                autoFocus
+              />
+              <button
+                onClick={() => addWord()}
+                className="px-6 py-3 min-h-[48px] min-w-[48px] rounded-xl bg-clay text-cream font-bold hover:bg-clay/80 active:scale-95 active:bg-clay/60 transition touch-manipulation flex items-center justify-center shadow-sm"
               >
-                {w}
-              </span>
-            ))}
+                Add
+              </button>
+              <GameVoiceInputButton
+                onTranscript={(spoken) => {
+                  setInput(spoken);
+                  addWord(spoken);
+                }}
+                disabled={submitted}
+              />
+            </div>
+            <div className="flex justify-center pt-2">
+              <button
+                onClick={submitRecall}
+                className="px-8 py-3.5 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-black text-base hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center gap-2"
+              >
+                ✓ I'm Done — Submit Words
+              </button>
+            </div>
           </div>
-          <div className="flex gap-2 justify-center items-center">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") addWord();
-              }}
-              className="rounded-xl border-2 border-clay bg-ink text-cream font-bold py-2.5 px-4 w-52 focus:border-sun focus:outline-none text-lg"
-              placeholder="Type a word…"
-              autoFocus
-            />
-            <button
-              onClick={() => addWord()}
-              className="px-4 py-2.5 rounded-xl bg-clay text-cream font-bold hover:bg-clay/80 transition"
-            >
-              Add
-            </button>
-            <GameVoiceInputButton
-              onTranscript={(spoken) => {
-                setInput(spoken);
-                addWord(spoken);
-              }}
-              disabled={submitted}
-            />
-          </div>
-          <div className="flex justify-center">
-            <button
-              onClick={submitRecall}
-              className="px-6 py-3 rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 transition shadow"
-            >
-              ✓ I'm Done — Submit
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </GameShell>
   );
 }

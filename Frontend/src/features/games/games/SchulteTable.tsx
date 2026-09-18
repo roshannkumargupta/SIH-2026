@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 const sizeForLevel = (l: number) => (l === 1 ? 3 : l === 2 ? 4 : l >= 8 ? 7 : 5);
@@ -74,66 +73,66 @@ export default function SchulteTable({ level }: { level: number }) {
     saved.current = false;
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, elapsed ? Math.round(10000 / Math.max(1, elapsed / 100)) : 70)}
-          accuracy={100}
-          durationSeconds={elapsed ? Math.round(elapsed / 1000) : 0}
-          level={level}
-          gameName="Schulte Table"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={reset}
-        />
-      </>
-    );
+  const finalScore = Math.min(100, elapsed ? Math.round(10000 / Math.max(1, elapsed / 100)) : 70);
+  const finalDuration = elapsed ? Math.round(elapsed / 1000) : 0;
 
   return (
-    <div className="space-y-4 flex flex-col items-center">
-      <div className="flex gap-4 text-sm font-bold text-cream/70">
-        <span>
-          Find: <span className="text-sun text-xl">{next}</span>
-        </span>
-        {elapsed !== null && (
-          <span>
-            Time: <span className="text-tea-confirm">{(elapsed / 1000).toFixed(2)}s</span>
-          </span>
-        )}
-      </div>
-      <p className="text-xs text-cream/40">
-        Click numbers 1 → {total} in order, as fast as you can.
-      </p>
+    <GameShell
+      gameId="schulte-table"
+      level={level}
+      stats={[
+        { label: "Target Number", value: next <= total ? next : "Done!", highlight: "sun" },
+        { label: "Remaining", value: Math.max(0, total - next + 1) },
+        ...(elapsed !== null
+          ? [{ label: "Time", value: `${(elapsed / 1000).toFixed(1)}s`, highlight: "tea" as const }]
+          : []),
+      ]}
+      instructionHint={`Tap numbers 1 to ${total} in sequence as quickly as possible`}
+      completed={completed}
+      results={{
+        score: finalScore,
+        accuracy: 100,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={reset}
+    >
+      <div className="space-y-6 flex flex-col items-center">
+        <div
+          className="grid gap-2.5 p-2 rounded-2xl border-2 border-clay bg-ink/50 shadow-inner"
+          style={{
+            gridTemplateColumns: `repeat(${size}, minmax(44px, 1fr))`,
+            maxWidth: "380px",
+            width: "100%",
+          }}
+        >
+          {numbers.map((n) => (
+            <button
+              key={n}
+              onClick={() => clickNumber(n)}
+              className={`aspect-square min-w-[44px] min-h-[44px] text-xl sm:text-2xl font-black rounded-xl border-2 transition-all shadow touch-manipulation select-none
+                ${
+                  n < next
+                    ? "bg-tea-confirm/20 border-tea-confirm/40 text-tea-confirm/60 opacity-60 cursor-default"
+                    : "bg-ink/80 border-clay text-cream hover:border-sun hover:scale-105 active:scale-90 shadow-sm"
+                }`}
+              disabled={n < next}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
 
-      <div
-        className="grid gap-2"
-        style={{
-          gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
-          maxWidth: "360px",
-          width: "100%",
-        }}
-      >
-        {numbers.map((n) => (
+        <div className="pt-2">
           <button
-            key={n}
-            onClick={() => clickNumber(n)}
-            className={`aspect-square text-xl sm:text-2xl font-black rounded-xl border-2 transition-all shadow
-              ${n < next ? "bg-tea-confirm/30 border-tea-confirm/40 opacity-50 cursor-default" : "bg-ink/70 border-clay text-cream hover:border-sun hover:scale-105 active:scale-95"}`}
-            disabled={n < next}
+            onClick={reset}
+            className="px-6 py-2.5 min-h-[48px] min-w-[48px] rounded-xl border border-clay text-cream/90 text-sm font-bold hover:bg-clay active:scale-95 transition touch-manipulation flex items-center justify-center gap-2 shadow-sm"
           >
-            {n}
+            🔄 Reset Table
           </button>
-        ))}
+        </div>
       </div>
-
-      <button
-        onClick={reset}
-        className="px-5 py-2 rounded-xl border border-clay text-cream/70 text-sm hover:bg-clay transition"
-      >
-        🔄 Reset
-      </button>
-    </div>
+    </GameShell>
   );
 }

@@ -12,7 +12,7 @@ import {
 import { toast } from "sonner";
 import { formatApiError } from "@/api/client";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
-import { NavigationHeader } from "@/components/navigation-header";
+import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { useAnalytics } from "@/hooks/use-analytics";
 import { useAuth } from "@/hooks/use-auth";
@@ -74,184 +74,181 @@ function AnalyticsPage() {
         : t("analytics:highRisk");
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <NavigationHeader />
+    <AppShell className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
+      {/* Navigation Breadcrumb & Action */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <Button asChild variant="outline" className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold">
+          <Link to="/">
+            <ArrowLeft size={18} className="mr-2 text-[#22C55E]" /> {t("common:backHome")}
+          </Link>
+        </Button>
 
-      <main className="flex-1 mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12 w-full">
-        {/* Navigation Breadcrumb */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-          <Button asChild variant="cream" size="touch">
-            <Link to="/">
-              <ArrowLeft size={20} className="mr-2" /> {t("common:backHome")}
-            </Link>
-          </Button>
+        <Button
+          type="button"
+          size="touch"
+          disabled={isAssessing}
+          onClick={handleRunAssessment}
+          className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] text-base font-bold gap-2 shadow-lg shadow-[#22C55E]/20"
+        >
+          <RotateCw size={18} className={isAssessing ? "animate-spin" : ""} />
+          {isAssessing ? t("analytics:assessing") : t("analytics:runAssessmentNow")}
+        </Button>
+      </div>
 
-          <Button
-            type="button"
-            variant="cream"
-            size="touch"
-            disabled={isAssessing}
-            onClick={handleRunAssessment}
-            className="text-base font-extrabold gap-2"
-          >
-            <RotateCw size={18} className={isAssessing ? "animate-spin" : ""} />
-            {isAssessing ? t("analytics:assessing") : t("analytics:runAssessmentNow")}
-          </Button>
-        </div>
-
-        {/* Page Title Card */}
-        <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card mb-8">
-          <div className="flex items-center gap-4">
-            <span className="flex size-16 items-center justify-center rounded-2xl bg-sun text-ink shadow-sm">
-              <BarChart3 size={36} />
-            </span>
-            <div>
-              <h1 className="font-display text-3xl sm:text-4xl font-bold text-cream">
-                {t("analytics:pageTitle")}
-              </h1>
-              <p className="text-cream/80 mt-1">{t("analytics:pageSubtitle")}</p>
-            </div>
+      {/* Page Title Card */}
+      <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
+        <div className="flex items-center gap-4">
+          <span className="flex size-16 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] shadow-inner">
+            <BarChart3 size={34} />
+          </span>
+          <div>
+            <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#E8ECEF]">
+              {t("analytics:pageTitle")}
+            </h1>
+            <p className="text-[#8A99A8] mt-1 font-medium">{t("analytics:pageSubtitle")}</p>
           </div>
         </div>
+      </div>
 
-        {/* Top Metric Cards */}
-        <div className="grid gap-6 md:grid-cols-3 mb-8">
-          {/* Overall Composite Score */}
-          <div className="rounded-2xl border border-clay bg-surface p-6 shadow-card flex items-center justify-between">
-            <div>
-              <p className="text-xs font-bold uppercase text-cream/70">
-                {t("analytics:cognitiveIndex")}
-              </p>
-              <p className="font-display text-4xl sm:text-5xl font-bold text-sun mt-1">
-                {latestAssessment?.overall_score ? `${latestAssessment.overall_score}` : "83.5"}
-                <span className="text-xl text-cream/60 font-sans"> / 100</span>
-              </p>
-              <p className="text-xs text-tea-confirm font-bold mt-2 flex items-center gap-1">
-                <TrendingUp size={14} /> {t("analytics:stableTrend")}
-              </p>
-            </div>
-            <div className="size-16 rounded-2xl bg-sun/15 flex items-center justify-center text-sun">
-              <Activity size={36} />
-            </div>
-          </div>
-
-          {/* Clinical Risk Level */}
-          <div className="rounded-2xl border border-clay bg-surface p-6 shadow-card flex items-center justify-between">
-            <div>
-              <p className="text-xs font-bold uppercase text-cream/70">
-                {t("analytics:riskLevel")}
-              </p>
-              <div className="flex items-center gap-2 mt-2">
-                <span
-                  className={`px-3 py-1 rounded-full text-base font-extrabold uppercase ${
-                    riskLevel === "low"
-                      ? "bg-tea-confirm/30 text-tea-confirm border border-tea-confirm"
-                      : riskLevel === "moderate"
-                        ? "bg-sun/30 text-sun border border-sun"
-                        : "bg-fire/30 text-fire border border-fire"
-                  }`}
-                >
-                  {riskLabel}
-                </span>
-              </div>
-              <p className="text-xs text-cream/70 mt-2">
-                Evaluated by Hybrid Neuro-Clinical Engine
-              </p>
-            </div>
-            <div className="size-16 rounded-2xl bg-tea-confirm/15 flex items-center justify-center text-tea-confirm">
-              <ShieldCheck size={36} />
-            </div>
-          </div>
-
-          {/* Patient Adherence Rate */}
-          <div className="rounded-2xl border border-clay bg-surface p-6 shadow-card flex items-center justify-between">
-            <div>
-              <p className="text-xs font-bold uppercase text-cream/70">Model Version</p>
-              <p className="font-display text-2xl font-bold text-cream mt-1">
-                {latestAssessment?.model_version || "v1.2-hybrid-clinical"}
-              </p>
-              <p className="text-xs text-cream/60 mt-2">
-                Last Assessed:{" "}
-                {latestAssessment?.assessment_date
-                  ? new Date(latestAssessment.assessment_date).toLocaleDateString()
-                  : "Today"}
-              </p>
-            </div>
-            <div className="size-16 rounded-2xl bg-fire/15 flex items-center justify-center text-fire">
-              <Sparkles size={36} />
-            </div>
-          </div>
-        </div>
-
-        {/* Charts and Domain Scores */}
-        <div className="grid gap-8 lg:grid-cols-2 mb-8">
-          {/* Domain Breakdown Chart */}
-          <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card">
-            <h2 className="font-display text-2xl font-bold text-cream mb-2">
-              {t("analytics:domainBreakdown")}
-            </h2>
-            <p className="text-cream/70 text-sm mb-6">
-              Assessed across game accuracy, speed, and medication consistency.
+      {/* Top Metric Cards */}
+      <div className="grid gap-6 md:grid-cols-3">
+        {/* Overall Composite Score */}
+        <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 shadow-xl flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#8A99A8]">
+              {t("analytics:cognitiveIndex")}
             </p>
-
-            <div className="h-64 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={domainData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#403833" />
-                  <XAxis dataKey="domain" stroke="#E8E2D9" tick={{ fill: "#E8E2D9" }} />
-                  <YAxis domain={[0, 100]} stroke="#E8E2D9" tick={{ fill: "#E8E2D9" }} />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#1F1C1A",
-                      borderColor: "#403833",
-                      borderRadius: "0.75rem",
-                      color: "#E8E2D9",
-                    }}
-                  />
-                  <Bar dataKey="score" fill="#F0B138" radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            <p className="font-display text-4xl sm:text-5xl font-bold text-[#22C55E] mt-1">
+              {latestAssessment?.overall_score ? `${latestAssessment.overall_score}` : "83.5"}
+              <span className="text-xl text-[#8A99A8] font-sans"> / 100</span>
+            </p>
+            <p className="text-xs text-[#22C55E] font-bold mt-2 flex items-center gap-1">
+              <TrendingUp size={14} /> {t("analytics:stableTrend")}
+            </p>
           </div>
-
-          {/* Clinical Insights & Recommendations */}
-          <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2 text-sun font-bold uppercase text-xs tracking-wider mb-2">
-                <Sparkles size={16} /> Clinical AI Analysis
-              </div>
-              <h2 className="font-display text-2xl font-bold text-cream mb-4">
-                {t("analytics:clinicalInsights")}
-              </h2>
-
-              <div className="space-y-4">
-                <div className="rounded-xl border border-clay bg-ink/70 p-4">
-                  <p className="text-xs font-bold uppercase text-sun mb-1">Key Observation</p>
-                  <p className="text-cream/90 text-sm leading-relaxed">
-                    {latestAssessment?.insights ||
-                      "Short-term recall and daily sequence attention remain stable with consistent medication adherence."}
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-tea-confirm/40 bg-tea-confirm/10 p-4">
-                  <p className="text-xs font-bold uppercase text-tea-confirm mb-1">
-                    Caregiver Recommendation
-                  </p>
-                  <p className="text-cream/90 text-sm leading-relaxed">
-                    {latestAssessment?.recommendations ||
-                      "Continue daily 10-minute Memory Match challenge and maintain regular morning garden walks."}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-clay text-xs text-cream/60 flex items-center justify-between">
-              <span>Secure Clinical Records</span>
-              <span className="text-sun">HIPAA / Data Protected</span>
-            </div>
+          <div className="size-16 rounded-2xl bg-[#22C55E]/15 flex items-center justify-center text-[#22C55E] shadow-sm">
+            <Activity size={32} />
           </div>
         </div>
-      </main>
-    </div>
+
+        {/* Clinical Risk Level */}
+        <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 shadow-xl flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#8A99A8]">
+              {t("analytics:riskLevel")}
+            </p>
+            <div className="flex items-center gap-2 mt-2">
+              <span
+                className={`px-3.5 py-1 rounded-full text-sm font-extrabold uppercase tracking-wide ${
+                  riskLevel === "low"
+                    ? "bg-[#22C55E]/20 text-[#22C55E] border border-[#22C55E]/30"
+                    : riskLevel === "moderate"
+                      ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                      : "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                }`}
+              >
+                {riskLabel}
+              </span>
+            </div>
+            <p className="text-xs text-[#8A99A8] mt-2 font-medium">
+              Evaluated by Hybrid Neuro-Clinical Engine
+            </p>
+          </div>
+          <div className="size-16 rounded-2xl bg-sky-500/15 flex items-center justify-center text-sky-400 shadow-sm">
+            <ShieldCheck size={32} />
+          </div>
+        </div>
+
+        {/* Patient Adherence Rate / Model Version */}
+        <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 shadow-xl flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#8A99A8]">Model Version</p>
+            <p className="font-display text-xl sm:text-2xl font-bold text-[#E8ECEF] mt-1">
+              {latestAssessment?.model_version || "v1.2-hybrid-clinical"}
+            </p>
+            <p className="text-xs text-[#8A99A8] mt-2 font-medium">
+              Last Assessed:{" "}
+              {latestAssessment?.assessment_date
+                ? new Date(latestAssessment.assessment_date).toLocaleDateString()
+                : "Today"}
+            </p>
+          </div>
+          <div className="size-16 rounded-2xl bg-purple-500/15 flex items-center justify-center text-purple-400 shadow-sm">
+            <Sparkles size={32} />
+          </div>
+        </div>
+      </div>
+
+      {/* Charts and Domain Scores */}
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Domain Breakdown Chart */}
+        <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
+          <h2 className="font-display text-2xl font-bold text-[#E8ECEF] mb-2">
+            {t("analytics:domainBreakdown")}
+          </h2>
+          <p className="text-[#8A99A8] text-sm mb-6 font-medium">
+            Assessed across game accuracy, speed, and medication consistency.
+          </p>
+
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={domainData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.08)" vertical={false} />
+                <XAxis dataKey="domain" stroke="#8A99A8" tick={{ fill: "#8A99A8", fontSize: 12, fontWeight: 600 }} />
+                <YAxis domain={[0, 100]} stroke="#8A99A8" tick={{ fill: "#8A99A8", fontSize: 12 }} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#121D2B",
+                    borderColor: "rgba(255, 255, 255, 0.12)",
+                    borderRadius: "1rem",
+                    color: "#E8ECEF",
+                    boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.5)",
+                    fontWeight: 600,
+                  }}
+                />
+                <Bar dataKey="score" fill="#22C55E" radius={[10, 10, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Clinical Insights & Recommendations */}
+        <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-2 text-[#22C55E] font-bold uppercase text-xs tracking-wider mb-2">
+              <Sparkles size={16} /> Clinical AI Analysis
+            </div>
+            <h2 className="font-display text-2xl font-bold text-[#E8ECEF] mb-4">
+              {t("analytics:clinicalInsights")}
+            </h2>
+
+            <div className="space-y-4">
+              <div className="rounded-2xl border border-white/8 bg-[#0A1420]/80 p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-[#22C55E] mb-1">Key Observation</p>
+                <p className="text-[#E8ECEF] text-sm leading-relaxed">
+                  {latestAssessment?.insights ||
+                    "Short-term recall and daily sequence attention remain stable with consistent medication adherence."}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-[#22C55E]/20 bg-[#0A1420]/80 p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-sky-400 mb-1">
+                  Caregiver Recommendation
+                </p>
+                <p className="text-[#E8ECEF] text-sm leading-relaxed">
+                  {latestAssessment?.recommendations ||
+                    "Continue daily 10-minute Memory Match challenge and maintain regular morning garden walks."}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-white/10 text-xs text-[#8A99A8] flex items-center justify-between font-semibold">
+            <span>Secure Clinical Records</span>
+            <span className="text-[#22C55E] font-bold">HIPAA / Data Protected</span>
+          </div>
+        </div>
+      </div>
+    </AppShell>
   );
 }

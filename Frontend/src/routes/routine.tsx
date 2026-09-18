@@ -2,30 +2,24 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { CalendarDays, ArrowLeft, Check, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { formatApiError } from "@/api/client";
-import { NavigationHeader } from "@/components/navigation-header";
+import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useTasks } from "@/hooks/use-tasks";
-import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/hooks/use-auth";
 import type { TaskPriority } from "@/types/api";
+import { formatApiError } from "@/api/client";
 
 export const Route = createFileRoute("/routine")({
   head: () => ({
     meta: [
-      { title: "Daily Routine | SmritiSetu" },
+      { title: "Daily Routine & Activities | SmritiSetu" },
       {
         name: "description",
-        content: "Reassuring, structured daily activities and reminders on SmritiSetu.",
+        content: "Track and organize gentle daily routines and healthy habits on SmritiSetu.",
       },
     ],
   }),
@@ -33,30 +27,41 @@ export const Route = createFileRoute("/routine")({
 });
 
 function RoutinePage() {
-  const { user } = useAuth();
+  const { todayTasks, toggleTask, deleteTask, createTask, isLoading } = useTasks();
   const { t } = useLanguage();
-  const { todayTasks, completeTask, createTask, deleteTask, isLoading } = useTasks();
-  const [filter, setFilter] = useState<"all" | "pending" | "completed">("all");
+  const { user } = useAuth();
 
-  // Add Task Modal State
+  const [filter, setFilter] = useState<"all" | "pending" | "completed">("all");
   const [isAddOpen, setIsAddOpen] = useState(false);
+
+  // Form State
   const [title, setTitle] = useState("");
   const [scheduledTime, setScheduledTime] = useState("10:00");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<TaskPriority>("normal");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const filteredTasks = todayTasks.filter((t) => {
-    if (filter === "pending") return t.status === "pending";
-    if (filter === "completed") return t.status === "completed";
+  const filteredTasks = todayTasks.filter((task) => {
+    if (filter === "pending") return task.status !== "completed";
+    if (filter === "completed") return task.status === "completed";
     return true;
   });
 
   const handleToggle = async (taskId: string) => {
     try {
-      await completeTask(taskId);
+      await toggleTask(taskId);
+      toast.success(t("routine:taskUpdated"));
     } catch (err: unknown) {
-      toast.error(formatApiError(err, "Failed to update task"));
+      toast.error(formatApiError(err, "Failed to update activity"));
+    }
+  };
+
+  const handleDelete = async (taskId: string) => {
+    try {
+      await deleteTask(taskId);
+      toast.success(t("routine:taskDeleted"));
+    } catch (err: unknown) {
+      toast.error(formatApiError(err, "Failed to delete task"));
     }
   };
 
@@ -73,74 +78,66 @@ function RoutinePage() {
       await createTask({
         patient_id: user.id,
         title: title.trim(),
-        description: description.trim() || undefined,
         scheduled_time: scheduledTime.length === 5 ? `${scheduledTime}:00` : scheduledTime,
+        description: description.trim() || undefined,
         priority,
         recurrence: "daily",
         start_date: new Date().toISOString().split("T")[0],
       });
-      toast.success(t("common:done"));
+
+      toast.success(t("routine:taskCreated"));
       setIsAddOpen(false);
       setTitle("");
       setDescription("");
+      setScheduledTime("10:00");
+      setPriority("normal");
     } catch (err: unknown) {
-      toast.error(formatApiError(err, "Failed to add activity"));
+      toast.error(formatApiError(err, "Failed to create activity"));
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleDelete = async (taskId: string) => {
-    try {
-      await deleteTask(taskId);
-      toast.success(t("common:done"));
-    } catch (err: unknown) {
-      toast.error(formatApiError(err, "Failed to remove activity"));
-    }
-  };
-
-  const filterLabels: Record<string, string> = {
-    all: t("routine:allTasks"),
+  const filterLabels = {
+    all: t("routine:all"),
     pending: t("routine:pending"),
     completed: t("routine:completed"),
   };
 
-  const priorityLabels: Record<string, string> = {
-    low: "Low",
+  const priorityLabels = {
+    low: t("routine:low"),
     normal: t("routine:normal"),
     high: t("routine:high"),
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <NavigationHeader />
-
-      <main className="flex-1 mx-auto max-w-5xl px-5 py-8 sm:px-8 sm:py-12 w-full">
-        {/* Navigation Breadcrumb */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-          <Button asChild variant="cream" size="touch">
+    <AppShell>
+      <div className="px-4 sm:px-8 py-6 max-w-[1550px] w-full mx-auto space-y-7">
+        {/* Navigation Breadcrumb & Action Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <Button asChild variant="outline" size="default" className="rounded-full bg-[#121D2B] border-white/8 text-[#E8ECEF] hover:bg-[#152335] shadow-sm font-semibold">
             <Link to="/">
-              <ArrowLeft size={20} className="mr-2" /> {t("common:backHome")}
+              <ArrowLeft size={16} className="mr-1.5 text-[#22C55E]" /> {t("common:backHome")}
             </Link>
           </Button>
 
           {/* Add Activity Dialog */}
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
-              <Button variant="cream" size="touch" className="text-base font-extrabold">
-                <Plus size={20} className="mr-2" /> {t("routine:addTask")}
+              <Button variant="default" size="default" className="rounded-full text-sm font-bold shadow-md bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850]">
+                <Plus size={16} className="mr-1.5" /> {t("routine:addTask")}
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-surface border-clay text-cream max-w-md">
+            <DialogContent className="bg-[#121D2B] border border-white/10 text-[#E8ECEF] max-w-md rounded-3xl shadow-2xl">
               <DialogHeader>
-                <DialogTitle className="font-display text-2xl font-bold text-cream">
+                <DialogTitle className="font-serif text-2xl font-bold text-[#E8ECEF]">
                   {t("routine:addTaskDialogTitle")}
                 </DialogTitle>
               </DialogHeader>
 
-              <form onSubmit={handleCreateTask} className="space-y-4 mt-4">
+              <form onSubmit={handleCreateTask} className="space-y-4 mt-3">
                 <div>
-                  <Label htmlFor="task-title" className="text-sm font-bold text-cream">
+                  <Label htmlFor="task-title" className="text-xs font-bold text-[#E8ECEF]">
                     {t("routine:taskTitle")}
                   </Label>
                   <Input
@@ -149,12 +146,12 @@ function RoutinePage() {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g. Afternoon Tea with Family"
-                    className="bg-ink border-clay text-cream mt-1"
+                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] mt-1 rounded-xl"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="task-time" className="text-sm font-bold text-cream">
+                  <Label htmlFor="task-time" className="text-xs font-bold text-[#E8ECEF]">
                     {t("routine:scheduledTime")}
                   </Label>
                   <Input
@@ -163,12 +160,12 @@ function RoutinePage() {
                     required
                     value={scheduledTime}
                     onChange={(e) => setScheduledTime(e.target.value)}
-                    className="bg-ink border-clay text-cream mt-1"
+                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] mt-1 rounded-xl"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="task-desc" className="text-sm font-bold text-cream">
+                  <Label htmlFor="task-desc" className="text-xs font-bold text-[#E8ECEF]">
                     {t("routine:description")}
                   </Label>
                   <Input
@@ -176,12 +173,12 @@ function RoutinePage() {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="e.g. Sit in the balcony garden"
-                    className="bg-ink border-clay text-cream mt-1"
+                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] mt-1 rounded-xl"
                   />
                 </div>
 
                 <div>
-                  <Label className="text-sm font-bold text-cream mb-1 block">
+                  <Label className="text-xs font-bold text-[#E8ECEF] mb-1 block">
                     {t("routine:priority")}
                   </Label>
                   <div className="grid grid-cols-3 gap-2">
@@ -190,10 +187,10 @@ function RoutinePage() {
                         key={p}
                         type="button"
                         onClick={() => setPriority(p)}
-                        className={`py-2 rounded-lg text-xs font-bold uppercase transition ${
+                        className={`py-2 rounded-xl text-xs font-bold uppercase transition cursor-pointer ${
                           priority === p
-                            ? "bg-sun text-ink shadow-sm"
-                            : "bg-ink border border-clay text-cream hover:bg-clay"
+                            ? "bg-[#22C55E] text-[#0A1420] shadow-sm"
+                            : "bg-[#0A1420] border border-white/10 text-[#8A99A8] hover:text-[#E8ECEF]"
                         }`}
                       >
                         {priorityLabels[p] || p}
@@ -202,16 +199,16 @@ function RoutinePage() {
                   </div>
                 </div>
 
-                <div className="pt-4 flex justify-end gap-3">
+                <div className="pt-3 flex justify-end gap-2.5">
                   <Button
                     type="button"
                     variant="ghost"
                     onClick={() => setIsAddOpen(false)}
-                    className="border border-clay text-cream"
+                    className="rounded-full text-[#8A99A8] hover:text-[#E8ECEF]"
                   >
                     {t("common:cancel")}
                   </Button>
-                  <Button type="submit" variant="cream" disabled={isSubmitting}>
+                  <Button type="submit" variant="default" disabled={isSubmitting} className="rounded-full bg-[#22C55E] text-[#0A1420] font-bold hover:bg-[#1ea850]">
                     {isSubmitting ? t("common:loading") : t("routine:saveTask")}
                   </Button>
                 </div>
@@ -220,30 +217,31 @@ function RoutinePage() {
           </Dialog>
         </div>
 
-        {/* Page Title Card */}
-        <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card mb-8">
-          <div className="flex flex-wrap items-center justify-between gap-6">
+        {/* Page Title Glass Banner */}
+        <div className="relative overflow-hidden rounded-3xl border border-white/8 bg-gradient-to-br from-[#13283E] via-[#0F2032] to-[#0A1420] p-6 sm:p-8 shadow-2xl">
+          <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#22C55E]/10 blur-3xl pointer-events-none" />
+          <div className="relative z-10 flex flex-wrap items-center justify-between gap-5">
             <div className="flex items-center gap-4">
-              <span className="flex size-16 items-center justify-center rounded-2xl bg-sun text-ink shadow-sm">
-                <CalendarDays size={36} />
+              <span className="flex size-14 items-center justify-center rounded-2xl bg-[#22C55E] text-[#0A1420] shadow-md shrink-0">
+                <CalendarDays size={30} />
               </span>
               <div>
-                <h1 className="font-display text-3xl sm:text-4xl font-bold text-cream">
+                <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#E8ECEF]">
                   {t("routine:pageTitle")}
                 </h1>
-                <p className="text-cream/80 mt-1">{t("routine:pageSubtitle")}</p>
+                <p className="text-[#8A99A8] text-sm font-medium mt-0.5">{t("routine:pageSubtitle")}</p>
               </div>
             </div>
 
             {/* Filter Buttons */}
-            <div className="flex items-center gap-1.5 bg-ink/70 p-1.5 rounded-xl border border-clay">
+            <div className="flex items-center gap-1.5 bg-[#121D2B] p-1.5 rounded-full border border-white/8 shadow-sm">
               {(["all", "pending", "completed"] as const).map((f) => (
                 <button
                   key={f}
                   type="button"
                   onClick={() => setFilter(f)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-extrabold uppercase tracking-wider transition ${
-                    filter === f ? "bg-sun text-ink shadow-sm" : "text-cream hover:bg-clay"
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
+                    filter === f ? "bg-[#22C55E] text-[#0A1420] shadow-md" : "text-[#8A99A8] hover:text-[#E8ECEF]"
                   }`}
                 >
                   {filterLabels[f] || f}
@@ -254,13 +252,13 @@ function RoutinePage() {
         </div>
 
         {/* Task List */}
-        <div className="space-y-4">
+        <div className="space-y-3.5">
           {isLoading ? (
-            <div className="py-12 text-center text-cream/70 text-lg">{t("common:loading")}</div>
+            <div className="py-12 text-center text-[#8A99A8] text-base">{t("common:loading")}</div>
           ) : filteredTasks.length === 0 ? (
-            <div className="rounded-2xl border border-clay bg-surface p-12 text-center text-cream/70">
-              <CalendarDays size={48} className="mx-auto text-sun/40 mb-4" />
-              <h2 className="font-display text-2xl font-bold text-cream">
+            <div className="rounded-3xl border border-white/8 bg-[#121D2B]/85 p-12 text-center text-[#8A99A8] shadow-md backdrop-blur-md">
+              <CalendarDays size={40} className="mx-auto text-[#22C55E]/40 mb-3" />
+              <h2 className="font-display text-xl font-bold text-[#E8ECEF]">
                 {t("dashboard:noRoutineScheduled")}
               </h2>
             </div>
@@ -270,59 +268,55 @@ function RoutinePage() {
               return (
                 <article
                   key={task.id}
-                  className={`rounded-2xl border-2 p-5 sm:p-6 transition shadow-card flex items-center justify-between gap-4 ${
+                  className={`rounded-2xl border p-4 sm:p-5 transition shadow-md backdrop-blur-md flex items-center justify-between gap-4 ${
                     isDone
-                      ? "border-tea-confirm bg-surface/90 text-cream"
-                      : "border-clay bg-surface text-cream hover:border-sun/60"
+                      ? "border-[#22C55E]/30 bg-[#121D2B]/90 text-[#E8ECEF]"
+                      : "border-white/8 bg-[#121D2B]/85 text-[#E8ECEF] hover:border-white/15"
                   }`}
                 >
                   <button
                     type="button"
                     onClick={() => handleToggle(task.id)}
-                    className="flex items-center gap-4 text-left flex-1 min-w-0"
+                    className="flex items-center gap-3.5 text-left flex-1 min-w-0 cursor-pointer"
                   >
                     <span
-                      className={`flex size-12 shrink-0 items-center justify-center rounded-2xl border-2 transition ${
+                      className={`flex size-10 shrink-0 items-center justify-center rounded-full border transition ${
                         isDone
-                          ? "border-cream bg-cream text-tea-confirm"
-                          : "border-cream/80 text-cream bg-ink"
+                          ? "border-[#22C55E] bg-[#22C55E] text-[#0A1420] shadow-sm"
+                          : "border-white/20 text-transparent bg-[#0A1420] shadow-sm"
                       }`}
                     >
-                      {isDone ? (
-                        <Check size={26} strokeWidth={3} />
-                      ) : (
-                        <span className="size-2 rounded-full bg-cream" />
-                      )}
+                      {isDone && <Check size={16} strokeWidth={3} />}
                     </span>
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2.5">
                         <span
-                          className={`font-display text-2xl font-bold truncate ${
-                            isDone ? "line-through opacity-80" : ""
+                          className={`font-display text-lg sm:text-xl font-bold truncate ${
+                            isDone ? "line-through opacity-70" : ""
                           }`}
                         >
                           {task.title}
                         </span>
                         <span
-                          className={`px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase ${
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                             task.priority === "high"
-                              ? "bg-fire/30 text-fire border border-fire"
+                              ? "bg-[#E85D6B]/15 text-[#E85D6B] border border-[#E85D6B]/30"
                               : task.priority === "low"
-                                ? "bg-clay/50 text-cream/70"
-                                : "bg-sun/20 text-sun border border-sun/40"
+                                ? "bg-white/5 text-[#8A99A8] border border-white/10"
+                                : "bg-[#E0A23B]/15 text-[#E0A23B] border border-[#E0A23B]/30"
                           }`}
                         >
                           {priorityLabels[task.priority] || task.priority}
                         </span>
                       </div>
 
-                      <p className="text-sun font-bold mt-0.5 text-base">
+                      <p className="text-[#22C55E] font-bold mt-0.5 text-xs sm:text-sm">
                         {task.scheduled_time.slice(0, 5)}
                       </p>
 
                       {task.description && (
-                        <p className="text-cream/80 text-sm mt-1 truncate">{task.description}</p>
+                        <p className="text-[#8A99A8] text-xs mt-0.5 truncate">{task.description}</p>
                       )}
                     </div>
                   </button>
@@ -332,10 +326,10 @@ function RoutinePage() {
                     <button
                       type="button"
                       onClick={() => handleDelete(task.id)}
-                      className="size-10 flex items-center justify-center rounded-xl text-cream/60 hover:text-fire hover:bg-ink transition"
+                      className="size-9 flex items-center justify-center rounded-full text-[#8A99A8] hover:text-[#E85D6B] hover:bg-white/5 transition cursor-pointer"
                       title={t("common:delete")}
                     >
-                      <Trash2 size={18} />
+                      <Trash2 size={16} />
                     </button>
                   )}
                 </article>
@@ -343,7 +337,7 @@ function RoutinePage() {
             })
           )}
         </div>
-      </main>
-    </div>
+      </div>
+    </AppShell>
   );
 }

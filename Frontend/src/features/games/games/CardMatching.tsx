@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 
 export type CardMatchingProps = { level: number };
@@ -120,70 +119,64 @@ export default function CardMatching({ level }: CardMatchingProps) {
     }
   };
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((pairCount / Math.max(pairCount, moves)) * 100))}
-          accuracy={Math.min(100, Math.round((pairCount / Math.max(pairCount, moves)) * 100))}
-          durationSeconds={endSecs.current}
-          level={level}
-          gameName="Card Matching"
-          synced={synced}
-          offline={offline}
-          onPlayAgain={initializeGame}
-        />
-      </>
-    );
+  const finalScore = Math.min(100, Math.round((pairCount / Math.max(pairCount, moves || 1)) * 100));
+  const finalAccuracy = finalScore;
+  const finalDuration = endSecs.current || Math.round((Date.now() - startTime.current) / 1000);
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-4 justify-center text-sm font-bold text-cream/80">
-        <span>
-          Moves: <span className="text-sun">{moves}</span>
-        </span>
-        <span>
-          Matched:{" "}
-          <span className="text-tea-confirm">
-            {matches}/{pairCount}
-          </span>
-        </span>
-      </div>
-
-      <div
-        className="grid gap-2"
-        style={{ gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))` }}
-      >
-        {cards.map((card) => (
-          <button
-            key={card.id}
-            type="button"
-            onClick={() => handleCardClick(card.id)}
-            disabled={card.isMatched || flippedCards.length === 2}
-            className={`aspect-square rounded-xl text-2xl sm:text-3xl font-bold transition-all duration-300 border-2 shadow flex items-center justify-center
-              ${
-                card.isMatched
-                  ? "border-tea-confirm bg-tea-confirm/20 opacity-60 scale-95"
-                  : card.isFlipped
-                    ? "border-sun bg-cream text-ink"
-                    : "border-clay bg-ink/70 text-cream hover:border-sun/50 hover:scale-105 active:scale-95"
-              }`}
-            aria-label={card.isFlipped || card.isMatched ? card.value : `Card ${card.id + 1}`}
-          >
-            {card.isFlipped || card.isMatched ? card.value : "✦"}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex justify-center">
-        <button
-          onClick={initializeGame}
-          className="px-5 py-2 rounded-xl border border-clay text-cream/80 text-sm hover:bg-clay transition"
+    <GameShell
+      gameId="card-matching"
+      level={level}
+      stats={[
+        { label: "Moves", value: moves },
+        { label: "Matched", value: `${matches} / ${pairCount}`, highlight: "tea" },
+      ]}
+      instructionHint="Tap cards to flip them and find matching pairs"
+      completed={completed}
+      results={{
+        score: finalScore,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={initializeGame}
+    >
+      <div className="space-y-6">
+        <div
+          className="grid gap-2 overflow-x-auto p-1 max-w-lg mx-auto"
+          style={{ gridTemplateColumns: `repeat(${size}, minmax(44px, 1fr))` }}
         >
-          🔄 New Game
-        </button>
+          {cards.map((card) => (
+            <button
+              key={card.id}
+              type="button"
+              onClick={() => handleCardClick(card.id)}
+              disabled={card.isMatched || flippedCards.length === 2}
+              className={`aspect-square min-w-[44px] min-h-[44px] rounded-xl text-2xl sm:text-3xl font-bold transition-all duration-200 border-2 shadow flex items-center justify-center touch-manipulation select-none
+                ${
+                  card.isMatched
+                    ? "border-tea-confirm bg-tea-confirm/20 opacity-60 scale-95"
+                    : card.isFlipped
+                      ? "border-sun bg-cream text-ink"
+                      : "border-clay bg-ink/70 text-cream hover:border-sun/50 hover:scale-105 active:scale-90 active:border-sun"
+                }`}
+              aria-label={card.isFlipped || card.isMatched ? card.value : `Card ${card.id + 1}`}
+            >
+              {card.isFlipped || card.isMatched ? card.value : "✦"}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex justify-center pt-2">
+          <button
+            onClick={initializeGame}
+            className="min-h-[48px] min-w-[48px] px-6 py-2.5 rounded-xl border border-clay text-cream/90 text-sm font-bold hover:bg-clay active:scale-95 active:bg-clay/50 transition touch-manipulation flex items-center justify-center gap-2 shadow-sm"
+          >
+            <span>🔄 New Deal</span>
+          </button>
+        </div>
       </div>
-    </div>
+    </GameShell>
   );
 }

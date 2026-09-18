@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import WaterJugs from "@/features/games/games/WaterJugs";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/water-jugs")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/water-jugs")({
 
 function WaterJugsPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("water-jugs")!;
-  return (
-    <GameShell game={game} level={level}>
-      <WaterJugs level={level} />
-    </GameShell>
-  );
+  return <WaterJugs level={level} />;
 }

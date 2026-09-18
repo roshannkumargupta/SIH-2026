@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 import { useLanguage } from "@/context/LanguageContext";
 import { getGameWordPool, getGraphemes, scrambleWord } from "../data/wordPools";
@@ -76,7 +75,7 @@ export default function AnagramSolver({ level }: { level: number }) {
           setCompleted(true);
         });
       } else {
-        setTimeout(pick, 700);
+        setTimeout(pick, 900);
       }
     } else {
       setFeedback("✗ Wrong — the answer was: " + word);
@@ -88,88 +87,89 @@ export default function AnagramSolver({ level }: { level: number }) {
     return getGraphemes(scr, shortLang);
   }, [scr, shortLang]);
 
-  if (completed)
-    return (
-      <>
-        <CelebrationAnimation show />
-        <GameResults
-          score={Math.min(100, Math.round((score / target) * 100))}
-          accuracy={Math.min(100, Math.round((score / target) * 100))}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName={t("games:anagramSolverTitle", { defaultValue: "Anagram Solver" })}
-          synced={synced}
-          offline={offline}
-          onPlayAgain={() => {
-            setCompleted(false);
-            setScore(0);
-            saved.current = false;
-            setSynced(false);
-            setOffline(false);
-            sessionStart.current = Date.now();
-            pick();
-          }}
-        />
-      </>
-    );
+  const finalAccuracy = Math.min(100, Math.round((score / target) * 100));
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
+
+  const resetGame = () => {
+    setCompleted(false);
+    setScore(0);
+    saved.current = false;
+    setSynced(false);
+    setOffline(false);
+    sessionStart.current = Date.now();
+    pick();
+  };
 
   return (
-    <div className="space-y-6 text-center">
-      <p className="text-cream/50 text-xs uppercase font-bold">
-        Score: {score}/{target}
-      </p>
-      <p className="text-cream/60 text-sm">Unscramble these letters to form a real word:</p>
-      <div className="flex justify-center gap-2 flex-wrap">
-        {scrambledTiles.map((letter, i) => (
-          <span
-            key={i}
-            className="flex min-w-12 h-12 px-2 items-center justify-center rounded-xl border-2 border-sun bg-sun/10 font-display text-2xl font-black text-sun"
-          >
-            {letter.toUpperCase()}
-          </span>
-        ))}
-      </div>
+    <GameShell
+      gameId="anagram-solver"
+      level={level}
+      score={score}
+      targetScore={target}
+      feedback={feedback}
+      instructionHint="Unscramble these letters to form a real word"
+      completed={completed}
+      results={{
+        score: finalAccuracy,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={resetGame}
+    >
+      <div className="space-y-6 text-center">
+        <div className="flex justify-center gap-2 flex-wrap">
+          {scrambledTiles.map((letter, i) => (
+            <span
+              key={i}
+              className="flex min-w-12 h-12 px-2 items-center justify-center rounded-xl border-2 border-sun bg-sun/10 font-display text-2xl font-black text-sun shadow-sm"
+            >
+              {letter.toUpperCase()}
+            </span>
+          ))}
+        </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") submit();
-          }}
-          className="rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-2xl font-bold py-3 px-4 w-full max-w-xs focus:border-sun focus:outline-none"
-          placeholder="Type or speak answer…"
-          disabled={completed}
-          autoFocus
-        />
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => submit()}
-            disabled={completed}
-            className="px-6 py-3 rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 disabled:opacity-40 transition shadow"
-          >
-            Submit
-          </button>
-          <GameVoiceInputButton
-            onTranscript={(spoken) => {
-              setInput(spoken);
-              submit(spoken);
+        <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") submit();
             }}
+            className="rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-2xl font-bold py-3 px-4 w-full max-w-xs focus:border-sun focus:outline-none"
+            placeholder="Type or speak answer…"
             disabled={completed}
+            autoFocus
           />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => submit()}
+              disabled={completed}
+              className="px-6 py-3 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 active:scale-95 active:opacity-90 disabled:opacity-40 transition shadow-md touch-manipulation"
+            >
+              Submit
+            </button>
+            <GameVoiceInputButton
+              onTranscript={(spoken) => {
+                setInput(spoken);
+                submit(spoken);
+              }}
+              disabled={completed}
+            />
+          </div>
+        </div>
+
+        <div className="pt-2">
+          <button
+            onClick={pick}
+            className="min-h-[44px] min-w-[44px] px-4 py-1.5 text-xs text-cream/50 hover:text-cream/80 active:scale-95 underline transition touch-manipulation"
+          >
+            Skip Word
+          </button>
         </div>
       </div>
-      {feedback && (
-        <p
-          className={`text-sm font-bold ${feedback.startsWith("✓") ? "text-tea-confirm" : "text-fire"}`}
-        >
-          {feedback}
-        </p>
-      )}
-      <button onClick={pick} className="text-xs text-cream/40 underline">
-        Skip
-      </button>
-    </div>
+    </GameShell>
   );
 }

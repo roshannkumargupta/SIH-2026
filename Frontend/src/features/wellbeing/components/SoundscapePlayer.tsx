@@ -119,29 +119,29 @@ export function SoundscapePlayer() {
       />
 
       {/* Main Active Soundscape Showcase Card */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-500/10 via-emerald-500/5 to-teal-500/20 border border-teal-200/50 dark:border-teal-800/40 p-8 shadow-sm backdrop-blur-md">
+      <div className="relative overflow-hidden rounded-3xl bg-[#121D2B] border border-white/8 p-8 sm:p-10 shadow-xl">
         <div className="flex flex-col items-center text-center space-y-6">
-          <div className="w-20 h-20 rounded-full bg-white dark:bg-slate-900 shadow-md flex items-center justify-center border border-teal-100 dark:border-teal-900">
+          <div className="w-20 h-20 rounded-2xl bg-[#22C55E]/15 border border-[#22C55E]/20 shadow-sm flex items-center justify-center text-[#22C55E]">
             {getTrackIcon(activeTrack.theme)}
           </div>
 
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-100/70 dark:bg-teal-900/40 text-teal-800 dark:text-teal-300 text-xs font-medium">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#22C55E]/15 border border-[#22C55E]/25 text-[#22C55E] text-xs font-bold shadow-sm">
               <Sparkles className="w-3.5 h-3.5" />
               <span>{t("dashboard:soundscapeCalmEnv")}</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-[#E8ECEF]">
               {t(activeTrack.titleKey)}
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+            <p className="text-sm sm:text-base text-[#8A99A8] max-w-md mx-auto font-medium">
               {t(activeTrack.descriptionKey)}
             </p>
           </div>
 
           {/* Fallback notification if audio asset is missing */}
           {isCurrentUnavailable && (
-            <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-xl text-amber-800 dark:text-amber-300 text-xs font-medium">
-              <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+            <div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-300 text-xs font-semibold">
+              <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0" />
               <span>{t("dashboard:soundscapeComingSoonDesc")}</span>
             </div>
           )}
@@ -153,11 +153,7 @@ export function SoundscapePlayer() {
               onClick={handleTogglePlay}
               disabled={isCurrentUnavailable}
               size="lg"
-              className={`h-16 w-16 rounded-full shadow-lg transition-transform active:scale-95 ${
-                isPlaying
-                  ? "bg-teal-700 hover:bg-teal-800 text-white"
-                  : "bg-teal-600 hover:bg-teal-700 text-white"
-              }`}
+              className="h-16 w-16 rounded-full shadow-lg transition-transform active:scale-95 bg-[#22C55E] hover:bg-[#1ea850] text-[#0A1420] shadow-[#22C55E]/20"
               aria-label={
                 isPlaying ? t("dashboard:soundscapePause") : t("dashboard:soundscapePlay")
               }
@@ -172,7 +168,7 @@ export function SoundscapePlayer() {
               variant="ghost"
               size="icon"
               onClick={toggleMute}
-              className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              className="text-[#8A99A8] hover:text-[#E8ECEF] rounded-full"
               aria-label={isMuted ? "Unmute" : "Mute"}
             >
               {isMuted || volume === 0 ? (
@@ -195,7 +191,7 @@ export function SoundscapePlayer() {
 
       {/* Track Picker Grid */}
       <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+        <h3 className="text-lg font-bold text-[#E8ECEF]">
           {t("dashboard:soundscapeSelectAtmosphere")}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -208,36 +204,36 @@ export function SoundscapePlayer() {
                 key={track.id}
                 type="button"
                 onClick={() => handleSelectTrack(track)}
-                className={`flex items-start gap-4 p-4 rounded-2xl border text-left transition-all ${
+                className={`flex items-start gap-4 p-4 rounded-3xl border text-left transition-all ${
                   isSelected
-                    ? "bg-white dark:bg-slate-800 border-teal-500 shadow-md ring-2 ring-teal-500/20"
-                    : "bg-white/70 dark:bg-slate-900/60 border-slate-200/80 dark:border-slate-800 hover:bg-white dark:hover:bg-slate-800 hover:border-slate-300"
+                    ? "bg-[#121D2B] border-[#22C55E] ring-2 ring-[#22C55E]/30 shadow-lg"
+                    : "bg-[#121D2B]/80 border-white/8 hover:bg-[#121D2B] hover:border-white/15 shadow-md"
                 }`}
               >
                 <div
-                  className={`p-3 rounded-xl ${
-                    isSelected ? "bg-teal-50 dark:bg-teal-950/60" : "bg-slate-100 dark:bg-slate-800"
+                  className={`p-3 rounded-2xl ${
+                    isSelected ? "bg-[#22C55E]/15 text-[#22C55E]" : "bg-[#0A1420] text-[#8A99A8]"
                   }`}
                 >
                   {getTrackIcon(track.theme)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <h4 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white truncate">
+                    <h4 className="font-bold text-sm sm:text-base text-[#E8ECEF] truncate">
                       {t(track.titleKey)}
                     </h4>
                     {isUnavailable ? (
-                      <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                      <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-white/5 text-[#8A99A8]">
                         {t("dashboard:soundscapeComingSoon")}
                       </span>
                     ) : isSelected && isPlaying ? (
-                      <span className="flex h-2 w-2 relative">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                      <span className="flex h-2.5 w-2.5 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                       </span>
                     ) : null}
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5">
+                  <p className="text-xs text-[#8A99A8] line-clamp-2 mt-0.5 font-medium">
                     {t(track.descriptionKey)}
                   </p>
                 </div>

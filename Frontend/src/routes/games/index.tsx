@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { NavigationHeader } from "@/components/navigation-header";
 import { GameDashboard } from "@/features/games/components/GameDashboard";
 
 export const Route = createFileRoute("/games/")({
@@ -18,11 +17,8 @@ export const Route = createFileRoute("/games/")({
 
 function CognitiveGamesPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <NavigationHeader />
-      <main className="flex-1 mx-auto max-w-6xl px-4 py-8 sm:px-8 sm:py-12 w-full">
-        <GameDashboard />
-      </main>
+    <div className="px-4 sm:px-8 py-6 max-w-[1550px] w-full mx-auto">
+      <GameDashboard />
     </div>
   );
 }

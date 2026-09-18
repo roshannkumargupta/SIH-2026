@@ -37,9 +37,10 @@ import { toast } from "sonner";
 import { caretakersApi } from "@/api/caretakers.api";
 import { appointmentsApi } from "@/api/appointments.api";
 import { useAuth } from "@/hooks/use-auth";
+import { useCaregiverRealtime } from "@/hooks/useCaregiverRealtime";
 import { useMemories } from "@/hooks/use-memories";
 import { useMood } from "@/hooks/use-mood";
-import { NavigationHeader } from "@/components/navigation-header";
+import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -87,6 +88,13 @@ function CaregiverPage() {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  // Real-Time WebSocket Alerts & Browser Push Notification Hook
+  const {
+    status: wsStatus,
+    latestAlert,
+    dismissAlert,
+  } = useCaregiverRealtime(user?.id);
 
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<MonitoringTab>("overview");
@@ -484,34 +492,91 @@ function CaregiverPage() {
   const selectedPatientItem = dashboard?.patients?.find((p) => p.patient.id === selectedPatientId);
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <NavigationHeader />
-
-      <main className="flex-1 mx-auto max-w-6xl px-5 py-8 sm:px-8 sm:py-12 w-full">
+    <AppShell className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto space-y-6">
         {/* Navigation Breadcrumb / Top Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
             {selectedPatientId ? (
-              <Button variant="cream" size="touch" onClick={() => setSelectedPatientId(null)}>
-                <ArrowLeft size={20} className="mr-2" /> All Assigned Patients
+              <Button variant="outline" size="touch" onClick={() => setSelectedPatientId(null)} className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold">
+                <ArrowLeft size={18} className="mr-2 text-[#22C55E]" /> All Assigned Patients
               </Button>
             ) : (
-              <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-tea-confirm/30 text-tea-confirm border border-tea-confirm">
+              <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/25">
                 Caregiver Clinical Monitoring Portal
               </span>
             )}
+
+            {/* Real-time WebSocket Status Pill */}
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#121D2B] border border-white/10 shadow-sm">
+              <span
+                className={`inline-block size-2 rounded-full ${
+                  wsStatus === "connected"
+                    ? "bg-[#22C55E] animate-pulse"
+                    : wsStatus === "connecting"
+                      ? "bg-amber-400 animate-ping"
+                      : "bg-[#8A99A8]/40"
+                }`}
+              />
+              <span className="text-[#8A99A8] text-[11px] font-medium">
+                {wsStatus === "connected"
+                  ? "Live Real-Time Alerts"
+                  : wsStatus === "connecting"
+                    ? "Connecting Feed…"
+                    : "Offline"}
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
             <Button
-              variant="cream"
               size="touch"
               onClick={() => navigate({ to: "/caregiver/add-patient" })}
+              className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-bold shadow-sm"
             >
               <UserPlus size={18} className="mr-2" /> Add / Connect Patient
             </Button>
           </div>
         </div>
+
+        {/* Real-time High-Priority Alert Banner */}
+        {latestAlert && (
+          <div className="mb-8 rounded-3xl border border-rose-500/20 bg-rose-500/10 p-4 sm:p-5 text-[#E8ECEF] flex items-start justify-between gap-4 shadow-xl backdrop-blur-md animate-in fade-in slide-in-from-top duration-300">
+            <div className="flex items-start gap-3.5">
+              <span className="flex size-10 items-center justify-center rounded-2xl bg-rose-600 text-white shrink-0 shadow-sm mt-0.5">
+                <ShieldAlert size={22} />
+              </span>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h3 className="font-bold text-base text-rose-300">{latestAlert.title}</h3>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                    {latestAlert.priority} REAL-TIME ALERT
+                  </span>
+                </div>
+                <p className="text-sm text-[#E8ECEF]/80 mt-1">{latestAlert.message}</p>
+                <div className="text-xs text-[#8A99A8] mt-2 flex flex-wrap items-center gap-3 font-medium">
+                  <span>Category: {latestAlert.type}</span>
+                  {latestAlert.scheduled_for && (
+                    <span>
+                      · Scheduled:{" "}
+                      {new Date(latestAlert.scheduled_for).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full border-rose-500/30 bg-[#121D2B] text-rose-300 hover:bg-rose-500/10 shrink-0 font-semibold"
+              onClick={dismissAlert}
+            >
+              Dismiss
+            </Button>
+          </div>
+        )}
 
         {/* ============================================================ */}
         {/* VIEW A: LIST OF ASSIGNED PATIENTS (WHEN NONE SELECTED)       */}
@@ -519,16 +584,16 @@ function CaregiverPage() {
         {!selectedPatientId ? (
           <div className="space-y-8">
             {/* Caregiver Portal Hero Header */}
-            <div className="rounded-2xl border border-clay bg-surface p-6 sm:p-8 shadow-card">
+            <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
               <div className="flex items-center gap-4">
-                <span className="flex size-16 items-center justify-center rounded-2xl bg-sun text-ink shadow-sm">
-                  <Users size={36} />
+                <span className="flex size-16 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] shadow-inner">
+                  <Users size={34} />
                 </span>
                 <div>
-                  <h1 className="font-display text-3xl sm:text-4xl font-bold text-cream">
+                  <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#E8ECEF]">
                     Caregiver Companion Hub
                   </h1>
-                  <p className="text-cream/80 mt-1">
+                  <p className="text-[#8A99A8] mt-1 font-medium">
                     Logged in as {user?.name || "Caregiver"} · Monitoring real-time patient care.
                   </p>
                 </div>
@@ -538,36 +603,36 @@ function CaregiverPage() {
             {/* Assigned Patients Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold uppercase text-sun tracking-wider">
+                <h2 className="text-lg font-bold uppercase text-[#22C55E] tracking-wider">
                   Assigned Patients ({dashboard?.total_patients ?? 0})
                 </h2>
               </div>
 
               {isDashLoading ? (
-                <div className="py-16 text-center text-cream/70 text-lg">
+                <div className="py-16 text-center text-[#8A99A8] text-lg font-medium">
                   Loading assigned patients from database…
                 </div>
               ) : isDashError ? (
-                <div className="rounded-2xl border border-fire/50 bg-fire/15 p-8 text-center text-cream">
+                <div className="rounded-3xl border border-rose-500/20 bg-rose-500/10 p-8 text-center text-rose-300 shadow-xl">
                   <p className="text-lg font-bold">Unable to load caregiver dashboard</p>
                   <p className="text-sm opacity-80 mt-1 mb-4">{formatApiError(dashError)}</p>
-                  <Button variant="cream" onClick={() => refetchDashboard()}>
+                  <Button onClick={() => refetchDashboard()} className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-bold shadow-sm">
                     Retry
                   </Button>
                 </div>
               ) : !dashboard?.patients || dashboard.patients.length === 0 ? (
-                <div className="rounded-2xl border border-clay bg-surface p-12 text-center text-cream/70">
-                  <Users size={48} className="mx-auto text-sun/40 mb-4" />
-                  <p className="text-2xl font-bold text-cream">
+                <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-12 text-center text-[#8A99A8] shadow-xl">
+                  <Users size={48} className="mx-auto text-[#22C55E]/40 mb-4" />
+                  <p className="text-2xl font-bold text-[#E8ECEF]">
                     No assigned patients connected yet
                   </p>
-                  <p className="text-sm text-cream/60 mt-2 mb-6">
+                  <p className="text-sm text-[#8A99A8] mt-2 mb-6 font-medium">
                     Connect an existing patient or create a new patient account to start monitoring.
                   </p>
                   <Button
-                    variant="cream"
                     size="touch"
                     onClick={() => navigate({ to: "/caregiver/add-patient" })}
+                    className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-bold shadow-sm"
                   >
                     <UserPlus size={18} className="mr-2" /> Add or Connect Patient
                   </Button>
@@ -577,27 +642,27 @@ function CaregiverPage() {
                   {dashboard.patients.map((item) => (
                     <article
                       key={item.patient.id}
-                      className="rounded-2xl border border-clay bg-surface p-6 shadow-card hover:border-sun/60 transition flex flex-col justify-between"
+                      className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 shadow-xl hover:border-[#22C55E]/40 transition flex flex-col justify-between"
                     >
                       <div>
-                        <div className="flex items-start justify-between gap-4 pb-4 border-b border-clay/50">
+                        <div className="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
                           <div className="flex items-center gap-3">
-                            <span className="flex size-14 items-center justify-center rounded-2xl bg-fire text-ink font-display text-2xl font-bold">
+                            <span className="flex size-14 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] font-display text-2xl font-bold shadow-sm">
                               {item.patient.name.charAt(0)}
                             </span>
                             <div>
-                              <h3 className="font-display text-2xl font-bold text-cream">
+                              <h3 className="font-display text-2xl font-bold text-[#E8ECEF]">
                                 {item.patient.name}
                               </h3>
-                              <p className="text-xs text-cream/70 mt-0.5">{item.patient.email}</p>
+                              <p className="text-xs text-[#8A99A8] mt-0.5 font-medium">{item.patient.email}</p>
                             </div>
                           </div>
 
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
                               item.risk_level === "low"
-                                ? "bg-tea-confirm/30 text-tea-confirm border border-tea-confirm"
-                                : "bg-sun/30 text-sun border border-sun"
+                                ? "bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/25"
+                                : "bg-amber-500/15 text-amber-300 border border-amber-500/25"
                             }`}
                           >
                             Risk: {item.risk_level}
@@ -606,29 +671,29 @@ function CaregiverPage() {
 
                         {/* Metrics Grid */}
                         <div className="grid grid-cols-3 gap-2 mt-4 text-center">
-                          <div className="rounded-xl border border-clay bg-ink/70 p-3">
-                            <p className="text-[11px] font-bold uppercase text-sun">Cognitive</p>
-                            <p className="font-display text-xl font-bold text-cream mt-1">
+                          <div className="rounded-2xl border border-white/8 bg-[#0A1420] p-3">
+                            <p className="text-[11px] font-bold uppercase text-[#22C55E]">Cognitive</p>
+                            <p className="font-display text-xl font-bold text-[#E8ECEF] mt-1">
                               {item.latest_cognitive_score != null
                                 ? `${item.latest_cognitive_score.toFixed(0)}%`
                                 : "N/A"}
                             </p>
                           </div>
 
-                          <div className="rounded-xl border border-clay bg-ink/70 p-3">
-                            <p className="text-[11px] font-bold uppercase text-fire">
+                          <div className="rounded-2xl border border-white/8 bg-[#0A1420] p-3">
+                            <p className="text-[11px] font-bold uppercase text-rose-400">
                               Pending Meds
                             </p>
-                            <p className="font-display text-xl font-bold text-cream mt-1">
+                            <p className="font-display text-xl font-bold text-[#E8ECEF] mt-1">
                               {item.pending_medication_count}
                             </p>
                           </div>
 
-                          <div className="rounded-xl border border-clay bg-ink/70 p-3">
-                            <p className="text-[11px] font-bold uppercase text-tea-confirm">
+                          <div className="rounded-2xl border border-white/8 bg-[#0A1420] p-3">
+                            <p className="text-[11px] font-bold uppercase text-[#22C55E]">
                               Pending Tasks
                             </p>
-                            <p className="font-display text-xl font-bold text-cream mt-1">
+                            <p className="font-display text-xl font-bold text-[#E8ECEF] mt-1">
                               {item.pending_task_count}
                             </p>
                           </div>
@@ -636,11 +701,10 @@ function CaregiverPage() {
                       </div>
 
                       {/* Open Patient Monitoring View Button */}
-                      <div className="mt-6 pt-4 border-t border-clay/40 flex justify-end">
+                      <div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
                         <Button
-                          variant="cream"
                           size="touch"
-                          className="w-full text-base font-extrabold"
+                          className="w-full text-base font-bold rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-sm"
                           onClick={() => {
                             setSelectedPatientId(item.patient.id);
                             setActiveTab("overview");
@@ -661,29 +725,29 @@ function CaregiverPage() {
           /* ============================================================ */
           <div className="space-y-6">
             {/* ───────── Patient Profile Header Card ───────── */}
-            <div className="rounded-2xl border border-sun/60 bg-surface p-6 sm:p-8 shadow-card">
-              <div className="flex flex-wrap items-start justify-between gap-6 pb-6 border-b border-clay/60">
+            <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
+              <div className="flex flex-wrap items-start justify-between gap-6 pb-6 border-b border-white/10">
                 <div className="flex items-center gap-4">
-                  <span className="flex size-16 items-center justify-center rounded-2xl bg-fire text-ink font-display text-3xl font-bold shadow-sm">
+                  <span className="flex size-16 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] font-display text-3xl font-bold shadow-inner">
                     {patientDetail?.patient.name?.charAt(0) ||
                       selectedPatientItem?.patient.name?.charAt(0) ||
                       "P"}
                   </span>
                   <div>
                     <div className="flex items-center gap-3 flex-wrap">
-                      <h1 className="font-display text-3xl sm:text-4xl font-bold text-cream">
+                      <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#E8ECEF]">
                         {patientDetail?.patient.name || selectedPatientItem?.patient.name}
                       </h1>
-                      <span className="px-3 py-0.5 rounded-full text-xs font-bold uppercase bg-tea-confirm/30 text-tea-confirm border border-tea-confirm">
+                      <span className="px-3 py-0.5 rounded-full text-xs font-bold uppercase bg-emerald-50 text-emerald-800 border border-emerald-200">
                         Active Patient
                       </span>
                       {analytics?.risk_level && (
-                        <span className="px-3 py-0.5 rounded-full text-xs font-bold uppercase bg-sun/30 text-sun border border-sun">
+                        <span className="px-3 py-0.5 rounded-full text-xs font-bold uppercase bg-amber-50 text-amber-800 border border-amber-200">
                           Risk: {analytics.risk_level}
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-cream/70 mt-1">
+                    <p className="text-sm text-muted-foreground mt-1 font-medium">
                       {patientDetail?.patient.email || selectedPatientItem?.patient.email} · Role:
                       Patient
                     </p>
@@ -691,45 +755,45 @@ function CaregiverPage() {
                 </div>
 
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   onClick={() => setSelectedPatientId(null)}
-                  className="border border-clay text-cream hover:bg-clay"
+                  className="rounded-full border-border/60 text-muted-foreground hover:text-foreground bg-white"
                 >
-                  <ArrowLeft size={16} className="mr-2" /> Back to All Patients
+                  <ArrowLeft size={16} className="mr-2 text-primary" /> Back to All Patients
                 </Button>
               </div>
 
               {/* Patient Basic Demographics Bar */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 text-sm">
-                <div className="flex items-center gap-2 text-cream/80">
-                  <Calendar size={16} className="text-sun shrink-0" />
+                <div className="flex items-center gap-2 text-muted-foreground font-medium">
+                  <Calendar size={16} className="text-primary shrink-0" />
                   <span>
-                    <strong className="text-cream">Age/DOB:</strong>{" "}
+                    <strong className="text-foreground">Age/DOB:</strong>{" "}
                     {patientDetail?.profile?.date_of_birth || "Not specified"}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-cream/80">
-                  <Languages size={16} className="text-sun shrink-0" />
+                <div className="flex items-center gap-2 text-muted-foreground font-medium">
+                  <Languages size={16} className="text-primary shrink-0" />
                   <span>
-                    <strong className="text-cream">Language:</strong>{" "}
+                    <strong className="text-foreground">Language:</strong>{" "}
                     {patientDetail?.profile?.preferred_language || "Hindi"}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-cream/80">
-                  <Phone size={16} className="text-sun shrink-0" />
+                <div className="flex items-center gap-2 text-muted-foreground font-medium">
+                  <Phone size={16} className="text-primary shrink-0" />
                   <span>
-                    <strong className="text-cream">Emergency:</strong>{" "}
+                    <strong className="text-foreground">Emergency:</strong>{" "}
                     {patientDetail?.profile?.emergency_contact_phone || "Not specified"}
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2 text-cream/80">
-                  <Stethoscope size={16} className="text-sun shrink-0" />
+                <div className="flex items-center gap-2 text-muted-foreground font-medium">
+                  <Stethoscope size={16} className="text-primary shrink-0" />
                   <span>
-                    <strong className="text-cream">Doctor:</strong>{" "}
+                    <strong className="text-foreground">Doctor:</strong>{" "}
                     {patientDetail?.profile?.doctor_name || "(Optional) Not assigned"}
                   </span>
                 </div>
@@ -737,30 +801,30 @@ function CaregiverPage() {
 
               {/* Warm Suggestive Emotional Distress Banner */}
               {moodTrend?.distress_flagged && (
-                <div className="mt-6 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-5 shadow-card flex items-start gap-4 text-cream">
-                  <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">
+                <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-50/80 p-5 shadow-sm flex items-start gap-4 text-foreground">
+                  <div className="p-2.5 rounded-2xl bg-amber-100 text-amber-800 shrink-0 mt-0.5 shadow-sm">
                     <Heart size={22} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-base sm:text-lg font-bold text-amber-300">
+                      <h3 className="text-base sm:text-lg font-bold text-amber-900">
                         Loving Attention Recommended
                       </h3>
-                      <span className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      <span className="text-[10px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
                         Self-Reported
                       </span>
                     </div>
-                    <p className="text-sm text-cream/90 mt-1 leading-relaxed">
+                    <p className="text-sm text-foreground/85 mt-1 leading-relaxed">
                       Recent daily check-ins suggest your loved one may be feeling confused or
                       anxious. It may help to call, visit, or share a calm, reassuring conversation
                       together.
                     </p>
                     {moodTrend.distress_reason && (
-                      <p className="text-xs text-cream/60 mt-1 italic">
+                      <p className="text-xs text-muted-foreground mt-1 italic font-medium">
                         Recent pattern: {moodTrend.distress_reason}
                       </p>
                     )}
-                    <p className="text-[11px] text-cream/50 mt-1.5">
+                    <p className="text-[11px] text-muted-foreground mt-1.5">
                       These observations reflect self-reported check-ins to support your caregiving,
                       not clinical or diagnostic assessments.
                     </p>
@@ -769,7 +833,7 @@ function CaregiverPage() {
               )}
 
               {/* ───────── Caregiver Navigation Tabs ───────── */}
-              <div className="flex items-center gap-2 overflow-x-auto mt-6 pt-5 border-t border-clay/60 scrollbar-none">
+              <div className="flex items-center gap-1.5 overflow-x-auto mt-6 pt-5 border-t border-border/30 scrollbar-none">
                 {(
                   [
                     { id: "overview", label: "Care Overview", icon: Heart },
@@ -793,13 +857,13 @@ function CaregiverPage() {
                       key={tab.id}
                       type="button"
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition whitespace-nowrap ${
+                      className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold transition-all whitespace-nowrap ${
                         activeTab === tab.id
-                          ? "bg-sun text-ink shadow-sm"
-                          : "text-cream hover:bg-clay"
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground hover:bg-white/60"
                       }`}
                     >
-                      <Icon size={16} /> {tab.label}
+                      <Icon size={15} /> {tab.label}
                     </button>
                   );
                 })}
@@ -811,60 +875,60 @@ function CaregiverPage() {
               <div className="space-y-6">
                 {/* 4 Vital Stat Cards */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="rounded-2xl border border-clay bg-surface p-5 shadow-card">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase text-sun">
+                  <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-5 shadow-xl">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#22C55E]">
                       <Brain size={18} /> Cognitive Score
                     </div>
-                    <p className="font-display text-3xl font-bold text-cream mt-2">
+                    <p className="font-display text-3xl font-bold text-[#E8ECEF] mt-2">
                       {analytics?.overall_score != null
                         ? `${analytics.overall_score.toFixed(1)}/100`
                         : "75.0/100"}
                     </p>
-                    <p className="text-xs text-cream/60 mt-1 capitalize">
+                    <p className="text-xs text-[#8A99A8] mt-1 capitalize font-medium">
                       Trend: {analytics?.trend || "stable"}
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-clay bg-surface p-5 shadow-card">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase text-fire">
+                  <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-5 shadow-xl">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-400">
                       <Pill size={18} /> Med Adherence
                     </div>
-                    <p className="font-display text-3xl font-bold text-cream mt-2">
+                    <p className="font-display text-3xl font-bold text-[#E8ECEF] mt-2">
                       {analytics?.medication_adherence_rate != null
                         ? `${analytics.medication_adherence_rate.toFixed(1)}%`
                         : "100%"}
                     </p>
-                    <p className="text-xs text-cream/60 mt-1">
+                    <p className="text-xs text-[#8A99A8] mt-1 font-medium">
                       {analytics?.medications_taken ?? 0} of{" "}
                       {analytics?.total_medications_scheduled ?? medications.length} taken
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-clay bg-surface p-5 shadow-card">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase text-tea-confirm">
+                  <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-5 shadow-xl">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#22C55E]">
                       <CheckSquare size={18} /> Task Completion
                     </div>
-                    <p className="font-display text-3xl font-bold text-cream mt-2">
+                    <p className="font-display text-3xl font-bold text-[#E8ECEF] mt-2">
                       {analytics?.task_completion_rate != null
                         ? `${analytics.task_completion_rate.toFixed(1)}%`
                         : "0%"}
                     </p>
-                    <p className="text-xs text-cream/60 mt-1">
+                    <p className="text-xs text-[#8A99A8] mt-1 font-medium">
                       {analytics?.completed_tasks ?? 0} of {analytics?.total_tasks ?? tasks.length}{" "}
                       done
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-clay bg-surface p-5 shadow-card">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase text-sun">
+                  <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-5 shadow-xl">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#22C55E]">
                       <TrendingUp size={18} /> Avg Game Accuracy
                     </div>
-                    <p className="font-display text-3xl font-bold text-cream mt-2">
+                    <p className="font-display text-3xl font-bold text-[#E8ECEF] mt-2">
                       {analytics?.average_game_accuracy != null
                         ? `${analytics.average_game_accuracy.toFixed(1)}%`
                         : "0%"}
                     </p>
-                    <p className="text-xs text-cream/60 mt-1">
+                    <p className="text-xs text-[#8A99A8] mt-1 font-medium">
                       {analytics?.total_games_played ?? 0} sessions audited
                     </p>
                   </div>
@@ -872,46 +936,46 @@ function CaregiverPage() {
 
                 {/* Patient Care Details & Contacts Grid */}
                 <div className="grid gap-6 md:grid-cols-2">
-                  <div className="rounded-2xl border border-clay bg-surface p-6 shadow-card">
-                    <h3 className="font-display text-xl font-bold text-cream mb-4 flex items-center gap-2">
-                      <Heart size={20} className="text-fire" /> Caregiving Contacts & Support
+                  <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 shadow-xl">
+                    <h3 className="font-display text-xl font-bold text-[#E8ECEF] mb-4 flex items-center gap-2">
+                      <Heart size={20} className="text-rose-400" /> Caregiving Contacts & Support
                     </h3>
                     <div className="space-y-3 text-sm">
-                      <div className="p-3 rounded-xl bg-ink/70 border border-clay flex justify-between items-center">
+                      <div className="p-3.5 rounded-2xl bg-[#0A1420] border border-white/8 flex justify-between items-center shadow-sm">
                         <div>
-                          <p className="text-xs text-cream/60">Emergency Contact</p>
-                          <p className="font-bold text-cream">
+                          <p className="text-xs text-[#8A99A8] font-medium">Emergency Contact</p>
+                          <p className="font-bold text-[#E8ECEF]">
                             {patientDetail?.profile?.emergency_contact_name || "Primary Contact"}
                           </p>
                         </div>
-                        <p className="text-sun font-bold">
+                        <p className="text-[#22C55E] font-bold">
                           {patientDetail?.profile?.emergency_contact_phone || "Not set"}
                         </p>
                       </div>
 
-                      <div className="p-3 rounded-xl bg-ink/70 border border-clay flex justify-between items-center">
+                      <div className="p-3.5 rounded-2xl bg-[#0A1420] border border-white/8 flex justify-between items-center shadow-sm">
                         <div>
-                          <p className="text-xs text-cream/60">Residential Address</p>
-                          <p className="font-bold text-cream">
+                          <p className="text-xs text-[#8A99A8] font-medium">Residential Address</p>
+                          <p className="font-bold text-[#E8ECEF]">
                             {patientDetail?.profile?.address || "Address on record"}
                           </p>
                         </div>
-                        <MapPin size={18} className="text-cream/50" />
+                        <MapPin size={18} className="text-[#8A99A8]" />
                       </div>
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-clay bg-surface p-6 shadow-card">
-                    <h3 className="font-display text-xl font-bold text-cream mb-4 flex items-center gap-2">
-                      <Stethoscope size={20} className="text-sun" /> Medical Supervision (Optional)
+                  <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 shadow-xl">
+                    <h3 className="font-display text-xl font-bold text-[#E8ECEF] mb-4 flex items-center gap-2">
+                      <Stethoscope size={20} className="text-[#22C55E]" /> Medical Supervision (Optional)
                     </h3>
                     <div className="space-y-3 text-sm">
-                      <div className="p-3 rounded-xl bg-ink/70 border border-clay">
-                        <p className="text-xs text-cream/60">Attending Physician</p>
-                        <p className="font-bold text-cream mt-0.5">
+                      <div className="p-3.5 rounded-2xl bg-[#0A1420] border border-white/8 shadow-sm">
+                        <p className="text-xs text-[#8A99A8] font-medium">Attending Physician</p>
+                        <p className="font-bold text-[#E8ECEF] mt-0.5">
                           {patientDetail?.profile?.doctor_name || "No doctor assigned (Optional)"}
                         </p>
-                        <p className="text-xs text-cream/70 mt-1">
+                        <p className="text-xs text-[#8A99A8] mt-1 font-medium">
                           Caregivers can add/update scheduled medications and routine tasks under
                           patient care.
                         </p>
@@ -921,20 +985,20 @@ function CaregiverPage() {
                 </div>
 
                 {/* 🌈 Recent Mood & Emotional Wellbeing Trend */}
-                <div className="rounded-2xl border border-clay bg-surface p-6 shadow-card">
+                <div className="rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md p-6 shadow-card">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                     <div>
-                      <h3 className="font-display text-xl font-bold text-cream flex items-center gap-2">
-                        <Heart size={20} className="text-teal-400" /> Recent Emotional Wellbeing &
+                      <h3 className="font-display text-xl font-bold text-foreground flex items-center gap-2">
+                        <Heart size={20} className="text-primary" /> Recent Emotional Wellbeing &
                         Mood Trend
                       </h3>
-                      <p className="text-xs text-cream/60 mt-0.5">
+                      <p className="text-xs text-muted-foreground mt-0.5 font-medium">
                         Self-reported check-ins from the last 7 days. Gentle guidance for loving
                         companionship.
                       </p>
                     </div>
                     {moodTrend && (
-                      <span className="text-xs font-bold text-cream/70 px-3 py-1 rounded-full bg-ink border border-clay">
+                      <span className="text-xs font-bold text-primary px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100">
                         {moodTrend.total_checkins} total{" "}
                         {moodTrend.total_checkins === 1 ? "check-in" : "check-ins"}
                       </span>
@@ -942,13 +1006,13 @@ function CaregiverPage() {
                   </div>
 
                   {isMoodLoading ? (
-                    <p className="text-sm text-cream/60 py-6 text-center">Loading mood trends...</p>
+                    <p className="text-sm text-muted-foreground py-6 text-center">Loading mood trends...</p>
                   ) : !moodTrend || moodTrend.total_checkins === 0 ? (
-                    <div className="p-6 rounded-xl bg-ink/50 border border-clay/60 text-center">
-                      <p className="text-sm text-cream/70 font-medium">
+                    <div className="p-6 rounded-2xl bg-white/60 border border-border/40 text-center shadow-sm">
+                      <p className="text-sm text-muted-foreground font-medium">
                         No mood check-ins recorded yet
                       </p>
-                      <p className="text-xs text-cream/50 mt-1">
+                      <p className="text-xs text-muted-foreground/80 mt-1">
                         When your loved one taps their feeling on their home screen, their
                         self-reports will appear here to help you stay in tune with their daily
                         emotional comfort.
@@ -964,39 +1028,39 @@ function CaregiverPage() {
                             emoji: "😊",
                             label: "Happy",
                             count: moodTrend.mood_counts?.happy || 0,
-                            color: "text-amber-300 bg-amber-500/10 border-amber-500/30",
+                            color: "text-amber-900 bg-amber-50 border-amber-200",
                           },
                           {
                             mood: "calm",
                             emoji: "😌",
                             label: "Calm",
                             count: moodTrend.mood_counts?.calm || 0,
-                            color: "text-teal-300 bg-teal-500/10 border-teal-500/30",
+                            color: "text-emerald-900 bg-emerald-50 border-emerald-200",
                           },
                           {
                             mood: "confused",
                             emoji: "🤔",
                             label: "Confused",
                             count: moodTrend.mood_counts?.confused || 0,
-                            color: "text-indigo-300 bg-indigo-500/10 border-indigo-500/30",
+                            color: "text-purple-900 bg-purple-50 border-purple-200",
                           },
                           {
                             mood: "anxious",
                             emoji: "😟",
                             label: "Anxious",
                             count: moodTrend.mood_counts?.anxious || 0,
-                            color: "text-rose-300 bg-rose-500/10 border-rose-500/30",
+                            color: "text-rose-900 bg-rose-50 border-rose-200",
                           },
                         ].map((m) => (
                           <div
                             key={m.mood}
-                            className={`p-3.5 rounded-xl border ${m.color} flex items-center justify-between`}
+                            className={`p-3.5 rounded-2xl border ${m.color} flex items-center justify-between shadow-sm`}
                           >
                             <div className="flex items-center gap-2">
                               <span className="text-2xl" role="img" aria-hidden="true">
                                 {m.emoji}
                               </span>
-                              <span className="text-sm font-bold text-cream">{m.label}</span>
+                              <span className="text-sm font-bold text-foreground">{m.label}</span>
                             </div>
                             <span className="text-xl font-display font-extrabold">{m.count}</span>
                           </div>
@@ -1005,8 +1069,8 @@ function CaregiverPage() {
 
                       {/* Recent Check-ins List */}
                       {moodTrend.recent_checkins && moodTrend.recent_checkins.length > 0 && (
-                        <div className="space-y-2 pt-2 border-t border-clay/50">
-                          <p className="text-xs font-bold uppercase tracking-wider text-cream/60">
+                        <div className="space-y-2 pt-2 border-t border-border/30">
+                          <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                             Recent Self-Reports
                           </p>
                           <div className="grid gap-2 max-h-48 overflow-y-auto pr-1">
@@ -1021,22 +1085,22 @@ function CaregiverPage() {
                               return (
                                 <div
                                   key={chk.id}
-                                  className="p-3 rounded-xl bg-ink/60 border border-clay/60 flex items-center justify-between gap-3 text-xs"
+                                  className="p-3 rounded-2xl bg-white/80 border border-border/40 flex items-center justify-between gap-3 text-xs shadow-sm"
                                 >
                                   <div className="flex items-center gap-2.5 min-w-0">
                                     <span className="text-lg">{moodEmoji[chk.mood] || "💭"}</span>
                                     <div className="truncate">
-                                      <span className="font-bold text-cream capitalize mr-2">
+                                      <span className="font-bold text-foreground capitalize mr-2">
                                         {chk.mood}
                                       </span>
                                       {chk.note && (
-                                        <span className="text-cream/70 italic truncate">
+                                        <span className="text-muted-foreground italic truncate">
                                           "{chk.note}"
                                         </span>
                                       )}
                                     </div>
                                   </div>
-                                  <span className="text-cream/50 shrink-0">
+                                  <span className="text-muted-foreground shrink-0 font-medium">
                                     {date.toLocaleDateString("en-IN", {
                                       month: "short",
                                       day: "numeric",
@@ -1053,7 +1117,7 @@ function CaregiverPage() {
                         </div>
                       )}
 
-                      <p className="text-[11px] text-cream/50 italic">
+                      <p className="text-[11px] text-muted-foreground italic font-medium">
                         Reminder: Self-reported moods provide personal context to support
                         companionship. They are not clinical diagnostic evaluations.
                       </p>
@@ -1068,8 +1132,8 @@ function CaregiverPage() {
               <div className="space-y-6">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-xl font-bold text-cream">Scheduled Medications</h2>
-                    <p className="text-xs text-cream/70">
+                    <h2 className="text-xl font-bold text-foreground">Scheduled Medications</h2>
+                    <p className="text-xs text-muted-foreground font-medium">
                       Medications configured for this patient. Changes reflect immediately in
                       patient’s profile.
                     </p>
@@ -1078,20 +1142,20 @@ function CaregiverPage() {
                   {/* Add Medicine Dialog */}
                   <Dialog open={isAddMedOpen} onOpenChange={setIsAddMedOpen}>
                     <DialogTrigger asChild>
-                      <Button variant="cream" size="touch" className="font-extrabold">
+                      <Button size="touch" className="font-bold rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm">
                         <Plus size={18} className="mr-2" /> ADD MEDICINE
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-surface border-clay text-cream max-w-md">
+                    <DialogContent className="bg-white/95 backdrop-blur-xl border border-white/80 text-foreground max-w-md rounded-3xl shadow-glass">
                       <DialogHeader>
-                        <DialogTitle className="font-display text-2xl font-bold text-cream">
+                        <DialogTitle className="font-display text-2xl font-bold text-foreground">
                           Add Patient Medication
                         </DialogTitle>
                       </DialogHeader>
 
                       <form onSubmit={handleAddMedicine} className="space-y-4 mt-4">
                         <div>
-                          <Label htmlFor="med-name" className="text-sm font-bold text-cream">
+                          <Label htmlFor="med-name" className="text-sm font-bold text-foreground">
                             Medicine Name
                           </Label>
                           <Input
@@ -1100,12 +1164,12 @@ function CaregiverPage() {
                             value={medName}
                             onChange={(e) => setMedName(e.target.value)}
                             placeholder="e.g. Donepezil / Memantine"
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
-                          <Label htmlFor="med-dosage" className="text-sm font-bold text-cream">
+                          <Label htmlFor="med-dosage" className="text-sm font-bold text-foreground">
                             Dosage
                           </Label>
                           <Input
@@ -1114,12 +1178,12 @@ function CaregiverPage() {
                             value={medDosage}
                             onChange={(e) => setMedDosage(e.target.value)}
                             placeholder="e.g. 5mg - 1 tablet"
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
-                          <Label htmlFor="med-time" className="text-sm font-bold text-cream">
+                          <Label htmlFor="med-time" className="text-sm font-bold text-foreground">
                             Scheduled Time
                           </Label>
                           <Input
@@ -1128,14 +1192,14 @@ function CaregiverPage() {
                             required
                             value={medTime}
                             onChange={(e) => setMedTime(e.target.value)}
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
                           <Label
                             htmlFor="med-instructions"
-                            className="text-sm font-bold text-cream"
+                            className="text-sm font-bold text-foreground"
                           >
                             Instructions / Notes (Optional)
                           </Label>
@@ -1144,20 +1208,20 @@ function CaregiverPage() {
                             value={medInstructions}
                             onChange={(e) => setMedInstructions(e.target.value)}
                             placeholder="e.g. Take with warm water after breakfast"
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div className="pt-4 flex justify-end gap-3">
                           <Button
                             type="button"
-                            variant="ghost"
+                            variant="outline"
                             onClick={() => setIsAddMedOpen(false)}
-                            className="border border-clay text-cream"
+                            className="rounded-full border-border/60 text-muted-foreground hover:text-foreground bg-white"
                           >
                             Cancel
                           </Button>
-                          <Button type="submit" variant="cream" disabled={isSubmittingMed}>
+                          <Button type="submit" disabled={isSubmittingMed} className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold shadow-sm">
                             {isSubmittingMed ? "Saving…" : "Save Medicine"}
                           </Button>
                         </div>
@@ -1168,16 +1232,16 @@ function CaregiverPage() {
 
                 {/* Medicines List */}
                 {isMedsLoading ? (
-                  <div className="py-12 text-center text-cream/70 text-lg">
+                  <div className="py-12 text-center text-muted-foreground text-lg font-medium">
                     Loading scheduled medications…
                   </div>
                 ) : medications.length === 0 ? (
-                  <div className="rounded-2xl border border-clay bg-surface p-12 text-center text-cream/70">
-                    <Pill size={48} className="mx-auto text-sun/40 mb-4" />
-                    <h3 className="font-display text-2xl font-bold text-cream">
+                  <div className="rounded-3xl border border-white/70 bg-white/80 backdrop-blur-md p-12 text-center text-muted-foreground shadow-card">
+                    <Pill size={48} className="mx-auto text-primary/40 mb-4" />
+                    <h3 className="font-display text-2xl font-bold text-foreground">
                       No medications scheduled yet
                     </h3>
-                    <p className="text-cream/70 mt-2">
+                    <p className="text-muted-foreground mt-2">
                       Click "ADD MEDICINE" above to configure a dosage schedule for this patient.
                     </p>
                   </div>
@@ -1188,38 +1252,38 @@ function CaregiverPage() {
                       return (
                         <div
                           key={m.id}
-                          className="rounded-2xl border border-clay bg-surface p-5 shadow-card flex items-center justify-between gap-4"
+                          className="rounded-3xl border border-white/75 bg-white/85 backdrop-blur-md p-5 shadow-card flex items-center justify-between gap-4"
                         >
                           <div className="flex items-start gap-4">
                             <span
-                              className={`flex size-12 shrink-0 items-center justify-center rounded-xl border ${
+                              className={`flex size-12 shrink-0 items-center justify-center rounded-2xl border ${
                                 isTaken
-                                  ? "border-tea-confirm bg-tea-confirm/20 text-tea-confirm"
-                                  : "border-fire bg-fire/20 text-fire"
+                                  ? "border-emerald-200 bg-emerald-100 text-emerald-800"
+                                  : "border-amber-200 bg-amber-100 text-amber-800"
                               }`}
                             >
                               <Pill size={24} />
                             </span>
                             <div>
                               <div className="flex items-center gap-3">
-                                <h4 className="font-display text-xl font-bold text-cream">
+                                <h4 className="font-display text-xl font-bold text-foreground">
                                   {m.medicine_name}
                                 </h4>
                                 <span
-                                  className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase ${
+                                  className={`px-3 py-0.5 rounded-full text-xs font-bold uppercase ${
                                     isTaken
-                                      ? "bg-tea-confirm/30 text-tea-confirm border border-tea-confirm"
-                                      : "bg-fire/30 text-fire border border-fire"
+                                      ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                                      : "bg-amber-50 text-amber-800 border border-amber-200"
                                   }`}
                                 >
                                   {m.status}
                                 </span>
                               </div>
-                              <p className="text-sun font-bold mt-1 text-sm">
+                              <p className="text-primary font-bold mt-1 text-sm">
                                 {m.scheduled_time.slice(0, 5)} · {m.dosage}
                               </p>
                               {m.instructions && (
-                                <p className="text-xs text-cream/80 mt-1">{m.instructions}</p>
+                                <p className="text-xs text-muted-foreground mt-1 font-medium">{m.instructions}</p>
                               )}
                             </div>
                           </div>
@@ -1228,7 +1292,7 @@ function CaregiverPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteMedicine(m.id)}
-                            className="text-cream/60 hover:text-fire hover:bg-ink"
+                            className="rounded-full text-muted-foreground hover:text-destructive hover:bg-white"
                             title="Remove medication"
                           >
                             <Trash2 size={18} />
@@ -1246,8 +1310,8 @@ function CaregiverPage() {
               <div className="space-y-6">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-xl font-bold text-cream">Assigned Daily Tasks</h2>
-                    <p className="text-xs text-cream/70">
+                    <h2 className="text-xl font-bold text-foreground">Assigned Daily Tasks</h2>
+                    <p className="text-xs text-muted-foreground font-medium">
                       Routine activities for this patient. Visible in patient’s daily routine
                       schedule.
                     </p>
@@ -1256,20 +1320,20 @@ function CaregiverPage() {
                   {/* Add Task Dialog */}
                   <Dialog open={isAddTaskOpen} onOpenChange={setIsAddTaskOpen}>
                     <DialogTrigger asChild>
-                      <Button variant="cream" size="touch" className="font-extrabold">
+                      <Button size="touch" className="font-bold rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm">
                         <Plus size={18} className="mr-2" /> ADD TASK
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-surface border-clay text-cream max-w-md">
+                    <DialogContent className="bg-white/95 backdrop-blur-xl border border-white/80 text-foreground max-w-md rounded-3xl shadow-glass">
                       <DialogHeader>
-                        <DialogTitle className="font-display text-2xl font-bold text-cream">
+                        <DialogTitle className="font-display text-2xl font-bold text-foreground">
                           Add Patient Routine Task
                         </DialogTitle>
                       </DialogHeader>
 
                       <form onSubmit={handleAddTask} className="space-y-4 mt-4">
                         <div>
-                          <Label htmlFor="task-title" className="text-sm font-bold text-cream">
+                          <Label htmlFor="task-title" className="text-sm font-bold text-foreground">
                             Task Title
                           </Label>
                           <Input
@@ -1278,12 +1342,12 @@ function CaregiverPage() {
                             value={taskTitle}
                             onChange={(e) => setTaskTitle(e.target.value)}
                             placeholder="e.g. Afternoon Walk in Balcony"
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
-                          <Label htmlFor="task-time" className="text-sm font-bold text-cream">
+                          <Label htmlFor="task-time" className="text-sm font-bold text-foreground">
                             Scheduled Time
                           </Label>
                           <Input
@@ -1292,12 +1356,12 @@ function CaregiverPage() {
                             required
                             value={taskTime}
                             onChange={(e) => setTaskTime(e.target.value)}
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
-                          <Label htmlFor="task-desc" className="text-sm font-bold text-cream">
+                          <Label htmlFor="task-desc" className="text-sm font-bold text-foreground">
                             Description / Instructions (Optional)
                           </Label>
                           <Input
@@ -1305,12 +1369,12 @@ function CaregiverPage() {
                             value={taskDesc}
                             onChange={(e) => setTaskDesc(e.target.value)}
                             placeholder="e.g. 15 minutes gentle walk"
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
-                          <Label className="text-sm font-bold text-cream mb-1 block">
+                          <Label className="text-sm font-bold text-foreground mb-1 block">
                             Priority
                           </Label>
                           <div className="grid grid-cols-3 gap-2">
@@ -1319,10 +1383,10 @@ function CaregiverPage() {
                                 key={p}
                                 type="button"
                                 onClick={() => setTaskPriority(p)}
-                                className={`py-2 rounded-lg text-xs font-bold uppercase transition ${
+                                className={`py-2 rounded-2xl text-xs font-bold uppercase transition-all ${
                                   taskPriority === p
-                                    ? "bg-sun text-ink shadow-sm"
-                                    : "bg-ink border border-clay text-cream hover:bg-clay"
+                                    ? "bg-primary text-primary-foreground shadow-sm"
+                                    : "bg-white border border-border/60 text-foreground hover:bg-white/80"
                                 }`}
                               >
                                 {p}
@@ -1334,13 +1398,13 @@ function CaregiverPage() {
                         <div className="pt-4 flex justify-end gap-3">
                           <Button
                             type="button"
-                            variant="ghost"
+                            variant="outline"
                             onClick={() => setIsAddTaskOpen(false)}
-                            className="border border-clay text-cream"
+                            className="rounded-full border-border/60 text-muted-foreground hover:text-foreground bg-white"
                           >
                             Cancel
                           </Button>
-                          <Button type="submit" variant="cream" disabled={isSubmittingTask}>
+                          <Button type="submit" disabled={isSubmittingTask} className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold shadow-sm">
                             {isSubmittingTask ? "Saving…" : "Save Task"}
                           </Button>
                         </div>
@@ -1351,16 +1415,16 @@ function CaregiverPage() {
 
                 {/* Tasks List */}
                 {isTasksLoading ? (
-                  <div className="py-12 text-center text-cream/70 text-lg">
+                  <div className="py-12 text-center text-muted-foreground text-lg font-medium">
                     Loading routine tasks…
                   </div>
                 ) : tasks.length === 0 ? (
-                  <div className="rounded-2xl border border-clay bg-surface p-12 text-center text-cream/70">
-                    <CheckSquare size={48} className="mx-auto text-sun/40 mb-4" />
-                    <h3 className="font-display text-2xl font-bold text-cream">
+                  <div className="rounded-3xl border border-white/70 bg-white/80 backdrop-blur-md p-12 text-center text-muted-foreground shadow-card">
+                    <CheckSquare size={48} className="mx-auto text-primary/40 mb-4" />
+                    <h3 className="font-display text-2xl font-bold text-foreground">
                       No routine tasks scheduled yet
                     </h3>
-                    <p className="text-cream/70 mt-2">
+                    <p className="text-muted-foreground mt-2">
                       Click "ADD TASK" above to schedule activities for this patient.
                     </p>
                   </div>
@@ -1371,16 +1435,16 @@ function CaregiverPage() {
                       return (
                         <div
                           key={t.id}
-                          className="rounded-2xl border border-clay bg-surface p-5 shadow-card flex items-center justify-between gap-4"
+                          className="rounded-3xl border border-white/75 bg-white/85 backdrop-blur-md p-5 shadow-card flex items-center justify-between gap-4"
                         >
                           <div className="flex items-start gap-4">
                             <button
                               type="button"
                               onClick={() => handleToggleTask(t.id)}
-                              className={`flex size-10 shrink-0 items-center justify-center rounded-xl border-2 transition ${
+                              className={`flex size-10 shrink-0 items-center justify-center rounded-2xl border transition ${
                                 isCompleted
-                                  ? "border-tea-confirm bg-tea-confirm text-cream"
-                                  : "border-clay bg-ink text-cream hover:border-sun"
+                                  ? "border-emerald-300 bg-emerald-600 text-white shadow-sm"
+                                  : "border-border/60 bg-white text-muted-foreground hover:border-primary"
                               }`}
                               title={isCompleted ? "Mark pending" : "Mark completed"}
                             >
@@ -1391,26 +1455,26 @@ function CaregiverPage() {
                               <div className="flex items-center gap-3">
                                 <h4
                                   className={`font-display text-xl font-bold ${
-                                    isCompleted ? "line-through text-cream/60" : "text-cream"
+                                    isCompleted ? "line-through text-muted-foreground" : "text-foreground"
                                   }`}
                                 >
                                   {t.title}
                                 </h4>
                                 <span
-                                  className={`px-2 py-0.5 rounded-full text-xs font-bold uppercase ${
+                                  className={`px-3 py-0.5 rounded-full text-xs font-bold uppercase ${
                                     t.priority === "high"
-                                      ? "bg-fire/30 text-fire border border-fire"
-                                      : "bg-sun/20 text-sun border border-sun/40"
+                                      ? "bg-rose-50 text-rose-800 border border-rose-200"
+                                      : "bg-sky-50 text-sky-800 border border-sky-200"
                                   }`}
                                 >
                                   {t.priority}
                                 </span>
                               </div>
-                              <p className="text-sun font-bold mt-0.5 text-sm">
+                              <p className="text-primary font-bold mt-0.5 text-sm">
                                 {t.scheduled_time.slice(0, 5)}
                               </p>
                               {t.description && (
-                                <p className="text-xs text-cream/80 mt-1">{t.description}</p>
+                                <p className="text-xs text-muted-foreground mt-1 font-medium">{t.description}</p>
                               )}
                             </div>
                           </div>
@@ -1419,7 +1483,7 @@ function CaregiverPage() {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteTask(t.id)}
-                            className="text-cream/60 hover:text-fire hover:bg-ink"
+                            className="rounded-full text-muted-foreground hover:text-destructive hover:bg-white"
                             title="Delete task"
                           >
                             <Trash2 size={18} />
@@ -1437,10 +1501,10 @@ function CaregiverPage() {
               <div className="space-y-6">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-xl font-bold text-cream flex items-center gap-2">
-                      <Heart size={22} className="text-sun" /> Patient Family Memories & Photo Album
+                    <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                      <Heart size={22} className="text-rose-600" /> Patient Family Memories & Photo Album
                     </h2>
-                    <p className="text-xs text-cream/70 mt-1">
+                    <p className="text-xs text-muted-foreground font-medium mt-1">
                       Add and manage photos and heartwarming reminiscence memories for this patient.
                       Changes appear immediately on the patient’s home screen and album.
                     </p>
@@ -1449,13 +1513,13 @@ function CaregiverPage() {
                   {/* Add Memory Dialog */}
                   <Dialog open={isAddMemoryOpen} onOpenChange={setIsAddMemoryOpen}>
                     <DialogTrigger asChild>
-                      <Button variant="cream" size="touch" className="font-extrabold">
+                      <Button size="touch" className="font-bold rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm">
                         <Plus size={18} className="mr-2" /> ADD MEMORY
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-surface border-clay text-cream max-w-md max-h-[90vh] overflow-y-auto">
+                    <DialogContent className="bg-white/95 backdrop-blur-xl border border-white/80 text-foreground max-w-md max-h-[90vh] overflow-y-auto rounded-3xl shadow-glass">
                       <DialogHeader>
-                        <DialogTitle className="font-display text-2xl font-bold text-cream">
+                        <DialogTitle className="font-display text-2xl font-bold text-foreground">
                           Add Memory for {patientDetail?.patient.name || "Patient"}
                         </DialogTitle>
                       </DialogHeader>
@@ -1464,7 +1528,7 @@ function CaregiverPage() {
                         <div>
                           <Label
                             htmlFor="caregiver-mem-title"
-                            className="text-sm font-bold text-cream"
+                            className="text-sm font-bold text-foreground"
                           >
                             Memory Title
                           </Label>
@@ -1474,12 +1538,12 @@ function CaregiverPage() {
                             value={memoryTitle}
                             onChange={(e) => setMemoryTitle(e.target.value)}
                             placeholder="e.g. Diwalis with Family in Jaipur"
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
-                          <Label className="text-sm font-bold text-cream mb-1 block">
+                          <Label className="text-sm font-bold text-foreground mb-1 block">
                             Category
                           </Label>
                           <div className="grid grid-cols-3 gap-2">
@@ -1488,10 +1552,10 @@ function CaregiverPage() {
                                 key={cat}
                                 type="button"
                                 onClick={() => setMemoryCategory(cat)}
-                                className={`py-2 rounded-lg text-xs font-bold transition ${
+                                className={`py-2 rounded-2xl text-xs font-bold transition-all ${
                                   memoryCategory === cat
-                                    ? "bg-sun text-ink shadow-sm"
-                                    : "bg-ink border border-clay text-cream hover:bg-clay"
+                                    ? "bg-primary text-primary-foreground shadow-sm"
+                                    : "bg-white border border-border/60 text-foreground hover:bg-white/80"
                                 }`}
                               >
                                 {cat}
@@ -1503,7 +1567,7 @@ function CaregiverPage() {
                         <div>
                           <Label
                             htmlFor="caregiver-mem-loc"
-                            className="text-sm font-bold text-cream"
+                            className="text-sm font-bold text-foreground"
                           >
                             Location (Optional)
                           </Label>
@@ -1512,14 +1576,14 @@ function CaregiverPage() {
                             value={memoryLocation}
                             onChange={(e) => setMemoryLocation(e.target.value)}
                             placeholder="e.g. Shimla / Home Veranda"
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
                           <Label
                             htmlFor="caregiver-mem-desc"
-                            className="text-sm font-bold text-cream"
+                            className="text-sm font-bold text-foreground"
                           >
                             Description & Heartwarming Details
                           </Label>
@@ -1530,12 +1594,12 @@ function CaregiverPage() {
                             value={memoryDesc}
                             onChange={(e) => setMemoryDesc(e.target.value)}
                             placeholder="Describe who was there, how it felt, or familiar sights…"
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
-                          <Label className="text-sm font-bold text-cream mb-1 block">
+                          <Label className="text-sm font-bold text-foreground mb-1 block">
                             Memory Photo
                           </Label>
                           <input
@@ -1551,18 +1615,18 @@ function CaregiverPage() {
                               variant="outline"
                               size="sm"
                               onClick={() => memoryFileInputRef.current?.click()}
-                              className="border-clay text-cream hover:bg-clay"
+                              className="rounded-full border-border/60 text-foreground bg-white hover:bg-white/90"
                             >
-                              <ImageIcon size={18} className="mr-2" /> Select Photo
+                              <ImageIcon size={18} className="mr-2 text-primary" /> Select Photo
                             </Button>
                             {memoryImageBase64 && (
-                              <span className="text-xs text-tea-confirm font-bold">
+                              <span className="text-xs text-primary font-bold">
                                 Photo attached
                               </span>
                             )}
                           </div>
                           {memoryImageBase64 && (
-                            <div className="mt-2 relative rounded-lg overflow-hidden border border-clay max-h-40">
+                            <div className="mt-2 relative rounded-2xl overflow-hidden border border-border/50 max-h-40">
                               <img
                                 src={memoryImageBase64}
                                 alt="Preview"
@@ -1575,13 +1639,13 @@ function CaregiverPage() {
                         <div className="pt-4 flex justify-end gap-3">
                           <Button
                             type="button"
-                            variant="ghost"
+                            variant="outline"
                             onClick={() => setIsAddMemoryOpen(false)}
-                            className="border border-clay text-cream"
+                            className="rounded-full border-border/60 text-muted-foreground hover:text-foreground bg-white"
                           >
                             Cancel
                           </Button>
-                          <Button type="submit" variant="cream" disabled={isCreatingMemory}>
+                          <Button type="submit" disabled={isCreatingMemory} className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold shadow-sm">
                             {isCreatingMemory ? "Saving…" : "Save to Patient Album"}
                           </Button>
                         </div>
@@ -1592,16 +1656,16 @@ function CaregiverPage() {
 
                 {/* Memories List */}
                 {isMemoriesLoading ? (
-                  <div className="py-12 text-center text-cream/70 text-lg">
+                  <div className="py-12 text-center text-muted-foreground text-lg font-medium">
                     Loading patient memories…
                   </div>
                 ) : patientMemories.length === 0 ? (
-                  <div className="rounded-2xl border border-clay bg-surface p-12 text-center text-cream/70">
-                    <Heart size={48} className="mx-auto text-sun/40 mb-4" />
-                    <h3 className="font-display text-2xl font-bold text-cream">
+                  <div className="rounded-3xl border border-white/70 bg-white/80 backdrop-blur-md p-12 text-center text-muted-foreground shadow-card">
+                    <Heart size={48} className="mx-auto text-primary/40 mb-4" />
+                    <h3 className="font-display text-2xl font-bold text-foreground">
                       No memories added for this patient yet
                     </h3>
-                    <p className="text-cream/70 mt-2">
+                    <p className="text-muted-foreground mt-2">
                       Click "ADD MEMORY" above to upload photos and create heartwarming
                       recollections for this patient.
                     </p>
@@ -1613,44 +1677,44 @@ function CaregiverPage() {
                       return (
                         <div
                           key={m.id}
-                          className="rounded-2xl border border-clay bg-surface overflow-hidden shadow-card flex flex-col justify-between"
+                          className="rounded-3xl border border-white/75 bg-white/85 backdrop-blur-md overflow-hidden shadow-card flex flex-col justify-between"
                         >
                           <div>
                             {m.image_url ? (
                               <img
                                 src={m.image_url}
                                 alt={m.title}
-                                className="h-44 w-full object-cover border-b border-clay/60"
+                                className="h-44 w-full object-cover border-b border-border/30"
                               />
                             ) : (
-                              <div className="h-28 w-full bg-ink/60 border-b border-clay/60 flex items-center justify-center text-cream/60">
+                              <div className="h-28 w-full bg-rose-50 border-b border-border/30 flex items-center justify-center text-rose-400">
                                 <Heart size={32} />
                               </div>
                             )}
 
                             <div className="p-5">
-                              <div className="flex items-center justify-between text-xs font-bold text-sun mb-1">
-                                <span className="uppercase tracking-wider">{tag}</span>
-                                {m.location && <span className="text-cream/60">{m.location}</span>}
+                              <div className="flex items-center justify-between text-xs font-bold text-primary mb-1">
+                                <span className="uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-50 text-primary border border-emerald-100">{tag}</span>
+                                {m.location && <span className="text-muted-foreground font-medium">{m.location}</span>}
                               </div>
-                              <h4 className="font-display text-xl font-bold text-cream mb-1">
+                              <h4 className="font-display text-xl font-bold text-foreground mb-1">
                                 {m.title}
                               </h4>
-                              <p className="text-cream/80 text-sm leading-relaxed line-clamp-3">
+                              <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
                                 {m.description}
                               </p>
                             </div>
                           </div>
 
-                          <div className="p-5 pt-0 border-t border-clay/40 mt-3 flex justify-between items-center">
-                            <span className="text-[11px] text-cream/60 font-medium">
+                          <div className="p-5 pt-0 border-t border-border/30 mt-3 flex justify-between items-center">
+                            <span className="text-[11px] text-muted-foreground font-semibold">
                               Linked to patient album
                             </span>
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => handleCaregiverDeleteMemory(m.id)}
-                              className="text-cream/60 hover:text-fire hover:bg-ink"
+                              className="rounded-full text-muted-foreground hover:text-destructive hover:bg-white"
                               title="Delete memory"
                             >
                               <Trash2 size={18} />
@@ -1668,10 +1732,10 @@ function CaregiverPage() {
             {activeTab === "games" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-xl font-bold text-cream flex items-center gap-2">
-                    <Gamepad2 size={22} className="text-sun" /> Cognitive Game Assignments
+                  <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                    <Gamepad2 size={22} className="text-primary" /> Cognitive Game Assignments
                   </h2>
-                  <p className="text-xs text-cream/70 mt-1">
+                  <p className="text-xs text-muted-foreground font-medium mt-1">
                     Select which cognitive exercises are active for this patient. Enabled games will
                     appear in the patient's daily challenge list.
                   </p>
@@ -1685,45 +1749,45 @@ function CaregiverPage() {
                     return (
                       <div
                         key={game.id}
-                        className={`rounded-2xl border p-5 transition flex flex-col justify-between ${
+                        className={`rounded-3xl border p-5 transition flex flex-col justify-between backdrop-blur-md ${
                           isAssigned
-                            ? "border-sun/60 bg-surface shadow-card"
-                            : "border-clay bg-ink/50 opacity-70"
+                            ? "border-primary/40 bg-white/90 shadow-card"
+                            : "border-border/40 bg-white/50 opacity-70"
                         }`}
                       >
                         <div>
                           <div className="flex items-center justify-between gap-2 mb-2">
-                            <span className="text-xs font-bold uppercase tracking-wider text-sun">
+                            <span className="text-xs font-bold uppercase tracking-wider text-primary">
                               {game.category}
                             </span>
                             <span
-                              className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
+                              className={`px-3 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
                                 isAssigned
-                                  ? "bg-tea-confirm/30 text-tea-confirm border border-tea-confirm"
-                                  : "bg-clay/50 text-cream/60"
+                                  ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                                  : "bg-muted text-muted-foreground"
                               }`}
                             >
                               {isAssigned ? "Enabled" : "Disabled"}
                             </span>
                           </div>
 
-                          <h3 className="font-display text-xl font-bold text-cream">{game.name}</h3>
-                          <p className="text-xs text-cream/75 mt-1 leading-relaxed">
+                          <h3 className="font-display text-xl font-bold text-foreground">{game.name}</h3>
+                          <p className="text-xs text-muted-foreground mt-1 leading-relaxed font-medium">
                             {game.description}
                           </p>
                         </div>
 
-                        <div className="mt-4 pt-4 border-t border-clay/50 flex items-center justify-between">
-                          <span className="text-xs text-cream/60 font-semibold">
+                        <div className="mt-4 pt-4 border-t border-border/30 flex items-center justify-between">
+                          <span className="text-xs text-muted-foreground font-semibold">
                             Patient Access
                           </span>
                           <button
                             type="button"
                             onClick={() => handleToggleGameAssignment(game.id)}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+                            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 shadow-sm ${
                               isAssigned
-                                ? "bg-fire text-ink hover:bg-fire/80"
-                                : "bg-sun text-ink hover:bg-sun/80"
+                                ? "bg-rose-100 text-rose-800 hover:bg-rose-200 border border-rose-200"
+                                : "bg-primary text-primary-foreground hover:bg-primary/90"
                             }`}
                           >
                             {isAssigned ? (
@@ -1748,12 +1812,12 @@ function CaregiverPage() {
             {activeTab === "analytics" && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-cream flex items-center gap-2">
-                    <Activity size={20} className="text-sun" /> Live Patient Analytics (100% Real DB
+                  <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                    <Activity size={20} className="text-primary" /> Live Patient Analytics (100% Real DB
                     Data)
                   </h2>
                   {isAnalyticsLoading && (
-                    <span className="text-xs text-cream/60">Recalculating live DB metrics…</span>
+                    <span className="text-xs text-muted-foreground font-medium">Recalculating live DB metrics…</span>
                   )}
                 </div>
 
@@ -1761,43 +1825,43 @@ function CaregiverPage() {
                   <div className="space-y-6">
                     {/* Compliance Metrics Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      <div className="rounded-xl border border-clay bg-ink/70 p-4">
-                        <p className="text-xs font-bold uppercase text-cream/60">Task Completion</p>
-                        <p className="font-display text-3xl font-bold text-tea-confirm mt-1">
+                      <div className="rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md p-4 shadow-card">
+                        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Task Completion</p>
+                        <p className="font-display text-3xl font-bold text-emerald-700 mt-1">
                           {analytics.task_completion_rate.toFixed(1)}%
                         </p>
-                        <p className="text-xs text-cream/50 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1 font-medium">
                           {analytics.completed_tasks} completed / {analytics.total_tasks} total
                         </p>
                       </div>
 
-                      <div className="rounded-xl border border-clay bg-ink/70 p-4">
-                        <p className="text-xs font-bold uppercase text-cream/60">Med Adherence</p>
-                        <p className="font-display text-3xl font-bold text-fire mt-1">
+                      <div className="rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md p-4 shadow-card">
+                        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Med Adherence</p>
+                        <p className="font-display text-3xl font-bold text-rose-700 mt-1">
                           {analytics.medication_adherence_rate.toFixed(1)}%
                         </p>
-                        <p className="text-xs text-cream/50 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1 font-medium">
                           {analytics.medications_taken} taken /{" "}
                           {analytics.total_medications_scheduled} scheduled
                         </p>
                       </div>
 
-                      <div className="rounded-xl border border-clay bg-ink/70 p-4">
-                        <p className="text-xs font-bold uppercase text-cream/60">Avg Game Score</p>
-                        <p className="font-display text-3xl font-bold text-sun mt-1">
+                      <div className="rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md p-4 shadow-card">
+                        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Avg Game Score</p>
+                        <p className="font-display text-3xl font-bold text-primary mt-1">
                           {analytics.average_game_score.toFixed(1)}
                         </p>
-                        <p className="text-xs text-cream/50 mt-1">
+                        <p className="text-xs text-muted-foreground mt-1 font-medium">
                           {analytics.total_games_played} sessions audited
                         </p>
                       </div>
 
-                      <div className="rounded-xl border border-clay bg-ink/70 p-4">
-                        <p className="text-xs font-bold uppercase text-cream/60">Cognitive Risk</p>
-                        <p className="font-display text-3xl font-bold text-sun mt-1 uppercase">
+                      <div className="rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md p-4 shadow-card">
+                        <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Cognitive Risk</p>
+                        <p className="font-display text-3xl font-bold text-primary mt-1 uppercase">
                           {analytics.risk_level}
                         </p>
-                        <p className="text-xs text-cream/50 mt-1 capitalize">
+                        <p className="text-xs text-muted-foreground mt-1 capitalize font-medium">
                           Trend: {analytics.trend}
                         </p>
                       </div>
@@ -1805,18 +1869,18 @@ function CaregiverPage() {
 
                     {/* Cognitive Sub-Scores Breakdown */}
                     {analytics.cognitive_scores && (
-                      <div className="rounded-2xl border border-clay bg-surface p-6 shadow-card">
-                        <h3 className="font-display text-xl font-bold text-cream mb-4">
+                      <div className="rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md p-6 shadow-card">
+                        <h3 className="font-display text-xl font-bold text-foreground mb-4">
                           Cognitive Domain Breakdown (AI Evaluated)
                         </h3>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                           {Object.entries(analytics.cognitive_scores).map(([domain, score]) => (
                             <div
                               key={domain}
-                              className="p-4 rounded-xl bg-ink/70 border border-clay"
+                              className="p-4 rounded-2xl bg-white/80 border border-border/40 shadow-sm"
                             >
-                              <p className="text-xs font-bold uppercase text-sun">{domain}</p>
-                              <p className="font-display text-2xl font-bold text-cream mt-1">
+                              <p className="text-xs font-bold uppercase tracking-wider text-primary">{domain}</p>
+                              <p className="font-display text-2xl font-bold text-foreground mt-1">
                                 {score.toFixed(1)}/100
                               </p>
                             </div>
@@ -1833,27 +1897,27 @@ function CaregiverPage() {
             {activeTab === "appointments" && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-cream flex items-center gap-2">
-                    <Calendar size={20} className="text-sun" /> Medical Appointments
+                  <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                    <Calendar size={20} className="text-primary" /> Medical Appointments
                   </h2>
 
                   {/* Schedule Appointment Dialog */}
                   <Dialog open={isAddApptOpen} onOpenChange={setIsAddApptOpen}>
                     <DialogTrigger asChild>
-                      <Button variant="cream" size="touch" className="text-sm font-extrabold">
+                      <Button size="touch" className="text-sm font-bold rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm">
                         <CalendarPlus size={18} className="mr-2" /> Schedule Appointment
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-surface border-clay text-cream max-w-md">
+                    <DialogContent className="bg-white/95 backdrop-blur-xl border border-white/80 text-foreground max-w-md rounded-3xl shadow-glass">
                       <DialogHeader>
-                        <DialogTitle className="font-display text-2xl font-bold text-cream">
+                        <DialogTitle className="font-display text-2xl font-bold text-foreground">
                           Schedule Medical Appointment
                         </DialogTitle>
                       </DialogHeader>
 
                       <form onSubmit={handleScheduleAppt} className="space-y-4 mt-4">
                         <div>
-                          <Label htmlFor="appt-title" className="text-sm font-bold text-cream">
+                          <Label htmlFor="appt-title" className="text-sm font-bold text-foreground">
                             Appointment Title *
                           </Label>
                           <Input
@@ -1862,12 +1926,12 @@ function CaregiverPage() {
                             value={apptTitle}
                             onChange={(e) => setApptTitle(e.target.value)}
                             placeholder="e.g. General Checkup"
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
-                          <Label htmlFor="appt-doctor" className="text-sm font-bold text-cream">
+                          <Label htmlFor="appt-doctor" className="text-sm font-bold text-foreground">
                             Doctor Name
                           </Label>
                           <Input
@@ -1875,12 +1939,12 @@ function CaregiverPage() {
                             value={apptDoctorName}
                             onChange={(e) => setApptDoctorName(e.target.value)}
                             placeholder="e.g. Dr. Sharma"
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
-                          <Label htmlFor="appt-location" className="text-sm font-bold text-cream">
+                          <Label htmlFor="appt-location" className="text-sm font-bold text-foreground">
                             Location
                           </Label>
                           <Input
@@ -1888,12 +1952,12 @@ function CaregiverPage() {
                             value={apptLocation}
                             onChange={(e) => setApptLocation(e.target.value)}
                             placeholder="e.g. Guwahati District PHC"
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
-                          <Label htmlFor="appt-datetime" className="text-sm font-bold text-cream">
+                          <Label htmlFor="appt-datetime" className="text-sm font-bold text-foreground">
                             Date & Time *
                           </Label>
                           <Input
@@ -1902,12 +1966,12 @@ function CaregiverPage() {
                             required
                             value={apptDatetime}
                             onChange={(e) => setApptDatetime(e.target.value)}
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                           />
                         </div>
 
                         <div>
-                          <Label htmlFor="appt-notes" className="text-sm font-bold text-cream">
+                          <Label htmlFor="appt-notes" className="text-sm font-bold text-foreground">
                             Notes
                           </Label>
                           <Textarea
@@ -1915,7 +1979,7 @@ function CaregiverPage() {
                             value={apptNotes}
                             onChange={(e) => setApptNotes(e.target.value)}
                             placeholder="Any additional notes..."
-                            className="bg-ink border-clay text-cream mt-1"
+                            className="bg-white/80 border-border/60 text-foreground rounded-2xl mt-1 focus-visible:ring-primary shadow-sm"
                             rows={3}
                           />
                         </div>
@@ -1923,13 +1987,13 @@ function CaregiverPage() {
                         <div className="pt-4 flex justify-end gap-3">
                           <Button
                             type="button"
-                            variant="ghost"
+                            variant="outline"
                             onClick={() => setIsAddApptOpen(false)}
-                            className="border border-clay text-cream"
+                            className="rounded-full border-border/60 text-muted-foreground hover:text-foreground bg-white"
                           >
                             Cancel
                           </Button>
-                          <Button type="submit" variant="cream" disabled={isSubmittingAppt}>
+                          <Button type="submit" disabled={isSubmittingAppt} className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-bold shadow-sm">
                             {isSubmittingAppt ? "Scheduling..." : "Schedule Appointment"}
                           </Button>
                         </div>
@@ -1940,14 +2004,14 @@ function CaregiverPage() {
 
                 {/* Appointments List */}
                 {isApptsLoading ? (
-                  <p className="text-sm text-cream/70 py-8 text-center">Loading appointments...</p>
+                  <p className="text-sm text-muted-foreground py-8 text-center font-medium">Loading appointments...</p>
                 ) : appointments.length === 0 ? (
-                  <div className="rounded-2xl border border-clay bg-surface p-10 text-center">
-                    <span className="flex size-16 items-center justify-center rounded-full bg-clay/50 text-cream/60 mx-auto mb-4">
+                  <div className="rounded-3xl border border-white/70 bg-white/80 backdrop-blur-md p-10 text-center shadow-card">
+                    <span className="flex size-16 items-center justify-center rounded-2xl bg-emerald-100 text-primary mx-auto mb-4 shadow-inner">
                       <Calendar size={32} />
                     </span>
-                    <h3 className="text-xl font-bold text-cream">No Appointments Scheduled</h3>
-                    <p className="text-sm text-cream/60 mt-2 max-w-sm mx-auto">
+                    <h3 className="text-xl font-bold text-foreground">No Appointments Scheduled</h3>
+                    <p className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto">
                       Schedule a medical appointment for this patient at a local health centre.
                     </p>
                   </div>
@@ -1957,28 +2021,28 @@ function CaregiverPage() {
                       const apptDate = new Date(appt.appointment_datetime);
                       const isPast = apptDate < new Date();
                       const statusColors: Record<string, string> = {
-                        scheduled: "bg-sun/20 text-sun border-sun/40",
-                        completed: "bg-tea-confirm/20 text-tea-confirm border-tea-confirm/40",
-                        cancelled: "bg-clay/40 text-cream/50 border-clay",
-                        missed: "bg-fire/20 text-fire border-fire/40",
+                        scheduled: "bg-sky-50 text-sky-800 border-sky-200",
+                        completed: "bg-emerald-50 text-emerald-800 border-emerald-200",
+                        cancelled: "bg-muted text-muted-foreground border-border/50",
+                        missed: "bg-rose-50 text-rose-800 border-rose-200",
                       };
                       return (
                         <article
                           key={appt.id}
-                          className={`rounded-2xl border p-5 shadow-card transition ${
+                          className={`rounded-3xl border p-5 shadow-card transition backdrop-blur-md ${
                             appt.status === "cancelled"
-                              ? "border-clay/50 bg-ink/50 opacity-70"
-                              : "border-clay bg-surface"
+                              ? "border-border/40 bg-white/50 opacity-70"
+                              : "border-white/75 bg-white/85"
                           }`}
                         >
                           <div className="flex flex-wrap items-start justify-between gap-4">
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-3 mb-1">
-                                <h3 className="text-lg font-bold text-cream truncate">
+                                <h3 className="text-lg font-bold text-foreground truncate">
                                   {appt.title}
                                 </h3>
                                 <span
-                                  className={`px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase border ${
+                                  className={`px-3 py-0.5 rounded-full text-xs font-extrabold uppercase border ${
                                     statusColors[appt.status] || statusColors["scheduled"]
                                   }`}
                                 >
@@ -1986,9 +2050,9 @@ function CaregiverPage() {
                                 </span>
                               </div>
 
-                              <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-cream/70 mt-2">
+                              <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-muted-foreground mt-2 font-medium">
                                 <span className="flex items-center gap-1.5">
-                                  <Clock size={14} className="text-sun shrink-0" />
+                                  <Clock size={14} className="text-primary shrink-0" />
                                   {apptDate.toLocaleDateString("en-IN", {
                                     weekday: "short",
                                     day: "numeric",
@@ -2003,20 +2067,20 @@ function CaregiverPage() {
                                 </span>
                                 {appt.doctor_name && (
                                   <span className="flex items-center gap-1.5">
-                                    <Stethoscope size={14} className="text-sun shrink-0" />
+                                    <Stethoscope size={14} className="text-primary shrink-0" />
                                     {appt.doctor_name}
                                   </span>
                                 )}
                                 {appt.location && (
                                   <span className="flex items-center gap-1.5">
-                                    <MapPin size={14} className="text-sun shrink-0" />
+                                    <MapPin size={14} className="text-primary shrink-0" />
                                     {appt.location}
                                   </span>
                                 )}
                               </div>
 
                               {appt.notes && (
-                                <p className="text-xs text-cream/50 mt-2 line-clamp-2">
+                                <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
                                   {appt.notes}
                                 </p>
                               )}
@@ -2028,7 +2092,7 @@ function CaregiverPage() {
                                 <button
                                   type="button"
                                   onClick={() => handleCancelAppt(appt.id)}
-                                  className="px-3 py-1.5 rounded-lg text-xs font-bold text-fire hover:bg-fire/10 border border-fire/30 transition"
+                                  className="px-3.5 py-1.5 rounded-full text-xs font-bold text-rose-700 hover:bg-rose-50 border border-rose-200 transition"
                                 >
                                   Cancel
                                 </button>
@@ -2037,7 +2101,7 @@ function CaregiverPage() {
                                 <button
                                   type="button"
                                   onClick={() => handleDeleteAppt(appt.id)}
-                                  className="size-8 flex items-center justify-center rounded-lg text-cream/50 hover:text-fire hover:bg-ink transition"
+                                  className="size-8 flex items-center justify-center rounded-full text-muted-foreground hover:text-destructive hover:bg-white transition"
                                   title="Delete"
                                 >
                                   <Trash2 size={16} />
@@ -2055,17 +2119,17 @@ function CaregiverPage() {
 
             {activeTab === "reports" && (
               <div className="space-y-6">
-                <h2 className="text-xl font-bold text-cream flex items-center gap-2">
-                  <FileText size={20} className="text-sun" /> Clinical Care Reports & Audit Logs
+                <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+                  <FileText size={20} className="text-primary" /> Clinical Care Reports & Audit Logs
                 </h2>
 
                 {/* AI Clinical Insights */}
-                <div className="rounded-2xl border border-clay bg-surface p-6 shadow-card">
-                  <h3 className="font-display text-xl font-bold text-cream mb-3 flex items-center gap-2">
-                    <Sparkles size={18} className="text-sun" /> AI Clinical Assessment Insights
+                <div className="rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md p-6 shadow-card">
+                  <h3 className="font-display text-xl font-bold text-foreground mb-3 flex items-center gap-2">
+                    <Sparkles size={18} className="text-primary" /> AI Clinical Assessment Insights
                   </h3>
                   {analytics?.insights && analytics.insights.length > 0 ? (
-                    <ul className="space-y-2 text-sm text-cream/90 list-disc list-inside">
+                    <ul className="space-y-2 text-sm text-foreground/90 list-disc list-inside font-medium">
                       {analytics.insights.map((insight, idx) => (
                         <li key={idx} className="leading-relaxed">
                           {insight}
@@ -2073,7 +2137,7 @@ function CaregiverPage() {
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-sm text-cream/70">
+                    <p className="text-sm text-muted-foreground font-medium">
                       Cognitive performance is consistent with baseline memory profile. Maintain
                       active daily routines.
                     </p>
@@ -2081,12 +2145,12 @@ function CaregiverPage() {
                 </div>
 
                 {/* AI Recommendations */}
-                <div className="rounded-2xl border border-clay bg-surface p-6 shadow-card">
-                  <h3 className="font-display text-xl font-bold text-cream mb-3 flex items-center gap-2">
-                    <CheckSquare size={18} className="text-tea-confirm" /> Caregiver Recommendations
+                <div className="rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md p-6 shadow-card">
+                  <h3 className="font-display text-xl font-bold text-foreground mb-3 flex items-center gap-2">
+                    <CheckSquare size={18} className="text-emerald-700" /> Caregiver Recommendations
                   </h3>
                   {analytics?.recommendations && analytics.recommendations.length > 0 ? (
-                    <ul className="space-y-2 text-sm text-cream/90 list-disc list-inside">
+                    <ul className="space-y-2 text-sm text-foreground/90 list-disc list-inside font-medium">
                       {analytics.recommendations.map((rec, idx) => (
                         <li key={idx} className="leading-relaxed">
                           {rec}
@@ -2094,7 +2158,7 @@ function CaregiverPage() {
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-sm text-cream/70">
+                    <p className="text-sm text-muted-foreground font-medium">
                       Encourage gentle recall exercises, ensure on-time dosage, and keep daily sleep
                       routine consistent.
                     </p>
@@ -2102,17 +2166,17 @@ function CaregiverPage() {
                 </div>
 
                 {/* Patient Game Activity Audit Log (Read-Only Caregiver Audit, NOT Playable Games) */}
-                <div className="rounded-2xl border border-clay bg-surface p-6 shadow-card">
-                  <h3 className="font-display text-xl font-bold text-cream mb-3 flex items-center gap-2">
-                    <Gamepad2 size={18} className="text-sun" /> Patient Game Activity Audit Log
+                <div className="rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md p-6 shadow-card">
+                  <h3 className="font-display text-xl font-bold text-foreground mb-3 flex items-center gap-2">
+                    <Gamepad2 size={18} className="text-primary" /> Patient Game Activity Audit Log
                   </h3>
-                  <p className="text-xs text-cream/60 mb-4">
+                  <p className="text-xs text-muted-foreground font-medium mb-4">
                     Audit log of cognitive game sessions completed by the patient. (Monitoring only)
                   </p>
 
                   {!analytics?.recent_game_sessions ||
                   analytics.recent_game_sessions.length === 0 ? (
-                    <p className="text-sm text-cream/60 py-4 text-center">
+                    <p className="text-sm text-muted-foreground py-4 text-center font-medium">
                       No game sessions recorded yet by patient.
                     </p>
                   ) : (
@@ -2120,20 +2184,20 @@ function CaregiverPage() {
                       {analytics.recent_game_sessions.map((session) => (
                         <div
                           key={session.id}
-                          className="flex items-center justify-between rounded-xl bg-ink/70 px-4 py-3 border border-clay/60 text-sm"
+                          className="flex items-center justify-between rounded-2xl bg-white/80 px-4 py-3 border border-border/40 text-sm shadow-sm"
                         >
                           <div>
-                            <span className="font-bold text-cream">{session.game_name}</span>
-                            <span className="text-xs text-cream/60 ml-2">
+                            <span className="font-bold text-foreground">{session.game_name}</span>
+                            <span className="text-xs text-muted-foreground ml-2 font-medium">
                               Level {session.level_achieved}
                             </span>
                           </div>
                           <div className="flex items-center gap-4">
-                            <span className="text-sun font-bold">{session.score} pts</span>
-                            <span className="text-tea-confirm font-bold">
+                            <span className="text-primary font-bold">{session.score} pts</span>
+                            <span className="text-emerald-700 font-bold">
                               {session.accuracy.toFixed(0)}% acc
                             </span>
-                            <span className="text-xs text-cream/50">
+                            <span className="text-xs text-muted-foreground font-medium">
                               {session.duration_seconds}s
                             </span>
                           </div>
@@ -2156,7 +2220,6 @@ function CaregiverPage() {
             )}
           </div>
         )}
-      </main>
-    </div>
+    </AppShell>
   );
 }

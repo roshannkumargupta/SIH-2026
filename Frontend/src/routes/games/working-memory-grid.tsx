@@ -1,7 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { GameShell } from "@/features/games/components/GameShell";
 import WorkingMemoryGrid from "@/features/games/games/WorkingMemoryGrid";
-import { GAME_MAP } from "@/features/games/data/gameRegistry";
 
 export const Route = createFileRoute("/games/working-memory-grid")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -18,10 +16,5 @@ export const Route = createFileRoute("/games/working-memory-grid")({
 
 function WorkingMemoryGridPage() {
   const { level } = Route.useSearch();
-  const game = GAME_MAP.get("working-memory-grid")!;
-  return (
-    <GameShell game={game} level={level}>
-      <WorkingMemoryGrid level={level} />
-    </GameShell>
-  );
+  return <WorkingMemoryGrid level={level} />;
 }

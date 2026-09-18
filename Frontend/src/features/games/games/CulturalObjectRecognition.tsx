@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CheckCircle2, ChevronRight, HelpCircle, MapPin, Sparkles, XCircle } from "lucide-react";
-import { CelebrationAnimation } from "../components/CelebrationAnimation";
-import { GameResults } from "../components/GameResults";
+import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
 import { useLanguage } from "@/context/LanguageContext";
 import { CULTURAL_OBJECTS, type CulturalObject } from "../data/culturalObjects";
@@ -77,71 +76,74 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
 
   const currentRound = rounds[currentRoundIdx];
 
-  // Submit multiple-choice selection
+  const getTargetName = (obj: CulturalObject) => {
+    return obj.names.en || obj.name;
+  };
+
+  const getTargetState = (obj: CulturalObject) => {
+    return obj.state;
+  };
+
+  const getTargetStory = (obj: CulturalObject) => {
+    return obj.stories.en;
+  };
+
+  // Multiple-choice click
   const handleSelectOption = (option: CulturalObject) => {
     if (roundAnswered || !currentRound) return;
 
     setSelectedOptionId(option.id);
+    setRoundAnswered(true);
+
     const correct = option.id === currentRound.target.id;
     setIsCurrentCorrect(correct);
+
     if (correct) {
-      setCorrectCount((c) => c + 1);
+      setCorrectCount((prev) => prev + 1);
     }
-    setRoundAnswered(true);
   };
 
-  const getTargetName = (obj: CulturalObject) => t(obj.nameKey, { defaultValue: obj.name });
-  const getTargetState = (obj: CulturalObject) => t(obj.stateKey, { defaultValue: obj.state });
-  const getTargetDesc = (obj: CulturalObject) =>
-    t(obj.descriptionKey, { defaultValue: obj.description });
-  const getTargetStory = (obj: CulturalObject) =>
-    t(obj.culturalNoteKey, { defaultValue: obj.culturalNote });
-
-  // Submit free recall typed or voice answer
-  const handleSubmitTypedAnswer = (overrideText?: string) => {
+  // Free-recall submit
+  const handleSubmitTypedAnswer = (overrideInput?: string) => {
     if (roundAnswered || !currentRound) return;
-    const raw = overrideText !== undefined ? overrideText : typedInput;
-    const cleanInput = raw.trim().normalize("NFC").toLowerCase();
-    if (!cleanInput) return;
+
+    const rawAnswer = overrideInput !== undefined ? overrideInput : typedInput;
+    const cleanAnswer = rawAnswer.trim().normalize("NFC").toLowerCase();
+    if (!cleanAnswer) return;
+
+    setRoundAnswered(true);
 
     const target = currentRound.target;
-    const locName = getTargetName(target).trim().normalize("NFC").toLowerCase();
-    const origName = target.name.trim().normalize("NFC").toLowerCase();
+    // Check against all localized aliases
+    const aliases = [
+      target.name.toLowerCase(),
+      ...Object.values(target.names).map((n) => n.toLowerCase()),
+      ...(target.aliases || []).map((a) => a.toLowerCase()),
+    ];
 
-    // Match against localized name, original English name, or keywords
-    const matchesName =
-      locName.includes(cleanInput) ||
-      cleanInput.includes(locName) ||
-      origName.includes(cleanInput) ||
-      cleanInput.includes(origName);
-
-    const matchesKeyword = target.keywords.some((kw) => {
-      const cleanKw = kw.trim().normalize("NFC").toLowerCase();
-      return cleanKw.includes(cleanInput) || cleanInput.includes(cleanKw);
-    });
-
-    const correct = matchesName || matchesKeyword;
+    const correct = aliases.some(
+      (alias) => cleanAnswer === alias || cleanAnswer.includes(alias) || alias.includes(cleanAnswer),
+    );
 
     setIsCurrentCorrect(correct);
     if (correct) {
-      setCorrectCount((c) => c + 1);
+      setCorrectCount((prev) => prev + 1);
     }
-    setRoundAnswered(true);
   };
 
-  // Next round or final submission
+  // Advance to next round or complete session
   const handleNextRound = () => {
-    if (currentRoundIdx + 1 < rounds.length) {
-      setCurrentRoundIdx((idx) => idx + 1);
+    if (currentRoundIdx + 1 < TOTAL_ROUNDS) {
+      setCurrentRoundIdx((prev) => prev + 1);
       setTypedInput("");
       setSelectedOptionId(null);
       setRoundAnswered(false);
       setIsCurrentCorrect(false);
     } else {
-      // Game completed!
+      // Completed all rounds
       if (!saved.current) {
         saved.current = true;
-        const total = rounds.length;
+        const total = TOTAL_ROUNDS;
         const acc = Math.round((correctCount / total) * 100);
         const dur = Math.round((Date.now() - sessionStart.current) / 1000);
 
@@ -167,92 +169,80 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
     }
   };
 
-  if (completed) {
-    const acc = Math.round((correctCount / TOTAL_ROUNDS) * 100);
-    return (
-      <>
-        <CelebrationAnimation show={acc >= 60} />
-        <GameResults
-          score={acc}
-          accuracy={acc}
-          durationSeconds={Math.round((Date.now() - sessionStart.current) / 1000)}
-          level={level}
-          gameName={t("games:culturalObjectRecognitionTitle")}
-          synced={synced}
-          offline={offline}
-          onPlayAgain={initGame}
-        />
-      </>
-    );
-  }
+  const finalAccuracy = Math.round((correctCount / TOTAL_ROUNDS) * 100);
+  const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
 
   if (!currentRound) {
     return (
-      <div className="py-12 text-center text-cream/70 animate-pulse">{t("common:loading")}</div>
+      <div className="py-12 text-center text-cream/70 animate-pulse font-sans">
+        {t("common:loading")}
+      </div>
     );
   }
 
   const { target, options } = currentRound;
 
   return (
-    <div className="space-y-6 max-w-xl mx-auto">
-      {/* Round Progress Tracker */}
-      <div className="flex items-center justify-between text-xs font-semibold text-cream/70 border-b border-clay/50 pb-3">
-        <span className="flex items-center gap-1.5">
-          <Sparkles size={14} className="text-sun" />
-          {t("games:roundProgress", { current: currentRoundIdx + 1, total: TOTAL_ROUNDS })}
-        </span>
-        <span className="bg-clay/40 px-2.5 py-1 rounded-full text-cream/80">
-          Score: {correctCount} / {currentRoundIdx + (roundAnswered ? 1 : 0)}
-        </span>
-      </div>
+    <GameShell
+      gameId="cultural-object-recognition"
+      level={level}
+      score={correctCount}
+      targetScore={TOTAL_ROUNDS}
+      stats={[
+        { label: "Round", value: `${currentRoundIdx + 1} / ${TOTAL_ROUNDS}` },
+      ]}
+      instructionHint={isMultipleChoice ? "Identify the cultural artifact" : "Type or speak the artifact name"}
+      completed={completed}
+      results={{
+        score: finalAccuracy,
+        accuracy: finalAccuracy,
+        durationSeconds: finalDuration,
+        synced,
+        offline,
+      }}
+      onPlayAgain={initGame}
+    >
+      <div className="space-y-6 max-w-xl mx-auto">
+        {/* Target Cultural Object Showcase */}
+        <div className="rounded-3xl border-2 border-clay bg-ink/70 p-6 sm:p-8 text-center space-y-4 shadow-card">
+          <div className="relative inline-flex items-center justify-center size-28 sm:size-32 rounded-3xl bg-sun/10 border-2 border-sun/30 mx-auto shadow-inner">
+            <span className="text-6xl sm:text-7xl select-none" aria-hidden="true">
+              {target.icon}
+            </span>
+            <span className="absolute -bottom-2.5 bg-clay/90 border border-sun/40 text-cream/90 text-[11px] font-bold px-3 py-0.5 rounded-full flex items-center gap-1">
+              <MapPin size={10} className="text-sun" />
+              {getTargetState(target)}
+            </span>
+          </div>
 
-      {/* Target Cultural Object Showcase */}
-      <div className="rounded-3xl border-2 border-clay bg-ink/70 p-6 sm:p-8 text-center space-y-4 shadow-card">
-        {/* Placeholder Emoji Icon (to be replaced with photo asset in production) */}
-        <div className="relative inline-flex items-center justify-center size-28 sm:size-32 rounded-3xl bg-sun/10 border-2 border-sun/30 mx-auto shadow-inner">
-          <span className="text-6xl sm:text-7xl select-none" aria-hidden="true">
-            {target.icon}
-          </span>
-          <span className="absolute -bottom-2.5 bg-clay/90 border border-sun/40 text-cream/90 text-[11px] font-bold px-3 py-0.5 rounded-full flex items-center gap-1">
-            <MapPin size={10} className="text-sun" />
-            {getTargetState(target)}
-          </span>
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold text-cream">
+              {roundAnswered
+                ? getTargetName(target)
+                : t("games:whichObjectIsThis")}
+            </h2>
+            <p className="text-xs sm:text-sm text-cream/60 mt-1 max-w-sm mx-auto">
+              {target.category.replace(/_/g, " ").toUpperCase()} · {getTargetState(target)}
+            </p>
+          </div>
         </div>
 
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-cream">
-            {roundAnswered
-              ? getTargetName(target)
-              : isMultipleChoice
-                ? t("games:culturalQuestion")
-                : t("games:typeAnswerPrompt")}
-          </h2>
-          <p className="text-xs text-cream/60 mt-1 max-w-md mx-auto">
-            {roundAnswered
-              ? getTargetDesc(target)
-              : "Observe the shapes, craft, and regional origin"}
-          </p>
-        </div>
-      </div>
-
-      {/* Mode A: Multiple Choice Selection */}
-      {isMultipleChoice && (
-        <div className="space-y-3">
+        {/* Interaction Mode A: Multiple Choice */}
+        {isMultipleChoice && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {options.map((option) => {
               const isSelected = selectedOptionId === option.id;
-              const isTarget = option.id === target.id;
+              const isCorrectOption = option.id === target.id;
 
-              let style = "border-clay bg-surface hover:border-sun/60 hover:bg-clay/30 text-cream";
+              let btnStyle = "border-clay bg-surface hover:border-sun/60 hover:bg-clay/40 text-cream";
+
               if (roundAnswered) {
-                if (isTarget) {
-                  style =
-                    "border-tea-confirm bg-tea-confirm/20 text-cream font-bold ring-2 ring-tea-confirm/40";
-                } else if (isSelected) {
-                  style = "border-fire bg-fire/20 text-cream line-through";
+                if (isCorrectOption) {
+                  btnStyle = "border-tea-confirm bg-tea-confirm/20 text-cream font-bold ring-2 ring-tea-confirm/50";
+                } else if (isSelected && !isCorrectOption) {
+                  btnStyle = "border-fire bg-fire/20 text-cream/80 line-through";
                 } else {
-                  style = "border-clay/40 bg-ink/30 text-cream/40 opacity-60";
+                  btnStyle = "border-clay/40 bg-surface/40 text-cream/40 opacity-50";
                 }
               }
 
@@ -262,110 +252,113 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
                   type="button"
                   onClick={() => handleSelectOption(option)}
                   disabled={roundAnswered}
-                  className={`p-4 rounded-2xl border-2 font-bold text-base transition-all text-left flex items-center justify-between shadow-sm ${style}`}
+                  className={`p-4 rounded-2xl border-2 text-left font-semibold text-base transition-all flex items-center justify-between min-h-[52px] touch-manipulation select-none active:scale-[0.98] ${btnStyle}`}
                 >
-                  <span>{getTargetName(option)}</span>
-                  {roundAnswered && isTarget && (
-                    <CheckCircle2 size={18} className="text-tea-confirm shrink-0" />
+                  <span className="flex items-center gap-2.5">
+                    <span className="text-2xl">{option.icon}</span>
+                    <span>{getTargetName(option)}</span>
+                  </span>
+                  {roundAnswered && isCorrectOption && (
+                    <CheckCircle2 size={20} className="text-tea-confirm shrink-0" />
                   )}
-                  {roundAnswered && isSelected && !isTarget && (
-                    <XCircle size={18} className="text-fire shrink-0" />
+                  {roundAnswered && isSelected && !isCorrectOption && (
+                    <XCircle size={20} className="text-fire shrink-0" />
                   )}
                 </button>
               );
             })}
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Mode B: Free Recall Typed Input with Voice Input */}
-      {!isMultipleChoice && !roundAnswered && (
-        <div className="space-y-3">
-          <div className="flex gap-2 items-center">
-            <input
-              type="text"
-              value={typedInput}
-              onChange={(e) => setTypedInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleSubmitTypedAnswer();
-              }}
-              className="flex-1 rounded-xl border-2 border-clay bg-ink text-cream font-bold py-3 px-4 focus:border-sun focus:outline-none text-base sm:text-lg"
-              placeholder="e.g. Gamusa, Jaapi, Rhino…"
-              autoFocus
-            />
-            <button
-              type="button"
-              onClick={() => handleSubmitTypedAnswer()}
-              disabled={!typedInput.trim()}
-              className="px-6 py-3 rounded-xl bg-sun text-ink font-bold hover:opacity-90 disabled:opacity-40 transition shrink-0"
-            >
-              {t("games:submitAnswer")}
-            </button>
-            <GameVoiceInputButton
-              onTranscript={(spoken) => {
-                setTypedInput(spoken);
-                handleSubmitTypedAnswer(spoken);
-              }}
-              disabled={roundAnswered}
-            />
+        {/* Interaction Mode B: Free Recall / Typed + Voice Input */}
+        {!isMultipleChoice && (
+          <div className="space-y-4">
+            <div className="flex gap-2.5 items-center">
+              <input
+                type="text"
+                value={typedInput}
+                onChange={(e) => setTypedInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSubmitTypedAnswer();
+                }}
+                disabled={roundAnswered}
+                placeholder={t("games:typeArtifactName")}
+                className="flex-1 rounded-2xl border-2 border-clay bg-surface/80 px-4 py-3 text-base text-cream placeholder:text-cream/40 focus:border-sun focus:outline-none disabled:opacity-50 min-h-[48px]"
+              />
+              <button
+                type="button"
+                onClick={() => handleSubmitTypedAnswer()}
+                disabled={roundAnswered || !typedInput.trim()}
+                className="px-6 py-3 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-bold hover:opacity-90 active:scale-95 active:opacity-90 disabled:opacity-40 transition shrink-0 touch-manipulation"
+              >
+                {t("games:submitAnswer")}
+              </button>
+              <GameVoiceInputButton
+                onTranscript={(spoken) => {
+                  setTypedInput(spoken);
+                  handleSubmitTypedAnswer(spoken);
+                }}
+                disabled={roundAnswered}
+              />
+            </div>
+            <p className="text-xs text-cream/40 text-center flex items-center justify-center gap-1">
+              <HelpCircle size={12} />
+              Tip: Spell as closely as you remember or tap the microphone to speak
+            </p>
           </div>
-          <p className="text-xs text-cream/40 text-center flex items-center justify-center gap-1">
-            <HelpCircle size={12} />
-            Tip: Spell as closely as you remember or tap the microphone to speak
-          </p>
-        </div>
-      )}
+        )}
 
-      {/* Answer Feedback & Cultural Story Card */}
-      {roundAnswered && (
-        <div className="space-y-4 animate-fadeIn">
-          <div
-            className={`p-4 rounded-2xl border flex items-start gap-3 ${
-              isCurrentCorrect
-                ? "border-tea-confirm/50 bg-tea-confirm/10 text-tea-confirm"
-                : "border-fire/50 bg-fire/10 text-cream"
-            }`}
-          >
-            {isCurrentCorrect ? (
-              <CheckCircle2 size={24} className="text-tea-confirm shrink-0 mt-0.5" />
-            ) : (
-              <XCircle size={24} className="text-fire shrink-0 mt-0.5" />
-            )}
-            <div className="text-sm">
-              <p className="font-extrabold text-base">
-                {isCurrentCorrect ? t("games:correct") : t("games:incorrect")}
-              </p>
-              {!isCurrentCorrect && (
-                <p className="text-cream/80 mt-0.5">
-                  This is the <span className="font-bold text-sun">{getTargetName(target)}</span>{" "}
-                  from {getTargetState(target)}.
-                </p>
+        {/* Answer Feedback & Cultural Story Card */}
+        {roundAnswered && (
+          <div className="space-y-4 animate-fadeIn">
+            <div
+              className={`p-4 rounded-2xl border flex items-start gap-3 ${
+                isCurrentCorrect
+                  ? "border-tea-confirm/50 bg-tea-confirm/10 text-tea-confirm"
+                  : "border-fire/50 bg-fire/10 text-cream"
+              }`}
+            >
+              {isCurrentCorrect ? (
+                <CheckCircle2 size={24} className="text-tea-confirm shrink-0 mt-0.5" />
+              ) : (
+                <XCircle size={24} className="text-fire shrink-0 mt-0.5" />
               )}
+              <div className="text-sm">
+                <p className="font-extrabold text-base">
+                  {isCurrentCorrect ? t("games:correct") : t("games:incorrect")}
+                </p>
+                {!isCurrentCorrect && (
+                  <p className="text-cream/80 mt-0.5">
+                    This is the <span className="font-bold text-sun">{getTargetName(target)}</span>{" "}
+                    from {getTargetState(target)}.
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Rich Cultural Story */}
+            <div className="rounded-2xl border border-clay bg-surface/80 p-4 sm:p-5 space-y-2 shadow-sm">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sun">
+                <Sparkles size={14} />
+                {t("games:culturalHeritageNote")}
+              </div>
+              <p className="text-sm text-cream/90 leading-relaxed">{getTargetStory(target)}</p>
+            </div>
+
+            {/* Next Button */}
+            <div className="flex justify-end pt-2">
+              <button
+                type="button"
+                onClick={handleNextRound}
+                className="flex items-center gap-2 px-6 py-3 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation"
+              >
+                <span>{currentRoundIdx + 1 < TOTAL_ROUNDS ? t("games:nextObject") : t("common:done")}</span>
+                <ChevronRight size={18} />
+              </button>
             </div>
           </div>
-
-          {/* Rich Cultural Story */}
-          <div className="rounded-2xl border border-clay bg-surface/80 p-4 sm:p-5 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sun">
-              <Sparkles size={14} />
-              {t("games:culturalHeritageNote")}
-            </div>
-            <p className="text-sm text-cream/90 leading-relaxed">{getTargetStory(target)}</p>
-          </div>
-
-          {/* Next Button */}
-          <div className="flex justify-end pt-2">
-            <button
-              type="button"
-              onClick={handleNextRound}
-              className="flex items-center gap-2 px-6 py-3 rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 transition shadow-card"
-            >
-              {currentRoundIdx + 1 < TOTAL_ROUNDS ? t("games:nextObject") : t("common:done")}
-              <ChevronRight size={18} />
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </GameShell>
   );
 }

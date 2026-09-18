@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -94,4 +94,5 @@ class AdaptiveLevelResponse(BaseModel):
     rationale: str
     based_on_sessions: int
     ai_difficulty_enabled: bool = True
+    model_type: Literal["heuristic", "ml"] = "heuristic"
 

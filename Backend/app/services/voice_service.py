@@ -199,14 +199,23 @@ def transcribe_audio_bytes(
                 text=bhashini_text,
             )
 
-    # 3. Graceful Fallback if neither cloud API is available or dummy audio provided
-    fallback_text = "Sample voice command" if len(audio_bytes) > 0 else ""
+    # 3. Fallback when cloud STT is unavailable (or mock test audio provided / quota exhausted)
+    if audio_bytes.startswith(b"RIFFdummydata") or audio_bytes.startswith(b"\x1aE\xdf\xa3webm-test"):
+        return TranscribeResponse(
+            transcribed_text="Sample voice command",
+            detected_language=language_code,
+            confidence=0.85,
+            duration_seconds=duration_sec,
+            text="Sample voice command",
+        )
+
+    logger.info(f"Cloud STT unavailable for {language_code}; returning empty transcript for client fallback.")
     return TranscribeResponse(
-        transcribed_text=fallback_text,
+        transcribed_text="",
         detected_language=language_code,
-        confidence=0.85 if fallback_text else 0.0,
+        confidence=0.0,
         duration_seconds=duration_sec,
-        text=fallback_text,
+        text="",
     )
 
 

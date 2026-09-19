@@ -120,14 +120,14 @@ function MemoriesPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Button asChild variant="outline" className="rounded-full bg-[#121D2B] border-white/8 text-[#E8ECEF] hover:bg-[#152335] shadow-sm font-semibold">
             <Link to="/">
-              <ArrowLeft size={18} className="mr-2 text-[#22C55E]" /> {t("common:backHome")}
+              <ArrowLeft size={18} className="mr-2 text-[#6FAF9A]" /> {t("common:backHome")}
             </Link>
           </Button>
 
           {/* Add Memory Dialog */}
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
-              <Button size="touch" className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] text-base font-bold shadow-md">
+              <Button size="touch" className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] text-base font-bold shadow-md">
                 <Plus size={20} className="mr-2" /> {t("memories:addMemory")}
               </Button>
             </DialogTrigger>
@@ -149,7 +149,7 @@ function MemoriesPage() {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g. Diwalis with Family in Jaipur"
-                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-xl mt-1 focus:border-[#22C55E]"
+                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-xl mt-1 focus:border-[#6FAF9A]"
                   />
                 </div>
 
@@ -165,7 +165,7 @@ function MemoriesPage() {
                         onClick={() => setCategory(cat)}
                         className={`py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                           category === cat
-                            ? "bg-[#22C55E] text-[#0A1420] shadow-sm"
+                            ? "bg-[#6FAF9A] text-[#0A1420] shadow-sm"
                             : "bg-[#0A1420] border border-white/10 text-[#8A99A8] hover:text-[#E8ECEF]"
                         }`}
                       >
@@ -184,7 +184,7 @@ function MemoriesPage() {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="e.g. Shimla / Home Veranda"
-                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-xl mt-1 focus:border-[#22C55E]"
+                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-xl mt-1 focus:border-[#6FAF9A]"
                   />
                 </div>
 
@@ -199,7 +199,7 @@ function MemoriesPage() {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Describe who was there, how it felt, or familiar sights…"
-                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-xl mt-1 focus:border-[#22C55E]"
+                    className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-xl mt-1 focus:border-[#6FAF9A]"
                   />
                 </div>
 
@@ -222,10 +222,10 @@ function MemoriesPage() {
                       onClick={() => fileInputRef.current?.click()}
                       className="rounded-full border-white/10 text-[#E8ECEF] bg-[#0A1420] hover:bg-white/5"
                     >
-                      <ImageIcon size={18} className="mr-2 text-[#22C55E]" /> {t("memories:uploadPhoto")}
+                      <ImageIcon size={18} className="mr-2 text-[#6FAF9A]" /> {t("memories:uploadPhoto")}
                     </Button>
                     {imageBase64 && (
-                      <span className="text-xs text-[#22C55E] font-bold">Photo attached</span>
+                      <span className="text-xs text-[#6FAF9A] font-bold">Photo attached</span>
                     )}
                   </div>
                   {imageBase64 && (
@@ -244,7 +244,7 @@ function MemoriesPage() {
                   >
                     {t("common:cancel")}
                   </Button>
-                  <Button type="submit" disabled={isCreating} className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-bold">
+                  <Button type="submit" disabled={isCreating} className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] font-bold">
                     {isCreating ? t("common:loading") : t("memories:saveMemory")}
                   </Button>
                 </div>
@@ -255,9 +255,9 @@ function MemoriesPage() {
 
         {/* Title Card */}
         <div className="relative overflow-hidden rounded-3xl border border-white/8 bg-gradient-to-br from-[#13283E] via-[#0F2032] to-[#0A1420] p-6 sm:p-8 shadow-2xl">
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#22C55E]/10 blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#6FAF9A]/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 flex items-center gap-4">
-            <span className="flex size-16 items-center justify-center rounded-2xl bg-[#22C55E] text-[#0A1420] shadow-md shrink-0">
+            <span className="flex size-16 items-center justify-center rounded-2xl bg-[#6FAF9A] text-[#0A1420] shadow-md shrink-0">
               <Heart size={34} />
             </span>
             <div>
@@ -286,7 +286,7 @@ function MemoriesPage() {
             <Button
               size="touch"
               onClick={() => setIsAddOpen(true)}
-              className="mt-6 text-base font-bold rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-md"
+              className="mt-6 text-base font-bold rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] shadow-md"
             >
               <Plus size={20} className="mr-2" /> {t("dashboard:createFirstMemory")}
             </Button>
@@ -309,8 +309,8 @@ function MemoriesPage() {
                       className="h-48 w-full object-cover border-b border-white/5"
                     />
                     <div className="p-6">
-                      <div className="flex items-center justify-between text-xs font-bold text-[#22C55E] mb-2">
-                        <span className="uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30">{localizedTag}</span>
+                      <div className="flex items-center justify-between text-xs font-bold text-[#6FAF9A] mb-2">
+                        <span className="uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#6FAF9A]/15 text-[#6FAF9A] border border-[#6FAF9A]/30">{localizedTag}</span>
                         {m.location && <span className="text-[#8A99A8] font-medium">{m.location}</span>}
                       </div>
                       <h2 className="font-display text-xl sm:text-2xl font-bold text-[#E8ECEF] mb-2 leading-tight">
@@ -325,7 +325,7 @@ function MemoriesPage() {
                       type="button"
                       size="touch"
                       onClick={() => handleSpeak(voiceText)}
-                      className="flex-1 text-sm sm:text-base font-bold gap-2 mt-4 rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-md"
+                      className="flex-1 text-sm sm:text-base font-bold gap-2 mt-4 rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] shadow-md"
                     >
                       <Volume2 size={18} /> {t("memories:listenRecollection")}
                     </Button>

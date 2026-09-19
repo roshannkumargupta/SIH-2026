@@ -91,7 +91,7 @@ export function useSpeechRecognition({
           analyser.getByteTimeDomainData(samples);
           let energy = 0;
           for (let i = 0; i < samples.length; i++) {
-            energy += Math.abs(samples[i] - 128);
+            energy += Math.abs((samples[i] ?? 128) - 128);
           }
           const average = energy / samples.length;
 

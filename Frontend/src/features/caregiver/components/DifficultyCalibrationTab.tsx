@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   Check,
   ArrowRight,
@@ -7,11 +7,22 @@ import {
   Award,
   Sparkles,
   AlertCircle,
+  Brain,
+  Sliders,
+  Shield,
+  Search,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { patientsApi } from "@/api/patients.api";
-import type { PatientCalibration, PatientCalibrationCreate } from "@/types/api";
+import { gamesApi } from "@/api/games.api";
+import type {
+  PatientCalibration,
+  PatientCalibrationCreate,
+  GameAbilityItem,
+  GameAbilityOverviewResponse,
+} from "@/types/api";
 
 interface QuestionOption {
   id: string;
@@ -133,6 +144,80 @@ export function DifficultyCalibrationTab({
       setAiEnabled(!enabled); // revert
     }
   };
+
+  // Bayesian psychometric abilities state
+  const [abilitiesOverview, setAbilitiesOverview] = useState<GameAbilityOverviewResponse | null>(null);
+  const [loadingAbilities, setLoadingAbilities] = useState(true);
+  const [updatingGameId, setUpdatingGameId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDomain, setSelectedDomain] = useState<string>("all");
+
+  const loadAbilities = (mountedRef = { current: true }) => {
+    setLoadingAbilities(true);
+    gamesApi
+      .getPatientAbilities(patientId)
+      .then((data) => {
+        if (mountedRef.current) {
+          setAbilitiesOverview(data);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load patient game abilities:", err);
+      })
+      .finally(() => {
+        if (mountedRef.current) {
+          setLoadingAbilities(false);
+        }
+      });
+  };
+
+  useEffect(() => {
+    const mounted = { current: true };
+    loadAbilities(mounted);
+    return () => {
+      mounted.current = false;
+    };
+  }, [patientId]);
+
+  const handleOverrideChange = async (gameId: string, level: number | null) => {
+    setUpdatingGameId(gameId);
+    try {
+      const updated = await gamesApi.setAbilityOverride(patientId, gameId, level);
+      toast.success(
+        level !== null
+          ? `Manual override set to Level ${level} for ${updated.game_name}`
+          : `Automatic AI difficulty resumed for ${updated.game_name}`,
+      );
+      setAbilitiesOverview((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          abilities: prev.abilities.map((a) => (a.game_id === gameId ? updated : a)),
+        };
+      });
+    } catch {
+      toast.error("Failed to update difficulty override");
+    } finally {
+      setUpdatingGameId(null);
+    }
+  };
+
+  const filteredAbilities = useMemo(() => {
+    if (!abilitiesOverview?.abilities) return [];
+    return abilitiesOverview.abilities.filter((item) => {
+      const matchesSearch =
+        item.game_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.game_id.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesDomain =
+        selectedDomain === "all" ||
+        item.cognitive_domains.some(
+          (d) =>
+            d.toLowerCase().replace(/[\s_]+/g, "") ===
+            selectedDomain.toLowerCase().replace(/[\s_]+/g, ""),
+        );
+      return matchesSearch && matchesDomain;
+    });
+  }, [abilitiesOverview, searchQuery, selectedDomain]);
 
   const handleSelect = (optionId: string) => {
     const q = QUESTIONS[currentQ];
@@ -425,6 +510,208 @@ export function DifficultyCalibrationTab({
           </div>
         </div>
       )}
+
+      {/* ─────────────────────────────────────────────────────────────────
+          BAYESIAN ABILITY CONTROLLER & PER-GAME OVERRIDES PANEL
+          ───────────────────────────────────────────────────────────────── */}
+      <div className="rounded-2xl border border-clay bg-surface p-5 sm:p-6 shadow-card space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-clay/40 pb-5">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <div className="size-9 rounded-xl bg-sun/20 text-sun flex items-center justify-center">
+                <Brain size={20} />
+              </div>
+              <h3 className="text-lg font-bold text-cream">
+                Adaptive Game Abilities & Difficulty Overrides
+              </h3>
+            </div>
+            <p className="text-xs sm:text-sm text-cream/70 mt-1 max-w-2xl">
+              Grounded in Item Response Theory (IRT). Tracks latent capability (θ) and uncertainty (σ)
+              per game to sustain the patient in their optimal <strong>75%–80% challenge zone</strong>.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-sun/15 text-sun border border-sun/30 flex items-center gap-1.5">
+              <Zap size={13} />
+              Target: 75%–80% Accuracy
+            </span>
+            <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-tea-confirm/15 text-tea-confirm border border-tea-confirm/30 flex items-center gap-1.5">
+              <Shield size={13} />
+              30m Cooldown Guard
+            </span>
+          </div>
+        </div>
+
+        {/* Filter & Search Toolbar */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="relative flex-1 max-w-sm">
+            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cream/40" />
+            <input
+              type="text"
+              placeholder="Search games..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 bg-ink/60 border border-clay/60 rounded-xl text-xs sm:text-sm text-cream placeholder:text-cream/40 focus:outline-none focus:border-sun"
+            />
+          </div>
+
+          {/* Domain Filter Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+            {["all", "Memory", "Attention", "Executive Function", "Language", "Visuospatial"].map((dom) => (
+              <button
+                key={dom}
+                type="button"
+                onClick={() => setSelectedDomain(dom)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                  selectedDomain === dom
+                    ? "bg-sun text-ink"
+                    : "bg-ink/50 text-cream/70 hover:bg-clay/40 hover:text-cream border border-clay/40"
+                }`}
+              >
+                {dom === "all" ? "All Domains" : dom}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Loading State or Cards Grid */}
+        {loadingAbilities ? (
+          <div className="py-12 flex flex-col items-center justify-center gap-3 text-cream/50">
+            <RefreshCw size={24} className="animate-spin text-sun" />
+            <span className="text-xs">Computing latent ability distributions…</span>
+          </div>
+        ) : filteredAbilities.length === 0 ? (
+          <div className="py-8 text-center text-cream/50 text-xs">
+            No games found matching your filter.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filteredAbilities.map((item) => {
+              const isUpdating = updatingGameId === item.game_id;
+              const hasOverride = item.manual_override_level !== null;
+
+              return (
+                <div
+                  key={item.game_id}
+                  className={`rounded-xl border p-4 transition-all ${
+                    hasOverride
+                      ? "bg-indigo-950/20 border-indigo-500/40 shadow-sm"
+                      : "bg-ink/50 border-clay/50 hover:border-clay"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2 mb-2.5">
+                    <div>
+                      <h4 className="text-sm font-bold text-cream">{item.game_name}</h4>
+                      <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                        {item.cognitive_domains.map((dom) => (
+                          <span
+                            key={dom}
+                            className="px-2 py-0.5 rounded text-[10px] font-semibold bg-clay/30 text-cream/80 border border-clay/40"
+                          >
+                            {dom}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Latent θ Ability Badge */}
+                    <div className="text-right shrink-0">
+                      <span className="text-xs font-mono font-bold text-sun">
+                        θ = {item.theta.toFixed(1)}
+                      </span>
+                      <p className="text-[10px] text-cream/50">
+                        ±{item.sigma.toFixed(2)} σ
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Metrics Row */}
+                  <div className="grid grid-cols-3 gap-2 bg-ink/70 rounded-lg p-2.5 my-3 border border-clay/30 text-center">
+                    <div>
+                      <span className="text-[10px] text-cream/50 block">Current Lvl</span>
+                      <span className="text-xs font-bold text-cream">
+                        Lvl {item.current_level}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-cream/50 block">Recommended</span>
+                      <span className="text-xs font-bold text-sun">
+                        Lvl {item.recommended_level}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-cream/50 block">Confidence</span>
+                      <span
+                        className={`text-xs font-bold capitalize ${
+                          item.confidence === "high"
+                            ? "text-tea-confirm"
+                            : item.confidence === "medium"
+                            ? "text-sun"
+                            : "text-cream/50"
+                        }`}
+                      >
+                        {item.confidence}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Cooldown or Override Warning */}
+                  {item.cooldown_active && (
+                    <div className="mb-3 px-2.5 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center gap-2 text-[11px] text-amber-200">
+                      <Shield size={12} className="shrink-0 text-amber-400" />
+                      <span>Step-down cooldown active (upward shift held)</span>
+                    </div>
+                  )}
+
+                  {/* Override Selector */}
+                  <div className="flex items-center gap-2 pt-1 border-t border-clay/30">
+                    <label
+                      htmlFor={`override-${item.game_id}`}
+                      className="text-xs text-cream/70 whitespace-nowrap flex items-center gap-1.5"
+                    >
+                      <Sliders size={13} className="text-cream/50" />
+                      Override:
+                    </label>
+
+                    <div className="relative flex-1">
+                      <select
+                        id={`override-${item.game_id}`}
+                        disabled={isUpdating}
+                        value={item.manual_override_level ?? ""}
+                        onChange={(e) => {
+                          const val = e.target.value === "" ? null : Number(e.target.value);
+                          handleOverrideChange(item.game_id, val);
+                        }}
+                        className="w-full bg-surface border border-clay rounded-lg px-2.5 py-1.5 text-xs text-cream focus:outline-none focus:border-sun cursor-pointer disabled:opacity-50"
+                      >
+                        <option value="">Auto (AI Rec: Level {item.recommended_level})</option>
+                        {Array.from({ length: item.max_level }, (_, i) => i + 1).map((lvl) => (
+                          <option key={lvl} value={lvl}>
+                            Lock at Level {lvl} {lvl === item.manual_override_level ? "★ (Active)" : ""}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {hasOverride && (
+                      <button
+                        type="button"
+                        onClick={() => handleOverrideChange(item.game_id, null)}
+                        disabled={isUpdating}
+                        className="px-2 py-1.5 rounded-lg text-[11px] font-semibold bg-clay/30 hover:bg-clay/50 text-cream/80 hover:text-cream border border-clay/40 transition-colors cursor-pointer shrink-0"
+                        title="Reset to automatic statistical recommendation"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

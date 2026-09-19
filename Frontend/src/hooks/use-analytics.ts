@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { analyticsApi } from "../api/analytics.api";
 import { useAuth } from "./use-auth";
 
-export function useAnalytics(customPatientId?: string) {
+export function useAnalytics(customPatientId?: string, days: number = 90) {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const patientId = customPatientId || user?.id;
@@ -15,9 +15,9 @@ export function useAnalytics(customPatientId?: string) {
   });
 
   const trendsQuery = useQuery({
-    queryKey: ["analytics", "trends", patientId],
+    queryKey: ["analytics", "trends", patientId, days],
     queryFn: () =>
-      patientId ? analyticsApi.getPatientTrends(patientId, 30) : Promise.resolve(null),
+      patientId ? analyticsApi.getPatientTrends(patientId, days) : Promise.resolve(null),
     enabled: !!patientId,
   });
 

@@ -117,14 +117,14 @@ function RoutinePage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <Button asChild variant="outline" size="default" className="rounded-full bg-[#121D2B] border-white/8 text-[#E8ECEF] hover:bg-[#152335] shadow-sm font-semibold">
             <Link to="/">
-              <ArrowLeft size={16} className="mr-1.5 text-[#22C55E]" /> {t("common:backHome")}
+              <ArrowLeft size={16} className="mr-1.5 text-[#6FAF9A]" /> {t("common:backHome")}
             </Link>
           </Button>
 
           {/* Add Activity Dialog */}
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
-              <Button variant="default" size="default" className="rounded-full text-sm font-bold shadow-md bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850]">
+              <Button variant="default" size="default" className="rounded-full text-sm font-bold shadow-md bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A]">
                 <Plus size={16} className="mr-1.5" /> {t("routine:addTask")}
               </Button>
             </DialogTrigger>
@@ -189,7 +189,7 @@ function RoutinePage() {
                         onClick={() => setPriority(p)}
                         className={`py-2 rounded-xl text-xs font-bold uppercase transition cursor-pointer ${
                           priority === p
-                            ? "bg-[#22C55E] text-[#0A1420] shadow-sm"
+                            ? "bg-[#6FAF9A] text-[#0A1420] shadow-sm"
                             : "bg-[#0A1420] border border-white/10 text-[#8A99A8] hover:text-[#E8ECEF]"
                         }`}
                       >
@@ -208,7 +208,7 @@ function RoutinePage() {
                   >
                     {t("common:cancel")}
                   </Button>
-                  <Button type="submit" variant="default" disabled={isSubmitting} className="rounded-full bg-[#22C55E] text-[#0A1420] font-bold hover:bg-[#1ea850]">
+                  <Button type="submit" variant="default" disabled={isSubmitting} className="rounded-full bg-[#6FAF9A] text-[#0A1420] font-bold hover:bg-[#5E9E8A]">
                     {isSubmitting ? t("common:loading") : t("routine:saveTask")}
                   </Button>
                 </div>
@@ -219,10 +219,10 @@ function RoutinePage() {
 
         {/* Page Title Glass Banner */}
         <div className="relative overflow-hidden rounded-3xl border border-white/8 bg-gradient-to-br from-[#13283E] via-[#0F2032] to-[#0A1420] p-6 sm:p-8 shadow-2xl">
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#22C55E]/10 blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#6FAF9A]/10 blur-3xl pointer-events-none" />
           <div className="relative z-10 flex flex-wrap items-center justify-between gap-5">
             <div className="flex items-center gap-4">
-              <span className="flex size-14 items-center justify-center rounded-2xl bg-[#22C55E] text-[#0A1420] shadow-md shrink-0">
+              <span className="flex size-14 items-center justify-center rounded-2xl bg-[#6FAF9A] text-[#0A1420] shadow-md shrink-0">
                 <CalendarDays size={30} />
               </span>
               <div>
@@ -241,7 +241,7 @@ function RoutinePage() {
                   type="button"
                   onClick={() => setFilter(f)}
                   className={`px-4 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
-                    filter === f ? "bg-[#22C55E] text-[#0A1420] shadow-md" : "text-[#8A99A8] hover:text-[#E8ECEF]"
+                    filter === f ? "bg-[#6FAF9A] text-[#0A1420] shadow-md" : "text-[#8A99A8] hover:text-[#E8ECEF]"
                   }`}
                 >
                   {filterLabels[f] || f}
@@ -257,7 +257,7 @@ function RoutinePage() {
             <div className="py-12 text-center text-[#8A99A8] text-base">{t("common:loading")}</div>
           ) : filteredTasks.length === 0 ? (
             <div className="rounded-3xl border border-white/8 bg-[#121D2B]/85 p-12 text-center text-[#8A99A8] shadow-md backdrop-blur-md">
-              <CalendarDays size={40} className="mx-auto text-[#22C55E]/40 mb-3" />
+              <CalendarDays size={40} className="mx-auto text-[#6FAF9A]/40 mb-3" />
               <h2 className="font-display text-xl font-bold text-[#E8ECEF]">
                 {t("dashboard:noRoutineScheduled")}
               </h2>
@@ -270,7 +270,7 @@ function RoutinePage() {
                   key={task.id}
                   className={`rounded-2xl border p-4 sm:p-5 transition shadow-md backdrop-blur-md flex items-center justify-between gap-4 ${
                     isDone
-                      ? "border-[#22C55E]/30 bg-[#121D2B]/90 text-[#E8ECEF]"
+                      ? "border-[#6FAF9A]/30 bg-[#121D2B]/90 text-[#E8ECEF]"
                       : "border-white/8 bg-[#121D2B]/85 text-[#E8ECEF] hover:border-white/15"
                   }`}
                 >
@@ -282,7 +282,7 @@ function RoutinePage() {
                     <span
                       className={`flex size-10 shrink-0 items-center justify-center rounded-full border transition ${
                         isDone
-                          ? "border-[#22C55E] bg-[#22C55E] text-[#0A1420] shadow-sm"
+                          ? "border-[#6FAF9A] bg-[#6FAF9A] text-[#0A1420] shadow-sm"
                           : "border-white/20 text-transparent bg-[#0A1420] shadow-sm"
                       }`}
                     >
@@ -311,7 +311,7 @@ function RoutinePage() {
                         </span>
                       </div>
 
-                      <p className="text-[#22C55E] font-bold mt-0.5 text-xs sm:text-sm">
+                      <p className="text-[#6FAF9A] font-bold mt-0.5 text-xs sm:text-sm">
                         {task.scheduled_time.slice(0, 5)}
                       </p>
 

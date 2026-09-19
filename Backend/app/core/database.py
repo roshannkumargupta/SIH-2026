@@ -80,4 +80,20 @@ def init_db() -> None:
             if "doctor_name" not in patient_cols:
                 conn.execute(text("ALTER TABLE patient_profiles ADD COLUMN doctor_name VARCHAR(150)"))
             if "avatar_url" not in patient_cols:
-                conn.execute(text("ALTER TABLE patient_profiles ADD COLUMN avatar_url TEXT"))
+                conn.execute(text("ALTER TABLE patient_profiles ADD COLUMN avatar_url TEXT"))
+        if "cognitive_assessments" in table_names:
+            assessment_cols = {col["name"] for col in inspector.get_columns("cognitive_assessments")}
+            if "visuospatial_score" not in assessment_cols:
+                conn.execute(text("ALTER TABLE cognitive_assessments ADD COLUMN visuospatial_score FLOAT"))
+            if "method_description" not in assessment_cols:
+                conn.execute(text("ALTER TABLE cognitive_assessments ADD COLUMN method_description TEXT"))
+            if "medication_adherence_rate" not in assessment_cols:
+                conn.execute(text("ALTER TABLE cognitive_assessments ADD COLUMN medication_adherence_rate FLOAT"))
+            if "task_adherence_rate" not in assessment_cols:
+                conn.execute(text("ALTER TABLE cognitive_assessments ADD COLUMN task_adherence_rate FLOAT"))
+        if "patient_game_abilities" in table_names:
+            ability_cols = {col["name"] for col in inspector.get_columns("patient_game_abilities")}
+            if "manual_override_level" not in ability_cols:
+                conn.execute(text("ALTER TABLE patient_game_abilities ADD COLUMN manual_override_level INTEGER"))
+            if "last_lowered_at" not in ability_cols:
+                conn.execute(text("ALTER TABLE patient_game_abilities ADD COLUMN last_lowered_at DATETIME"))

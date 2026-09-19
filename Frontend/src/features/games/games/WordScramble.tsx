@@ -98,14 +98,7 @@ export default function WordScramble({ level }: { level: number }) {
       level={level}
       score={score}
       targetScore={target}
-      feedback={
-        feedback
-          ? {
-              text: feedback,
-              type: feedback.startsWith("✓") ? "success" : "error",
-            }
-          : undefined
-      }
+      feedback={feedback || null}
       instructionHint="Unscramble the letters into a meaningful word. Type your answer or tap the microphone to speak."
       completed={completed}
       results={{

@@ -61,8 +61,8 @@ export function VoiceTriggerButton({ className = "", defaultLanguage }: VoiceTri
             onClick={handleClick}
             className={`relative flex items-center gap-3 rounded-full pl-2 pr-5 py-2 backdrop-blur-xl shadow-2xl transition-all duration-300 transform active:scale-95 cursor-pointer border ${
               isListening
-                ? "border-[#22C55E] bg-[#121D2B] text-[#E8ECEF] shadow-[#22C55E]/20 animate-pulse ring-4 ring-[#22C55E]/30"
-                : "border-white/10 bg-[#121D2B]/95 text-[#E8ECEF] hover:scale-105 hover:border-[#22C55E]/40"
+                ? "border-[#6FAF9A] bg-[#121D2B] text-[#E8ECEF] shadow-[#6FAF9A]/20 animate-pulse ring-4 ring-[#6FAF9A]/30"
+                : "border-white/10 bg-[#121D2B]/95 text-[#E8ECEF] hover:scale-105 hover:border-[#6FAF9A]/40"
             }`}
             aria-label="Open voice assistant"
             title="SmritiSetu Multilingual Voice Assistant (or say 'Hey Setu')"
@@ -70,7 +70,7 @@ export function VoiceTriggerButton({ className = "", defaultLanguage }: VoiceTri
             {/* Teal-green circular mic badge */}
             <span
               className={`flex size-10 items-center justify-center rounded-full transition-transform ${
-                isListening ? "bg-[#22C55E] text-[#0A1420] animate-pulse" : "bg-[#22C55E] text-[#0A1420] group-hover:scale-105"
+                isListening ? "bg-[#6FAF9A] text-[#0A1420] animate-pulse" : "bg-[#6FAF9A] text-[#0A1420] group-hover:scale-105"
               }`}
             >
               <Mic size={20} className={isListening ? "animate-bounce" : ""} />
@@ -88,10 +88,10 @@ export function VoiceTriggerButton({ className = "", defaultLanguage }: VoiceTri
             {/* Waveform animation bars when listening */}
             {isListening && (
               <div className="flex items-center gap-0.5 h-4 ml-1">
-                <span className="w-1 bg-[#22C55E] rounded-full animate-bounce [animation-delay:-0.3s] h-3" />
-                <span className="w-1 bg-[#22C55E] rounded-full animate-bounce [animation-delay:-0.15s] h-4" />
+                <span className="w-1 bg-[#6FAF9A] rounded-full animate-bounce [animation-delay:-0.3s] h-3" />
+                <span className="w-1 bg-[#6FAF9A] rounded-full animate-bounce [animation-delay:-0.15s] h-4" />
                 <span className="w-1 bg-[#2DD4BF] rounded-full animate-bounce h-2" />
-                <span className="w-1 bg-[#22C55E] rounded-full animate-bounce [animation-delay:-0.4s] h-3" />
+                <span className="w-1 bg-[#6FAF9A] rounded-full animate-bounce [animation-delay:-0.4s] h-3" />
               </div>
             )}
           </button>

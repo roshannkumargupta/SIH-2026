@@ -1,6 +1,6 @@
 import type { User } from "../types/api";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api/v1";
+const BASE_URL = (import.meta.env["VITE_API_BASE_URL"] as string | undefined) || "/api/v1";
 const TOKEN_KEY = "smritisetu_auth_token";
 const USER_KEY = "smritisetu_auth_user";
 
@@ -12,7 +12,7 @@ export interface ApiValidationErrorDetail {
 
 export class ApiRequestError extends Error {
   status: number;
-  errorCode?: string;
+  errorCode?: string | undefined;
   details?: unknown;
 
   constructor(message: string, status: number, errorCode?: string, details?: unknown) {
@@ -240,17 +240,21 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     let details: unknown = null;
 
     if (data) {
-      if (typeof data.message === "string") {
-        message = data.message;
-      } else if (typeof data.detail === "string") {
-        message = data.detail;
-      } else if (Array.isArray(data.detail)) {
-        details = data.detail;
-        message = (data.detail as Array<{ msg?: string }>).map((d) => d.msg || "").join(", ");
+      const dataMsg = data["message"];
+      const dataDetail = data["detail"];
+      const dataDetails = data["details"];
+
+      if (typeof dataMsg === "string") {
+        message = dataMsg;
+      } else if (typeof dataDetail === "string") {
+        message = dataDetail;
+      } else if (Array.isArray(dataDetail)) {
+        details = dataDetail;
+        message = (dataDetail as Array<{ msg?: string }>).map((d) => d.msg || "").join(", ");
       }
 
-      if (data.details) {
-        details = data.details;
+      if (dataDetails) {
+        details = dataDetails;
       }
     }
 
@@ -262,7 +266,7 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     throw new ApiRequestError(
       message,
       response.status,
-      (data?.errorCode as string) || `HTTP_${response.status}`,
+      (data?.["errorCode"] as string) || `HTTP_${response.status}`,
       details,
     );
   }
@@ -273,24 +277,30 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 export const apiClient = {
   get: <T>(endpoint: string, options?: RequestInit) =>
     request<T>(endpoint, { ...options, method: "GET" }),
-  post: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
-    request<T>(endpoint, {
+  post: <T>(endpoint: string, body?: unknown, options?: RequestInit) => {
+    const formattedBody = body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : null;
+    return request<T>(endpoint, {
       ...options,
       method: "POST",
-      body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
-    }),
-  put: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
-    request<T>(endpoint, {
+      ...(formattedBody !== null ? { body: formattedBody } : {}),
+    });
+  },
+  put: <T>(endpoint: string, body?: unknown, options?: RequestInit) => {
+    const formattedBody = body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : null;
+    return request<T>(endpoint, {
       ...options,
       method: "PUT",
-      body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
-    }),
-  patch: <T>(endpoint: string, body?: unknown, options?: RequestInit) =>
-    request<T>(endpoint, {
+      ...(formattedBody !== null ? { body: formattedBody } : {}),
+    });
+  },
+  patch: <T>(endpoint: string, body?: unknown, options?: RequestInit) => {
+    const formattedBody = body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : null;
+    return request<T>(endpoint, {
       ...options,
       method: "PATCH",
-      body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
-    }),
+      ...(formattedBody !== null ? { body: formattedBody } : {}),
+    });
+  },
   delete: <T>(endpoint: string, options?: RequestInit) =>
     request<T>(endpoint, { ...options, method: "DELETE" }),
 };

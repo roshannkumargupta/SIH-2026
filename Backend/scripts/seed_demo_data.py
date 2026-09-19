@@ -200,34 +200,45 @@ def seed_data():
                 )
                 db.add(t_obj)
 
-        # Games sessions
+        # Games sessions across real clinical games
         if db.query(GameSession).filter_by(patient_id=lalita.id).count() == 0:
-            for i in range(5):
+            demo_games = [
+                ("card-matching", 88.0, 3, 0),
+                ("tower-of-hanoi", 84.0, 2, 1),
+                ("stroop", 86.0, 4, 2),
+                ("word-scramble", 82.0, 2, 3),
+                ("mental-rotation", 85.0, 3, 4),
+            ]
+            for gid, acc, lvl, day_ago in demo_games:
                 db.add(GameSession(
                     patient_id=lalita.id,
-                    game_type="memory_match",
-                    game_id="memory_match",
-                    score=80 + i * 3,
-                    accuracy=85.0 + i * 2.5,
-                    duration_seconds=45 - i * 3,
+                    game_type=gid,
+                    game_id=f"demo_{gid}",
+                    score=int(acc * 10),
+                    accuracy=acc,
+                    duration_seconds=90,
                     difficulty="medium",
-                    level_achieved=1 + i,
-                    completed_at=datetime.now(timezone.utc) - timedelta(days=i),
+                    level_achieved=lvl,
+                    completed_at=datetime.now(timezone.utc) - timedelta(days=day_ago),
                 ))
 
         # Cognitive Assessment
         if db.query(CognitiveAssessment).filter_by(patient_id=lalita.id).count() == 0:
             db.add(CognitiveAssessment(
                 patient_id=lalita.id,
-                overall_score=83.5,
+                overall_score=84.0,
                 risk_level="low",
-                memory_score=85.0,
-                attention_score=82.0,
-                executive_function_score=81.0,
-                language_score=86.0,
-                insights="Short-term recall and daily sequence attention remain stable with consistent medication adherence.",
-                recommendations="Continue daily Memory Match challenge and maintain morning garden walks.",
-                model_version="v1.2-hybrid-clinical",
+                memory_score=86.0,
+                attention_score=85.0,
+                executive_function_score=83.0,
+                language_score=82.0,
+                visuospatial_score=84.0,
+                insights='["Short-term memory recall and sequence attention remain stable with consistent gameplay.", "Visuospatial orientation and task execution are within expected baselines."]',
+                recommendations='["Continue daily Card Matching and Tower of Hanoi cognitive puzzles.", "Maintain regular daily walk and social interaction."]',
+                model_version="2.0-heuristic",
+                method_description="Exponential recency-weighting (7-day half-life) across 24 games and 5 clinical domains.",
+                medication_adherence_rate=95.0,
+                task_adherence_rate=90.0,
                 assessment_date=datetime.now(timezone.utc),
             ))
 

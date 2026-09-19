@@ -5,7 +5,10 @@ from uuid import UUID
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.models.game import GameSession
+from app.ai.cognitive_engine import engine
+from app.ai.game_domain_mapping import get_max_level_for_game, normalize_game_id
+from app.ai.ml_difficulty import INITIAL_SIGMA, update_ability_state
+from app.models.game import GameSession, PatientGameAbility
 from app.schemas.game import GameSessionCreate, GameTypeInfo
 
 AVAILABLE_GAMES = [
@@ -190,6 +193,8 @@ def record_game_session(
     data: GameSessionCreate,
 ) -> GameSession:
     completed_time = data.completed_at or datetime.now(timezone.utc)
+    if completed_time.tzinfo is None:
+        completed_time = completed_time.replace(tzinfo=timezone.utc)
     metrics_str = json.dumps(data.metrics) if data.metrics else None
 
     session = GameSession(
@@ -209,8 +214,55 @@ def record_game_session(
         db.add(session)
         db.commit()
         db.refresh(session)
+
+        # 1. Update Bayesian psychometric ability state
+        raw_gid = data.game_id or data.game_type
+        gid = normalize_game_id(raw_gid)
+        max_lvl = get_max_level_for_game(gid)
+
+        ability = db.scalars(
+            select(PatientGameAbility).where(
+                PatientGameAbility.patient_id == patient_id,
+                PatientGameAbility.game_id.in_([gid, raw_gid, gid.replace("_", "-")]),
+            )
+        ).first()
+
+        if ability is None:
+            ability = PatientGameAbility(
+                patient_id=patient_id,
+                game_id=gid,
+                theta=float(data.level_achieved),
+                sigma=INITIAL_SIGMA,
+                last_level_played=data.level_achieved,
+                sessions_count=0,
+            )
+            db.add(ability)
+            db.flush()
+
+        new_theta, new_sigma, _, _ = update_ability_state(
+            current_theta=ability.theta,
+            current_sigma=ability.sigma,
+            accuracy=data.accuracy,
+            level_played=data.level_achieved,
+            metrics=data.metrics,
+            completed_at=completed_time,
+            last_session_at=ability.updated_at,
+            max_level=max_lvl,
+        )
+
+        ability.theta = new_theta
+        ability.sigma = new_sigma
+        ability.last_level_played = data.level_achieved
+        ability.sessions_count = (ability.sessions_count or 0) + 1
+        ability.updated_at = completed_time
+
+        # 2. Invalidate daily cognitive assessment cache
+        engine.invalidate_assessment_cache(patient_id)
+
+        db.commit()
+
         is_won = session.accuracy >= 60.0 or session.score >= 40
-        session.next_level_unlocked = min(10, session.level_achieved + 1) if is_won else session.level_achieved
+        session.next_level_unlocked = min(max_lvl, session.level_achieved + 1) if is_won else session.level_achieved
         return session
     except Exception:
         db.rollback()

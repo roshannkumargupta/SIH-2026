@@ -412,6 +412,7 @@ export const en = {
     attention: "Attention",
     executiveFunction: "Executive Function",
     language: "Language",
+    visuospatial: "Visuospatial",
     clinicalInsights: "Clinical Insights & Recommendations",
     longitudinalTrend: "30-Day Cognitive Trend",
     stableTrend: "Stable cognitive profile within expected baseline variance.",
@@ -450,182 +451,191 @@ export const en = {
   },
   voice: {
   "phrases": {
-    "OPEN_GAMES": [
-      "open games",
-      "play games",
-      "show games",
-      "brain games",
-      "cognitive exercises",
-      "i want to play games",
-      "start games",
-      "take me to games"
-    ],
-    "NEXT_GAME": [
-      "next game",
-      "another game",
-      "new game",
-      "show next game",
-      "give me another game",
-      "switch game"
-    ],
-    "OPEN_GAME": [
-      "play",
-      "open",
-      "start",
-      "launch"
-    ],
-    "OPEN_REMINDERS": [
-      "open reminders",
-      "show reminders",
-      "my reminders",
-      "routine",
-      "daily routine",
-      "open routine",
-      "show schedule",
-      "view schedule"
-    ],
-    "TODAY_REMINDERS": [
-      "what do i have today",
-      "today reminders",
-      "what tasks today",
-      "what is on today",
-      "today's schedule",
-      "what should i do today",
-      "schedule for today"
-    ],
-    "NEXT_REMINDER": [
-      "what is my next task",
-      "next reminder",
-      "next task",
-      "what is next",
-      "what should i do next",
-      "upcoming reminder"
-    ],
-    "ADD_ROUTINE": [
-      "add a task",
-      "add routine",
-      "create task",
-      "new routine",
-      "new task",
-      "schedule walk",
-      "schedule activity",
-      "add reminder",
-      "set reminder"
-    ],
-    "COMPLETE_ROUTINE": [
-      "mark task done",
-      "task completed",
-      "routine done",
-      "completed task",
-      "finished task",
-      "i finished my task",
-      "mark routine completed"
-    ],
-    "REMOVE_ROUTINE": [
-      "delete task",
-      "remove task",
-      "delete routine",
-      "remove routine",
-      "cancel task",
-      "clear task"
-    ],
-    "UPDATE_ROUTINE": [
-      "change the time",
-      "update routine",
-      "change routine time",
-      "reschedule task",
-      "reschedule routine",
-      "modify task time"
-    ],
-    "OPEN_MEDICATIONS": [
-      "show my medicines",
-      "open medications",
-      "my medicines",
-      "show medicines",
-      "medicine list",
-      "prescriptions",
-      "open medicine schedule"
-    ],
-    "TODAY_MEDICATIONS": [
-      "what medicine do i take today",
-      "today's medicines",
-      "medicines for today",
-      "what pills today",
-      "what medicines should i take today",
-      "daily medication"
-    ],
-    "NEXT_MEDICATION": [
-      "what is my next dose",
-      "next medicine",
-      "next pill",
-      "when is my next dose",
-      "what medicine next",
-      "upcoming medicine"
-    ],
-    "MEDICATION_TAKEN": [
-      "i took my medicine",
-      "medicine taken",
-      "took pill",
-      "took tablet",
-      "already took medicine",
-      "i have taken my medicine",
-      "mark medicine taken"
-    ],
-    "MEDICATION_SKIPPED": [
-      "skip medicine",
-      "skip dose",
-      "skipped medicine",
-      "did not take medicine",
-      "missed medicine"
-    ],
-    "OPEN_ANALYTICS": [
-      "show my progress",
-      "open analytics",
-      "my progress",
-      "cognitive score",
-      "performance report",
-      "how am i doing",
-      "show report"
-    ],
-    "OPEN_MEMORIES": [
-      "show my memories",
-      "open memories",
-      "my photos",
-      "family photos",
-      "photo album",
-      "view memories"
-    ],
-    "OPEN_CAREGIVER": [
-      "caregiver",
-      "caretaker",
-      "caregiver dashboard",
-      "caretaker portal",
-      "open caregiver"
-    ],
-    "GO_HOME": [
-      "go home",
-      "home page",
-      "back to dashboard",
-      "main screen",
-      "return home",
-      "exit to home"
-    ],
-    "HELP": [
-      "help",
-      "what can i say",
-      "voice commands",
-      "how does this work",
-      "assistant guide"
-    ],
-    "CLOSE": [
-      "close",
-      "exit",
-      "quit",
-      "dismiss",
-      "stop",
-      "cancel"
-    ]
-  },
+        "OPEN_GAMES": [
+            "Open games",
+            "open games",
+            "play games",
+            "show games",
+            "brain games",
+            "cognitive exercises",
+            "i want to play games",
+            "start games",
+            "take me to games"
+        ],
+        "NEXT_GAME": [
+            "next game",
+            "another game",
+            "new game",
+            "show next game",
+            "give me another game",
+            "switch game"
+        ],
+        "OPEN_GAME": [
+            "play",
+            "open",
+            "start",
+            "launch"
+        ],
+        "OPEN_REMINDERS": [
+            "Show my reminders",
+            "open reminders",
+            "show reminders",
+            "my reminders",
+            "routine",
+            "daily routine",
+            "open routine",
+            "show schedule",
+            "view schedule"
+        ],
+        "TODAY_REMINDERS": [
+            "What should I do today?",
+            "what do i have today",
+            "today reminders",
+            "what tasks today",
+            "what is on today",
+            "today's schedule",
+            "what should i do today",
+            "schedule for today"
+        ],
+        "NEXT_REMINDER": [
+            "Tell me my next reminder",
+            "what is my next task",
+            "next reminder",
+            "next task",
+            "what is next",
+            "what should i do next",
+            "upcoming reminder"
+        ],
+        "ADD_ROUTINE": [
+            "add a task",
+            "add routine",
+            "create task",
+            "new routine",
+            "new task",
+            "schedule walk",
+            "schedule activity",
+            "add reminder",
+            "set reminder"
+        ],
+        "COMPLETE_ROUTINE": [
+            "mark task done",
+            "task completed",
+            "routine done",
+            "completed task",
+            "finished task",
+            "i finished my task",
+            "mark routine completed"
+        ],
+        "REMOVE_ROUTINE": [
+            "delete task",
+            "remove task",
+            "delete routine",
+            "remove routine",
+            "cancel task",
+            "clear task"
+        ],
+        "UPDATE_ROUTINE": [
+            "change the time",
+            "update routine",
+            "change routine time",
+            "reschedule task",
+            "reschedule routine",
+            "modify task time"
+        ],
+        "OPEN_MEDICATIONS": [
+            "Take my medicine",
+            "show my medicines",
+            "open medications",
+            "my medicines",
+            "show medicines",
+            "medicine list",
+            "prescriptions",
+            "open medicine schedule"
+        ],
+        "TODAY_MEDICATIONS": [
+            "what medicine do i take today",
+            "today's medicines",
+            "medicines for today",
+            "what pills today",
+            "what medicines should i take today",
+            "daily medication"
+        ],
+        "NEXT_MEDICATION": [
+            "what is my next dose",
+            "next medicine",
+            "next pill",
+            "when is my next dose",
+            "what medicine next",
+            "upcoming medicine"
+        ],
+        "MEDICATION_TAKEN": [
+            "i took my medicine",
+            "medicine taken",
+            "took pill",
+            "took tablet",
+            "already took medicine",
+            "i have taken my medicine",
+            "mark medicine taken"
+        ],
+        "MEDICATION_SKIPPED": [
+            "skip medicine",
+            "skip dose",
+            "skipped medicine",
+            "did not take medicine",
+            "missed medicine"
+        ],
+        "OPEN_ANALYTICS": [
+            "Show my progress",
+            "show my progress",
+            "open analytics",
+            "my progress",
+            "cognitive score",
+            "performance report",
+            "how am i doing",
+            "show report"
+        ],
+        "OPEN_MEMORIES": [
+            "show my memories",
+            "open memories",
+            "my photos",
+            "family photos",
+            "photo album",
+            "view memories"
+        ],
+        "OPEN_CAREGIVER": [
+            "Open caregiver dashboard",
+            "caregiver",
+            "caretaker",
+            "caregiver dashboard",
+            "caretaker portal",
+            "open caregiver"
+        ],
+        "GO_HOME": [
+            "Go back to home dashboard",
+            "go home",
+            "home page",
+            "back to dashboard",
+            "main screen",
+            "return home",
+            "exit to home"
+        ],
+        "HELP": [
+            "What can I say?",
+            "help",
+            "what can i say",
+            "voice commands",
+            "how does this work",
+            "assistant guide"
+        ],
+        "CLOSE": [
+            "close",
+            "exit",
+            "quit",
+            "dismiss",
+            "stop",
+            "cancel"
+        ]
+    },
   "games": {
     "WATER_JUGS": [
       "water jugs",

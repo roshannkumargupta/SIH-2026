@@ -32,13 +32,13 @@ function CalmPage() {
             className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold"
           >
             <Link to="/">
-              <ArrowLeft className="w-4 h-4 mr-2 text-[#22C55E]" />
+              <ArrowLeft className="w-4 h-4 mr-2 text-[#6FAF9A]" />
               <span>{t("common:backHome")}</span>
             </Link>
           </Button>
           <div>
             <div className="flex items-center gap-2">
-              <HeartHandshake className="w-6 h-6 text-[#22C55E]" />
+              <HeartHandshake className="w-6 h-6 text-[#6FAF9A]" />
               <h1 className="text-2xl sm:text-3xl font-display font-bold tracking-tight text-[#E8ECEF]">
                 {t("dashboard:calmTitle")}
               </h1>
@@ -49,7 +49,7 @@ function CalmPage() {
           </div>
         </div>
 
-        <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-[#22C55E]/15 border border-[#22C55E]/25 text-[#22C55E] text-xs font-bold shadow-sm">
+        <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-[#6FAF9A]/15 border border-[#6FAF9A]/25 text-[#6FAF9A] text-xs font-bold shadow-sm">
           <Sparkles className="w-4 h-4" />
           <span>{t("dashboard:calmPeacefulCorner")}</span>
         </div>

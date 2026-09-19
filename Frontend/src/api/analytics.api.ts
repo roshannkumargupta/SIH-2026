@@ -8,6 +8,6 @@ export const analyticsApi = {
   getLatestAssessment: (patientId: string) =>
     apiClient.get<CognitiveAssessment>(`/analytics/patient/${patientId}/latest`),
 
-  getPatientTrends: (patientId: string, days: number = 30) =>
+  getPatientTrends: (patientId: string, days: number = 90) =>
     apiClient.get<CognitiveTrend>(`/analytics/patient/${patientId}/trends?days=${days}`),
 };

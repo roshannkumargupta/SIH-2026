@@ -265,7 +265,7 @@ export function savePatient(patient: PatientData): void {
         // Recovery Strategy 2: Strip ALL memory images and non-critical history
         const minimalPatient: PatientData = {
           ...sanitized,
-          memories: (sanitized.memories || []).map((m) => ({ ...m, photoUrl: undefined })),
+          memories: (sanitized.memories || []).map(({ photoUrl: _photoUrl, ...m }) => m),
           dailyScores: (sanitized.dailyScores || []).slice(-7),
         };
 

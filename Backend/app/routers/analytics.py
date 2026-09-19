@@ -106,7 +106,7 @@ def get_latest_patient_assessment(
 def get_patient_trends(
     patient_id: UUID,
     db: DBSession,
-    days: int = Query(default=30, ge=7, le=180),
+    days: int = Query(default=90, ge=7, le=180),
     current_user: User = Depends(get_current_user),
 ):
     """Get cognitive score trends over time for visualization charts."""

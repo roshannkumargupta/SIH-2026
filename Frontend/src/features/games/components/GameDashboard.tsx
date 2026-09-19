@@ -40,12 +40,12 @@ export function GameDashboard() {
     <div className="space-y-8">
       {/* Hero Header: Dark Navy Ambient Glass Banner */}
       <div className="relative overflow-hidden rounded-3xl border border-white/8 bg-gradient-to-br from-[#13283E] via-[#0F2032] to-[#0A1420] p-6 sm:p-9 shadow-2xl">
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#22C55E]/10 blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#6FAF9A]/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 -mb-20 size-64 rounded-full bg-[#2DD4BF]/10 blur-3xl pointer-events-none" />
 
         <div className="relative z-10">
           <div className="flex flex-wrap items-center gap-5">
-            <span className="flex size-14 sm:size-16 items-center justify-center rounded-2xl bg-[#22C55E] text-[#0A1420] shadow-md shrink-0">
+            <span className="flex size-14 sm:size-16 items-center justify-center rounded-2xl bg-[#6FAF9A] text-[#0A1420] shadow-md shrink-0">
               <Brain size={32} />
             </span>
             <div>
@@ -76,11 +76,11 @@ export function GameDashboard() {
               </div>
 
               <div className="rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-4 flex items-center gap-3.5 shadow-md">
-                <span className="flex size-10 items-center justify-center rounded-xl bg-[#22C55E]/15 text-[#22C55E] shrink-0">
+                <span className="flex size-10 items-center justify-center rounded-xl bg-[#6FAF9A]/15 text-[#6FAF9A] shrink-0">
                   <CheckCircle2 size={22} />
                 </span>
                 <div>
-                  <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#22C55E]">
+                  <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#6FAF9A]">
                     {Math.round(summary.average_accuracy)}%
                   </p>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-[#8A99A8]">
@@ -128,7 +128,7 @@ export function GameDashboard() {
           onClick={() => setFilter("all")}
           className={`px-4 py-2 rounded-full text-xs font-bold border transition-all cursor-pointer ${
             filter === "all"
-              ? "bg-[#22C55E] text-[#0A1420] border-[#22C55E] shadow-md"
+              ? "bg-[#6FAF9A] text-[#0A1420] border-[#6FAF9A] shadow-md"
               : "bg-[#121D2B] text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-[#152335] border-white/8 shadow-sm"
           }`}
         >
@@ -144,7 +144,7 @@ export function GameDashboard() {
               onClick={() => setFilter(cat)}
               className={`px-4 py-2 rounded-full text-xs font-bold border transition-all capitalize cursor-pointer ${
                 filter === cat
-                  ? "bg-[#22C55E] text-[#0A1420] border-[#22C55E] shadow-md"
+                  ? "bg-[#6FAF9A] text-[#0A1420] border-[#6FAF9A] shadow-md"
                   : "bg-[#121D2B] text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-[#152335] border-white/8 shadow-sm"
               }`}
             >
@@ -172,7 +172,7 @@ export function GameDashboard() {
       {/* Recent Sessions */}
       {sessions.length > 0 && (
         <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
-          <div className="flex items-center gap-2 text-base font-bold text-[#22C55E] mb-5">
+          <div className="flex items-center gap-2 text-base font-bold text-[#6FAF9A] mb-5">
             <History size={20} />
             <span className="font-display tracking-tight text-lg text-[#E8ECEF]">
               {t("games:recentSessions") && t("games:recentSessions") !== "recentSessions"
@@ -210,8 +210,8 @@ export function GameDashboard() {
                       {s.game_id.replace(/-/g, " ")}
                     </td>
                     <td className="py-3.5 text-[#8A99A8]">Lv {s.level_achieved}</td>
-                    <td className="py-3.5 font-bold text-[#22C55E]">{s.score}</td>
-                    <td className="py-3.5 font-bold text-[#22C55E]">{Math.round(s.accuracy)}%</td>
+                    <td className="py-3.5 font-bold text-[#6FAF9A]">{s.score}</td>
+                    <td className="py-3.5 font-bold text-[#6FAF9A]">{Math.round(s.accuracy)}%</td>
                     <td className="py-3.5 text-[#8A99A8]">{s.duration_seconds}s</td>
                   </tr>
                 ))}

@@ -92,6 +92,7 @@ export interface MedicationSchedule {
   end_date: string | null;
   active: boolean;
   reminder_enabled: boolean;
+  instructions?: string | null | undefined;
   created_at: string;
   updated_at: string;
 }
@@ -215,46 +216,72 @@ export interface GameProgressResponse {
   games: Record<string, SingleGameProgress>;
 }
 
-export type RiskLevel = "low" | "moderate" | "high" | "critical";
+export type RiskLevel = "low" | "moderate" | "high" | "critical" | "unassessable";
+
+export interface AdherenceData {
+  medication_rate: number | null;
+  task_rate: number | null;
+}
+
+export interface DomainSlopeItem {
+  slope_7d: number | null;
+  slope_30d: number | null;
+  declining: boolean;
+  days_declining: number;
+}
 
 export interface CognitiveAssessment {
   id: string;
   patient_id: string;
-  overall_score: number;
+  overall_score: number | null;
   risk_level: RiskLevel;
-  memory_score: number;
-  attention_score: number;
-  executive_function_score: number;
-  language_score: number;
+  memory_score: number | null;
+  attention_score: number | null;
+  executive_function_score: number | null;
+  language_score: number | null;
+  visuospatial_score: number | null;
   insights: string[] | string | null;
   recommendations: string[] | string | null;
   model_version: string;
+  method_description?: string | null;
+  adherence?: AdherenceData | null;
   assessment_date: string;
   created_at: string;
 }
 
 export interface CognitiveTrendItem {
   date: string;
-  overall_score: number;
+  overall_score: number | null;
   risk_level?: string | undefined;
-  memory_score: number;
-  attention_score: number;
-  executive_function_score?: number | undefined;
-  language_score?: number | undefined;
+  memory_score: number | null;
+  attention_score: number | null;
+  executive_function_score?: number | null;
+  language_score?: number | null;
+  visuospatial_score?: number | null;
 }
 
 export interface CognitiveTrend {
   patient_id: string;
   trends?: CognitiveTrendItem[] | undefined;
   data_points?: CognitiveTrendItem[] | undefined;
-  average_score?: number | undefined;
-  trend_direction: "improving" | "stable" | "declining";
+  average_score?: number | null;
+  trend_direction: "improving" | "stable" | "declining" | "insufficient_data";
+  domain_slopes?: Record<string, DomainSlopeItem>;
+  decline_alert_active?: boolean;
+  decline_domains?: string[] | null;
 }
 
 export interface Notification {
   id: string;
   patient_id: string;
-  type: "medication" | "task" | "general";
+  type:
+    | "medication"
+    | "task"
+    | "general"
+    | "hydration"
+    | "appointment"
+    | "mood_alert"
+    | "cognitive_decline";
   title: string;
   message: string;
   scheduled_for: string;
@@ -594,6 +621,42 @@ export interface AdaptiveLevelResponse {
   rationale: string;
   based_on_sessions: number;
   ai_difficulty_enabled: boolean;
+  model_type?: string;
+  theta?: number;
+  sigma?: number;
+  manual_override_level?: number | null;
+  cooldown_active?: boolean;
+  last_lowered_at?: string | null;
+}
+
+export interface GameAbilityItem {
+  game_id: string;
+  game_name: string;
+  cognitive_domains: string[];
+  theta: number;
+  sigma: number;
+  confidence: "high" | "medium" | "low";
+  current_level: number;
+  recommended_level: number;
+  max_level: number;
+  manual_override_level: number | null;
+  sessions_count: number;
+  last_played_at: string | null;
+  last_lowered_at: string | null;
+  cooldown_active: boolean;
+}
+
+export interface GameAbilityOverviewResponse {
+  patient_id: string;
+  controller_type: string;
+  description: string;
+  target_accuracy_band: string;
+  abilities: GameAbilityItem[];
+}
+
+export interface GameOverrideRequest {
+  game_id: string;
+  override_level: number | null;
 }
 
 export interface CalibrationAnswer {

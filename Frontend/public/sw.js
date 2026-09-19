@@ -3,7 +3,7 @@
  * Provides offline caching, network resiliency, and seamless background sync readiness.
  */
 
-const CACHE_NAME = "smritisetu-v2";
+const CACHE_NAME = "smritisetu-v3";
 
 // Note on i18n: Frontend/src/i18n/config.ts statically imports all translation resources,
 // so all 11 Indic language catalogs are compiled directly into the application JS bundle.

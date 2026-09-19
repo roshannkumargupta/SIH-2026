@@ -179,8 +179,8 @@ def score_phrase(text: str, candidate_raw: str) -> float:
         elif matched > 0 and len(c_tokens) > 1:
             score = 0.45 * (matched / len(c_tokens))
 
-    # Single short token penalty (avoids "help" substring bug)
-    if len(c_tokens) == 1 and len(candidate) < 4:
+    # Single short token penalty (avoids "help" substring bug when not exact match)
+    if text != candidate and len(c_tokens) == 1 and len(candidate) < 4:
         score -= 0.35
 
     return min(1.0, max(0.0, score))
@@ -250,10 +250,16 @@ def tier1_match(raw: str, lang: str = "en-IN") -> dict[str, Any]:
                 evaluate(intent_key, p, None, -0.10)
 
     if best_score >= 0.58:
+        ENTITY_ALIAS_MAP = {
+            "CARD_MATCHING": "MEMORY_MATCH",
+            "NUMBER_SEQUENCE": "NUMBER_PUZZLE",
+            "WORD_SCRAMBLE": "WORD_PUZZLE",
+        }
+        final_entity = ENTITY_ALIAS_MAP.get(best_entity, best_entity)
         return {
             "intent": best_intent,
             "confidence": min(round(best_score, 2), 0.99),
-            "entity": best_entity,
+            "entity": final_entity,
         }
 
     return {
@@ -277,7 +283,7 @@ def interpret_fallback(input_text: str, language: str = "en") -> dict[str, Any]:
 
 
 def classify_with_llm(input_text: str, language: str, api_key: str) -> dict[str, Any]:
-    """Tier 2: Sarvam LLM intent classification with reasoning_effort=None."""
+    """Tier 2: Sarvam LLM intent classification with adequate token budget."""
     lang_key = get_lang_key(language)
     lang_label = lang_key
 
@@ -290,8 +296,8 @@ def classify_with_llm(input_text: str, language: str, api_key: str) -> dict[str,
             {"role": "user", "content": user_message},
         ],
         "temperature": 0.0,
-        "max_tokens": 64,
-        "reasoning_effort": None,
+        "max_tokens": 256,
+        "reasoning_effort": "low",
     }
 
     import httpx
@@ -302,7 +308,7 @@ def classify_with_llm(input_text: str, language: str, api_key: str) -> dict[str,
             "Content-Type": "application/json",
         },
         json=payload,
-        timeout=3.5,
+        timeout=4.5,
     )
     if res.status_code != 200:
         raise RuntimeError(f"Sarvam LLM status {res.status_code}: {res.text}")
@@ -339,16 +345,46 @@ def classify_with_llm(input_text: str, language: str, api_key: str) -> dict[str,
 # In-memory LRU cache for Tier 2/3 classification
 @lru_cache(maxsize=512)
 def _cached_interpret(normalized_input: str, lang_code: str) -> str:
-    # helper for cached json strings
     return ""
+
+
+# Cross-lingual core vocabulary for Tier 3 offline semantic translation fallback
+CROSS_LINGUAL_MAP: dict[str, str] = {
+    # Games
+    "khel": "games", "khelo": "play games", "aatalu": "games", "vilaiyattu": "games",
+    "khela": "games", "ramat": "games", "gele": "games", "gelemu": "games", "shanba": "games",
+    "shaanba": "games", "game": "games", "games": "games", "play": "play",
+    # Medicines
+    "dawa": "medicine", "dawai": "medicine", "davai": "medicine", "mandulu": "medicine",
+    "marunthu": "medicine", "oushodh": "medicine", "dorob": "medicine", "aushadh": "medicine",
+    "aushadhi": "medicine", "muli": "medicine", "hidak": "medicine", "tablet": "medicine",
+    "pill": "medicine", "pills": "medicine", "goli": "medicine",
+    # Routine / Reminders
+    "routine": "routine", "reminder": "reminder", "reminders": "reminders",
+    "kaam": "tasks", "pani": "tasks", "thabak": "tasks", "khamani": "tasks", "kaaj": "tasks",
+    "schedule": "schedule", "dinacharya": "routine",
+    # Home
+    "home": "home", "ghar": "home", "illu": "home", "veedu": "home", "bari": "home",
+    "yum": "home", "nokhor": "home", "dashboard": "home",
+    # Progress
+    "score": "score", "progress": "progress", "report": "progress", "pragati": "progress",
+    # Memories
+    "photo": "memories", "photos": "memories", "yaad": "memories", "yaadein": "memories",
+    "smriti": "memories", "gnapakalu": "memories", "ninaivugal": "memories", "album": "memories",
+    # Help
+    "help": "help", "madad": "help", "sahay": "help", "sahayam": "help", "udhavi": "help",
+    "mateng": "help", "hefajab": "help",
+    # Close
+    "close": "close", "exit": "close", "band": "close", "stop": "close", "moosi": "close",
+}
 
 
 def interpret_command(input_text: str, language: str = "en", api_key: str | None = None) -> dict[str, Any]:
     """
     Classifies user command text using the universal 3-tier pipeline:
-      Tier 1: Scored deterministic local match (instant)
-      Tier 2: Sarvam LLM (with translate pre-pass for non-native languages) + hybrid Tier 1 validation
-      Tier 3: Translate-then-classify fallback
+      Tier 1: Scored deterministic local match (instant native coverage for all 11 languages)
+      Tier 2: Sarvam LLM with adequate token budget + hybrid validation
+      Tier 3: Translate-then-classify genuine fallback (API or semantic vocabulary)
     """
     if not input_text or not input_text.strip():
         return {"intent": "UNKNOWN", "confidence": 0.0, "entity": None}
@@ -358,15 +394,14 @@ def interpret_command(input_text: str, language: str = "en", api_key: str | None
     # 1. Run Tier 1 Matcher
     tier1_res = tier1_match(clean_text, language)
 
-    # If Tier 1 confidence is very high (>= 0.85) or it's a specific game entity, return immediately
-    if tier1_res["confidence"] >= 0.85 or (tier1_res["intent"] == "OPEN_GAME" and tier1_res["entity"]):
+    # If Tier 1 confidence is strong (>= 0.70) or a specific game entity was matched, return immediately
+    if tier1_res["confidence"] >= 0.70 or (tier1_res["intent"] == "OPEN_GAME" and tier1_res["entity"]):
         return tier1_res
 
     # 2. Try Tier 2 (LLM) if API key is present
     if api_key:
         try:
             llm_text = clean_text
-            # For non-native LLM languages (as, ne, mni, brx), translate to en-IN first
             lang_prefix = language[:2].lower()
             if lang_prefix in ("as", "ne", "mni", "brx"):
                 from app.services.translation_service import translate_text_sarvam
@@ -381,25 +416,48 @@ def interpret_command(input_text: str, language: str = "en", api_key: str | None
 
             llm_res = classify_with_llm(llm_text, language, api_key)
 
-            # Hybrid validation between LLM and Tier 1:
-            # - Agreement -> high confidence
-            if llm_res["intent"] == tier1_res["intent"]:
+            # Agreement with Tier 1
+            if llm_res["intent"] == tier1_res["intent"] and llm_res["intent"] != "UNKNOWN":
                 llm_res["confidence"] = max(llm_res["confidence"], 0.95)
                 if not llm_res.get("entity") and tier1_res.get("entity"):
                     llm_res["entity"] = tier1_res["entity"]
                 return llm_res
 
-            # - Tier 1 is strong (> 0.70) -> trust Tier 1
-            if tier1_res["confidence"] >= 0.70:
-                return tier1_res
-
-            # - Tier 1 is UNKNOWN and LLM is confident -> trust LLM
-            if tier1_res["intent"] == "UNKNOWN" and llm_res["intent"] != "UNKNOWN":
+            # Strong LLM intent
+            if llm_res["intent"] != "UNKNOWN" and llm_res.get("confidence", 0) >= 0.65:
                 return llm_res
-
-            return llm_res
         except Exception as exc:
             logger.warning(f"[NLP Tier 2 Error]: {exc}")
 
-    # 3. Tier 3 fallback: return best Tier 1 result
+    # 3. Tier 3 Genuine Fallback: Translate utterance to English, then classify
+    try:
+        translated_en = None
+        # Try API translation if key available
+        if api_key:
+            try:
+                from app.services.translation_service import translate_text_sarvam
+                translated_en = translate_text_sarvam(
+                    text=clean_text,
+                    source_language_code=language,
+                    target_language_code="en-IN",
+                    api_key=api_key,
+                )
+            except Exception:
+                pass
+
+        # If API translation was unavailable or failed, use cross-lingual semantic dictionary
+        if not translated_en:
+            tokens = clean_text.split()
+            mapped_tokens = [CROSS_LINGUAL_MAP.get(tok, tok) for tok in tokens]
+            translated_en = " ".join(mapped_tokens)
+
+        if translated_en and translated_en != clean_text:
+            t3_match = tier1_match(translated_en, "en-IN")
+            if t3_match["intent"] != "UNKNOWN" and t3_match["confidence"] >= 0.55:
+                t3_match["confidence"] = min(t3_match["confidence"], 0.85)
+                return t3_match
+    except Exception as exc:
+        logger.warning(f"[NLP Tier 3 Error]: {exc}")
+
+    # Return best available match or UNKNOWN
     return tier1_res

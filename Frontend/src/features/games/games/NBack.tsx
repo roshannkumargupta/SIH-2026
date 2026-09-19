@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
+import { GameVoiceInputButton } from "../components/GameVoiceInputButton";
+import { isMatchSpoken } from "@/features/voice/utils/normalizeText";
 
 export type NBackProps = { level: number };
 
@@ -147,10 +149,22 @@ export default function NBack({ level }: NBackProps) {
             type="button"
             onClick={pressMatch}
             disabled={!running}
-            className="px-8 py-3.5 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-black text-lg disabled:opacity-40 hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center gap-2"
+            className="px-8 py-3.5 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-black text-lg disabled:opacity-40 hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center gap-2 cursor-pointer"
           >
             ✨ Match!
           </button>
+          <GameVoiceInputButton
+            disabled={!running || completed}
+            onTranscript={(spoken) => {
+              const curLetter = sequence[sequence.length - 1];
+              if (
+                isMatchSpoken(spoken) ||
+                (curLetter && spoken.trim().toUpperCase() === curLetter.toUpperCase())
+              ) {
+                pressMatch();
+              }
+            }}
+          />
         </div>
       </div>
     </GameShell>

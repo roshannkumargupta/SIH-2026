@@ -142,7 +142,7 @@ function AddPatientPage() {
   };
 
   const fieldClass =
-    "bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] mt-1 h-12 rounded-2xl px-4 text-base focus-visible:ring-[#22C55E] shadow-sm";
+    "bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] mt-1 h-12 rounded-2xl px-4 text-base focus-visible:ring-[#6FAF9A] shadow-sm";
 
   return (
     <AppShell className="p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto space-y-6">
@@ -150,7 +150,7 @@ function AddPatientPage() {
       <div>
         <Button asChild variant="outline" className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold">
           <Link to="/caregiver">
-            <ArrowLeft size={18} className="mr-2 text-[#22C55E]" /> Back to Caregiver Hub
+            <ArrowLeft size={18} className="mr-2 text-[#6FAF9A]" /> Back to Caregiver Hub
           </Link>
         </Button>
       </div>
@@ -158,7 +158,7 @@ function AddPatientPage() {
       {/* Page Header */}
       <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
         <div className="flex items-center gap-4">
-          <span className="flex size-14 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] shadow-inner flex-shrink-0">
+          <span className="flex size-14 items-center justify-center rounded-2xl bg-[#6FAF9A]/15 text-[#6FAF9A] shadow-inner flex-shrink-0">
             <UserPlus size={30} />
           </span>
           <div>
@@ -178,7 +178,7 @@ function AddPatientPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Section 1: Account & Credentials */}
         <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl space-y-5">
-          <div className="flex items-center gap-2 text-[#22C55E] font-bold text-lg border-b border-white/10 pb-3">
+          <div className="flex items-center gap-2 text-[#6FAF9A] font-bold text-lg border-b border-white/10 pb-3">
             <Key size={20} /> Account & Login Credentials
           </div>
           <p className="text-xs text-[#8A99A8] font-medium">
@@ -190,7 +190,7 @@ function AddPatientPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
-                <Mail size={15} className="text-[#22C55E]" /> Patient Email / Gmail *
+                <Mail size={15} className="text-[#6FAF9A]" /> Patient Email / Gmail *
               </Label>
               <Input
                 type="email"
@@ -204,7 +204,7 @@ function AddPatientPage() {
 
             <div>
               <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
-                <Key size={15} className="text-[#22C55E]" /> Initial Password (for new patient)
+                <Key size={15} className="text-[#6FAF9A]" /> Initial Password (for new patient)
               </Label>
               <Input
                 type="password"
@@ -219,7 +219,7 @@ function AddPatientPage() {
 
         {/* Section 2: Personal Demographics */}
         <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl space-y-5">
-          <div className="flex items-center gap-2 text-[#22C55E] font-bold text-lg border-b border-white/10 pb-3">
+          <div className="flex items-center gap-2 text-[#6FAF9A] font-bold text-lg border-b border-white/10 pb-3">
             <User size={20} /> Patient Demographics
           </div>
 
@@ -237,7 +237,7 @@ function AddPatientPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
-                <Calendar size={15} className="text-[#22C55E]" /> Age / DOB
+                <Calendar size={15} className="text-[#6FAF9A]" /> Age / DOB
               </Label>
               <Input
                 type="number"
@@ -253,7 +253,7 @@ function AddPatientPage() {
               <select
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                className="flex w-full h-12 rounded-2xl border border-white/10 bg-[#0A1420] text-[#E8ECEF] px-4 text-base mt-1 shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#22C55E]"
+                className="flex w-full h-12 rounded-2xl border border-white/10 bg-[#0A1420] text-[#E8ECEF] px-4 text-base mt-1 shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#6FAF9A]"
               >
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
@@ -263,7 +263,7 @@ function AddPatientPage() {
 
             <div>
               <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
-                <Phone size={15} className="text-[#22C55E]" /> Phone Number
+                <Phone size={15} className="text-[#6FAF9A]" /> Phone Number
               </Label>
               <Input
                 type="tel"
@@ -277,7 +277,7 @@ function AddPatientPage() {
 
           <div>
             <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
-              <MapPin size={15} className="text-[#22C55E]" /> Residential Address
+              <MapPin size={15} className="text-[#6FAF9A]" /> Residential Address
             </Label>
             <Input
               value={address}
@@ -290,7 +290,7 @@ function AddPatientPage() {
 
         {/* Section 3: Emergency Contact & Doctor */}
         <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl space-y-5">
-          <div className="flex items-center gap-2 text-[#22C55E] font-bold text-lg border-b border-white/10 pb-3">
+          <div className="flex items-center gap-2 text-[#6FAF9A] font-bold text-lg border-b border-white/10 pb-3">
             <Heart size={20} /> Emergency Contacts & Care
           </div>
 
@@ -319,7 +319,7 @@ function AddPatientPage() {
 
           <div>
             <Label className="text-sm font-bold text-[#E8ECEF] flex items-center gap-1.5">
-              <Stethoscope size={15} className="text-[#22C55E]" /> Assigned Doctor Name (Optional)
+              <Stethoscope size={15} className="text-[#6FAF9A]" /> Assigned Doctor Name (Optional)
             </Label>
             <Input
               value={doctorName}
@@ -332,7 +332,7 @@ function AddPatientPage() {
 
         {/* Section 4: Preferred Language */}
         <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl space-y-5">
-          <div className="flex items-center gap-2 text-[#22C55E] font-bold text-lg border-b border-white/10 pb-3">
+          <div className="flex items-center gap-2 text-[#6FAF9A] font-bold text-lg border-b border-white/10 pb-3">
             <Globe size={20} /> Preferred Language
           </div>
           <p className="text-xs text-[#8A99A8] font-medium">
@@ -350,15 +350,15 @@ function AddPatientPage() {
                   onClick={() => setPreferredLanguage(lang.code)}
                   className={`p-3.5 rounded-2xl border text-left transition-all duration-200 ${
                     selected
-                      ? "border-[#22C55E] bg-[#22C55E]/15 shadow-sm"
+                      ? "border-[#6FAF9A] bg-[#6FAF9A]/15 shadow-sm"
                       : "border-white/8 bg-[#0A1420]/60 hover:bg-[#0A1420] hover:border-white/15"
                   }`}
                 >
-                  <p className={`text-sm font-bold ${selected ? "text-[#22C55E]" : "text-[#E8ECEF]"}`}>
+                  <p className={`text-sm font-bold ${selected ? "text-[#6FAF9A]" : "text-[#E8ECEF]"}`}>
                     {lang.label}
                   </p>
                   {selected && (
-                    <span className="text-[11px] font-bold text-[#22C55E] flex items-center gap-1 mt-1">
+                    <span className="text-[11px] font-bold text-[#6FAF9A] flex items-center gap-1 mt-1">
                       <CheckCircle2 size={12} /> Active
                     </span>
                   )}
@@ -382,7 +382,7 @@ function AddPatientPage() {
           <Button
             type="submit"
             size="touch"
-            className="flex-1 font-bold rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-sm"
+            className="flex-1 font-bold rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] shadow-sm"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Connecting Patient..." : "✓ Save & Connect Patient"}

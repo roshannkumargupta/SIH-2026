@@ -96,7 +96,7 @@ function DoctorPage() {
         dosage: dosage.trim(),
         route: "Oral",
         instructions: instructions.trim(),
-        start_date: new Date().toISOString().split("T")[0],
+        start_date: new Date().toISOString().slice(0, 10),
       });
     } finally {
       setIsSubmittingRx(false);
@@ -109,14 +109,14 @@ function DoctorPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Button asChild variant="outline" className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold">
           <Link to="/">
-            <ArrowLeft size={18} className="mr-2 text-[#22C55E]" /> Back to Dashboard
+            <ArrowLeft size={18} className="mr-2 text-[#6FAF9A]" /> Back to Dashboard
           </Link>
         </Button>
 
         {/* Write Prescription Modal */}
         <Dialog open={isRxOpen} onOpenChange={setIsRxOpen}>
           <DialogTrigger asChild>
-            <Button size="touch" className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] text-base font-bold gap-2 shadow-lg shadow-[#22C55E]/20">
+            <Button size="touch" className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] text-base font-bold gap-2 shadow-lg shadow-[#6FAF9A]/20">
               <Plus size={20} /> WRITE PRESCRIPTION
             </Button>
           </DialogTrigger>
@@ -138,7 +138,7 @@ function DoctorPage() {
                   value={medicineName}
                   onChange={(e) => setMedicineName(e.target.value)}
                   placeholder="e.g. Rivastigmine or Donepezil"
-                  className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl mt-1 focus-visible:ring-[#22C55E] shadow-sm"
+                  className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl mt-1 focus-visible:ring-[#6FAF9A] shadow-sm"
                 />
               </div>
 
@@ -152,7 +152,7 @@ function DoctorPage() {
                   value={dosage}
                   onChange={(e) => setDosage(e.target.value)}
                   placeholder="e.g. 5mg or 10mg"
-                  className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl mt-1 focus-visible:ring-[#22C55E] shadow-sm"
+                  className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl mt-1 focus-visible:ring-[#6FAF9A] shadow-sm"
                 />
               </div>
 
@@ -166,7 +166,7 @@ function DoctorPage() {
                   value={instructions}
                   onChange={(e) => setInstructions(e.target.value)}
                   placeholder="e.g. 1 tablet once daily after breakfast"
-                  className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl mt-1 focus-visible:ring-[#22C55E] shadow-sm"
+                  className="bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl mt-1 focus-visible:ring-[#6FAF9A] shadow-sm"
                 />
               </div>
 
@@ -179,7 +179,7 @@ function DoctorPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isSubmittingRx} className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-bold">
+                <Button type="submit" disabled={isSubmittingRx} className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] font-bold">
                   {isSubmittingRx ? "Issuing…" : "Issue Prescription"}
                 </Button>
               </div>
@@ -191,7 +191,7 @@ function DoctorPage() {
       {/* Doctor Header Card */}
       <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
         <div className="flex items-center gap-4">
-          <span className="flex size-16 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] shadow-inner">
+          <span className="flex size-16 items-center justify-center rounded-2xl bg-[#6FAF9A]/15 text-[#6FAF9A] shadow-inner">
             <Stethoscope size={34} />
           </span>
           <div>
@@ -207,7 +207,7 @@ function DoctorPage() {
 
       {/* Patients Overview */}
       <div className="space-y-6">
-        <h2 className="text-lg font-bold uppercase text-[#22C55E] tracking-wider">
+        <h2 className="text-lg font-bold uppercase text-[#6FAF9A] tracking-wider">
           Monitored Clinical Patients
         </h2>
 
@@ -222,14 +222,14 @@ function DoctorPage() {
             <button
               type="button"
               onClick={() => refetch()}
-              className="px-5 py-2 rounded-full bg-[#22C55E] text-[#0A1420] font-bold text-sm shadow-sm"
+              className="px-5 py-2 rounded-full bg-[#6FAF9A] text-[#0A1420] font-bold text-sm shadow-sm"
             >
               Retry
             </button>
           </div>
         ) : !dashboard?.patients || dashboard.patients.length === 0 ? (
           <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-12 text-center text-[#8A99A8] shadow-xl">
-            <Stethoscope size={48} className="mx-auto text-[#22C55E]/40 mb-4" />
+            <Stethoscope size={48} className="mx-auto text-[#6FAF9A]/40 mb-4" />
             <p className="text-xl font-bold text-[#E8ECEF]">No assigned patients found</p>
           </div>
         ) : (
@@ -239,7 +239,7 @@ function DoctorPage() {
               className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6"
             >
               <div className="flex items-start gap-4">
-                <span className="flex size-14 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] font-display text-2xl font-bold shrink-0 shadow-sm">
+                <span className="flex size-14 items-center justify-center rounded-2xl bg-[#6FAF9A]/15 text-[#6FAF9A] font-display text-2xl font-bold shrink-0 shadow-sm">
                   {item.patient.name.charAt(0)}
                 </span>
                 <div>
@@ -257,7 +257,7 @@ function DoctorPage() {
                     <span
                       className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase ${
                         item.risk_level === "low"
-                          ? "bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/25"
+                          ? "bg-[#6FAF9A]/15 text-[#6FAF9A] border border-[#6FAF9A]/25"
                           : "bg-amber-500/15 text-amber-300 border border-amber-500/25"
                       }`}
                     >
@@ -275,7 +275,7 @@ function DoctorPage() {
                     setSelectedPatientId(item.patient.id);
                     setIsRxOpen(true);
                   }}
-                  className="w-full sm:w-auto font-bold rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-sm"
+                  className="w-full sm:w-auto font-bold rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] shadow-sm"
                 >
                   Prescribe Medication
                 </Button>

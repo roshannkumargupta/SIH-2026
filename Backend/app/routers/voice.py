@@ -277,3 +277,74 @@ def get_reminders_dictation(
             for t in tasks
         ],
     }
+
+
+from pydantic import BaseModel
+from app.models.medication import MedicationLogStatus
+
+class MedicationLogVoiceRequest(BaseModel):
+    log_id: str
+    status: MedicationLogStatus
+    confirmed: bool
+
+@router.get("/medications-dictation")
+async def get_medications_dictation(
+    db: DBSession,
+    language: str = "en-IN",
+    lang: Optional[str] = None,
+    patient_id: Optional[str] = None,
+    current_user: Optional[User] = Depends(get_current_user_optional),
+):
+    from app.services.medication_dictation_service import generate_medication_dictation
+    effective_language = lang or language or "en-IN"
+    target_patient_id = None
+    if patient_id:
+        try:
+            target_patient_id = UUID(patient_id)
+        except Exception:
+            target_patient_id = None
+
+    if not target_patient_id and current_user:
+        if current_user.role == UserRole.PATIENT:
+            target_patient_id = current_user.id
+        elif current_user.role == UserRole.CARETAKER:
+            from app.models.patient import PatientProfile
+            prof = db.query(PatientProfile).filter(PatientProfile.primary_caretaker_id == current_user.id).first()
+            if prof:
+                target_patient_id = prof.user_id
+        elif current_user.role == UserRole.DOCTOR:
+            from app.models.patient import PatientProfile
+            prof = db.query(PatientProfile).filter(PatientProfile.primary_doctor_id == current_user.id).first()
+            if prof:
+                target_patient_id = prof.user_id
+                
+    if not target_patient_id:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Could not determine patient context")
+        
+    return await generate_medication_dictation(db, target_patient_id, effective_language)
+
+
+@router.post("/medication-log")
+def voice_update_medication_log(
+    data: MedicationLogVoiceRequest,
+    db: DBSession,
+    current_user: Optional[User] = Depends(get_current_user_optional),
+):
+    if not data.confirmed:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Medication log updates via voice require explicit confirmation (confirmed=true)."
+        )
+        
+    from app.services.medication_service import get_medication_log, update_medication_log_status
+    try:
+        log_id = UUID(data.log_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid log ID")
+        
+    log = get_medication_log(db, log_id)
+    if not log:
+        raise HTTPException(status_code=404, detail="Log not found")
+        
+    updated = update_medication_log_status(db, log, data.status)
+    return {"status": "success", "log": str(updated.id)}

@@ -35,13 +35,14 @@ export interface RemindersDictationResponse {
   } | null;
 }
 
-const API_TIMEOUT_MS = 4000;
+const API_TIMEOUT_MS = 10000;
 
 function createTimeoutSignal(timeoutMs = API_TIMEOUT_MS) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
   return { signal: controller.signal, clear: () => clearTimeout(timeoutId) };
 }
+
 
 export const voiceApi = {
   /** Transcribe audio blob to text via backend Sarvam proxy with 4s timeout */
@@ -210,5 +211,31 @@ export const voiceApi = {
       clear();
     }
     return null;
+  },
+
+  /** Fetch structured medications and spoken dictation in selected language */
+  async getMedicationsDictation(
+    language: string = "en-IN",
+    patientId?: string,
+  ): Promise<{ dictation: string; [key: string]: any } | null> {
+    try {
+      const query = new URLSearchParams({ language });
+      if (patientId) query.set("patient_id", patientId);
+      return await apiClient.get<{ dictation: string }>(
+        `/voice/medications-dictation?${query.toString()}`,
+      );
+    } catch (err) {
+      console.warn("[Voice] Failed to fetch medications dictation:", err);
+    }
+    return null;
+  },
+
+  /** Update medication log status via voice confirmation */
+  async updateMedicationLogVoice(logId: string, status: string, confirmed: boolean) {
+    return await apiClient.post("/voice/medication-log", {
+      log_id: logId,
+      status,
+      confirmed,
+    });
   },
 };

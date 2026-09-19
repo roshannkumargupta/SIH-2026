@@ -119,6 +119,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
+      { rel: "icon", href: "/assets/brain-logo.png", type: "image/png" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),

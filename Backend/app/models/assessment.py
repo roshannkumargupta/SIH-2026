@@ -21,40 +21,41 @@ class CognitiveAssessment(Base):
         index=True,
     )
 
-    overall_score: Mapped[float] = mapped_column(
+    overall_score: Mapped[float | None] = mapped_column(
         Float,
-        nullable=False,
+        nullable=True,
     )
 
     risk_level: Mapped[str] = mapped_column(
         String(20),
         nullable=False,
-        default="low",
+        default="unassessable",
         index=True,
     )
 
-    memory_score: Mapped[float] = mapped_column(
+    memory_score: Mapped[float | None] = mapped_column(
         Float,
-        nullable=False,
-        default=0.0,
+        nullable=True,
     )
 
-    attention_score: Mapped[float] = mapped_column(
+    attention_score: Mapped[float | None] = mapped_column(
         Float,
-        nullable=False,
-        default=0.0,
+        nullable=True,
     )
 
-    executive_function_score: Mapped[float] = mapped_column(
+    executive_function_score: Mapped[float | None] = mapped_column(
         Float,
-        nullable=False,
-        default=0.0,
+        nullable=True,
     )
 
-    language_score: Mapped[float] = mapped_column(
+    language_score: Mapped[float | None] = mapped_column(
         Float,
-        nullable=False,
-        default=0.0,
+        nullable=True,
+    )
+
+    visuospatial_score: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
     )
 
     insights: Mapped[str | None] = mapped_column(
@@ -70,7 +71,22 @@ class CognitiveAssessment(Base):
     model_version: Mapped[str] = mapped_column(
         String(50),
         nullable=False,
-        default="v1.0-hybrid",
+        default="2.0-heuristic",
+    )
+
+    method_description: Mapped[str | None] = mapped_column(
+        Text,
+        nullable=True,
+    )
+
+    medication_adherence_rate: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+
+    task_adherence_rate: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
     )
 
     assessment_date: Mapped[datetime] = mapped_column(

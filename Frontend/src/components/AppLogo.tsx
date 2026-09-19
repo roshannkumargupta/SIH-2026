@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "@tanstack/react-router";
-import brainLogoImg from "@/assets/brain-logo.png";
+import brainLogoImg from "@/assets/golden-brain-emblem.png";
+import brandLockupImg from "@/assets/brand-lockup-transparent.png";
 
 interface AppLogoProps {
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
   showText?: boolean;
   className?: string;
   asLink?: boolean;
@@ -15,43 +16,39 @@ export const AppLogo: React.FC<AppLogoProps> = ({
   className = "",
   asLink = true,
 }) => {
-  const sizeClasses = {
-    sm: "size-8",
-    md: "size-10 sm:size-11",
-    lg: "size-14 sm:size-16",
+  const emblemSizes = {
+    sm: "w-8 h-9",
+    md: "w-10 h-11 sm:w-11 sm:h-12",
+    lg: "w-14 h-16 sm:w-16 sm:h-18",
+    xl: "w-20 h-23 sm:w-24 sm:h-28",
   };
 
-  const textSizes = {
-    sm: "text-base",
-    md: "text-xl sm:text-2xl",
-    lg: "text-2xl sm:text-3xl",
+  const lockupSizes = {
+    sm: "h-9 w-auto max-w-[170px]",
+    md: "h-11 sm:h-12 w-auto max-w-[210px]",
+    lg: "h-14 sm:h-16 w-auto max-w-[280px]",
+    xl: "h-20 sm:h-24 w-auto max-w-[400px]",
   };
 
   const content = (
-    <div className={`flex items-center gap-2.5 select-none ${className}`}>
-      <div
-        className={`relative shrink-0 ${sizeClasses[size]} rounded-2xl overflow-hidden shadow-sm transition-transform duration-200 group-hover:scale-105 border border-primary/20 bg-primary/10 flex items-center justify-center`}
-      >
+    <div className={`flex items-center select-none ${className}`}>
+      {showText ? (
         <img
-          src={brainLogoImg}
-          alt="SmritiSetu Brain Logo"
-          className="w-full h-full object-contain p-1"
+          src={brandLockupImg}
+          alt="SmritiSetu - Cognitive Care Companion"
+          className={`${lockupSizes[size]} object-contain drop-shadow-[0_2px_12px_rgba(245,199,126,0.2)] transition-transform duration-300 group-hover:scale-102`}
           loading="eager"
         />
-      </div>
-
-      {showText && (
-        <div className="flex flex-col">
-          <div className="flex items-center gap-1.5">
-            <span
-              className={`font-display font-bold tracking-tight text-foreground ${textSizes[size]} transition-colors group-hover:text-primary`}
-            >
-              SmritiSetu
-            </span>
-          </div>
-          <span className="text-[10px] text-muted-foreground font-semibold tracking-wide uppercase">
-            Cognitive Care Companion
-          </span>
+      ) : (
+        <div
+          className={`relative shrink-0 ${emblemSizes[size]} transition-transform duration-300 group-hover:scale-105 flex items-center justify-center`}
+        >
+          <img
+            src={brainLogoImg}
+            alt="SmritiSetu Brain Emblem"
+            className="w-full h-full object-contain drop-shadow-[0_2px_10px_rgba(245,199,126,0.3)]"
+            loading="eager"
+          />
         </div>
       )}
     </div>
@@ -71,3 +68,4 @@ export const AppLogo: React.FC<AppLogoProps> = ({
 
   return content;
 };
+

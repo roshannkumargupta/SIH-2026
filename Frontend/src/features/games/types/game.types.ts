@@ -9,6 +9,14 @@ export type CognitiveDomain =
   | "spatial_reasoning"
   | "cognitive_flexibility";
 
+/** Five consolidated clinical cognitive domains used for patient assessment scoring. */
+export type ClinicalDomain =
+  | "memory"
+  | "attention"
+  | "executive_function"
+  | "language"
+  | "visuospatial";
+
 export interface GameMetadata {
   id: string;
   name: string;
@@ -17,6 +25,8 @@ export interface GameMetadata {
   maxLevel: number;
   estimatedMinutes: number;
   cognitiveDomains: CognitiveDomain[];
+  /** Clinical assessment domains this game contributes to (maps to backend scoring). */
+  clinicalDomains: ClinicalDomain[];
   icon: string; // emoji
 }
 

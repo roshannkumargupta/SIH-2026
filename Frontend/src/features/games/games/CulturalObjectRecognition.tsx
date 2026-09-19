@@ -77,15 +77,15 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
   const currentRound = rounds[currentRoundIdx];
 
   const getTargetName = (obj: CulturalObject) => {
-    return obj.names.en || obj.name;
+    return t(obj.nameKey as any) || obj.name;
   };
 
   const getTargetState = (obj: CulturalObject) => {
-    return obj.state;
+    return t(obj.stateKey as any) || obj.state;
   };
 
   const getTargetStory = (obj: CulturalObject) => {
-    return obj.stories.en;
+    return t(obj.culturalNoteKey as any) || obj.culturalNote;
   };
 
   // Multiple-choice click
@@ -117,8 +117,7 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
     // Check against all localized aliases
     const aliases = [
       target.name.toLowerCase(),
-      ...Object.values(target.names).map((n) => n.toLowerCase()),
-      ...(target.aliases || []).map((a) => a.toLowerCase()),
+      ...(target.keywords || []).map((k: string) => k.toLowerCase()),
     ];
 
     const correct = aliases.some(
@@ -222,7 +221,7 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
                 : t("games:whichObjectIsThis")}
             </h2>
             <p className="text-xs sm:text-sm text-cream/60 mt-1 max-w-sm mx-auto">
-              {target.category.replace(/_/g, " ").toUpperCase()} · {getTargetState(target)}
+              {getTargetState(target)}
             </p>
           </div>
         </div>

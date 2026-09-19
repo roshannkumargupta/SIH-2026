@@ -379,6 +379,7 @@ export const brx = {
     attention: "गोसो होनाय",
     executiveFunction: "थि खालामनाय",
     language: "राव",
+    visuospatial: "नुथाय आरो जायगा",
     clinicalInsights: "डक्टरनि पारामास",
     longitudinalTrend: "30-साननि दावगानाय",
     stableTrend: "मेन्दुनि देहा मोजां आरो थाखोआव दं।",
@@ -416,182 +417,247 @@ export const brx = {
   },
   voice: {
   "phrases": {
-    "OPEN_GAMES": [
-      "open games",
-      "play games",
-      "show games",
-      "brain games",
-      "cognitive exercises",
-      "i want to play games",
-      "start games",
-      "take me to games"
-    ],
-    "NEXT_GAME": [
-      "next game",
-      "another game",
-      "new game",
-      "show next game",
-      "give me another game",
-      "switch game"
-    ],
-    "OPEN_GAME": [
-      "play",
-      "open",
-      "start",
-      "launch"
-    ],
-    "OPEN_REMINDERS": [
-      "open reminders",
-      "show reminders",
-      "my reminders",
-      "routine",
-      "daily routine",
-      "open routine",
-      "show schedule",
-      "view schedule"
-    ],
-    "TODAY_REMINDERS": [
-      "what do i have today",
-      "today reminders",
-      "what tasks today",
-      "what is on today",
-      "today's schedule",
-      "what should i do today",
-      "schedule for today"
-    ],
-    "NEXT_REMINDER": [
-      "what is my next task",
-      "next reminder",
-      "next task",
-      "what is next",
-      "what should i do next",
-      "upcoming reminder"
-    ],
-    "ADD_ROUTINE": [
-      "add a task",
-      "add routine",
-      "create task",
-      "new routine",
-      "new task",
-      "schedule walk",
-      "schedule activity",
-      "add reminder",
-      "set reminder"
-    ],
-    "COMPLETE_ROUTINE": [
-      "mark task done",
-      "task completed",
-      "routine done",
-      "completed task",
-      "finished task",
-      "i finished my task",
-      "mark routine completed"
-    ],
-    "REMOVE_ROUTINE": [
-      "delete task",
-      "remove task",
-      "delete routine",
-      "remove routine",
-      "cancel task",
-      "clear task"
-    ],
-    "UPDATE_ROUTINE": [
-      "change the time",
-      "update routine",
-      "change routine time",
-      "reschedule task",
-      "reschedule routine",
-      "modify task time"
-    ],
-    "OPEN_MEDICATIONS": [
-      "show my medicines",
-      "open medications",
-      "my medicines",
-      "show medicines",
-      "medicine list",
-      "prescriptions",
-      "open medicine schedule"
-    ],
-    "TODAY_MEDICATIONS": [
-      "what medicine do i take today",
-      "today's medicines",
-      "medicines for today",
-      "what pills today",
-      "what medicines should i take today",
-      "daily medication"
-    ],
-    "NEXT_MEDICATION": [
-      "what is my next dose",
-      "next medicine",
-      "next pill",
-      "when is my next dose",
-      "what medicine next",
-      "upcoming medicine"
-    ],
-    "MEDICATION_TAKEN": [
-      "i took my medicine",
-      "medicine taken",
-      "took pill",
-      "took tablet",
-      "already took medicine",
-      "i have taken my medicine",
-      "mark medicine taken"
-    ],
-    "MEDICATION_SKIPPED": [
-      "skip medicine",
-      "skip dose",
-      "skipped medicine",
-      "did not take medicine",
-      "missed medicine"
-    ],
-    "OPEN_ANALYTICS": [
-      "show my progress",
-      "open analytics",
-      "my progress",
-      "cognitive score",
-      "performance report",
-      "how am i doing",
-      "show report"
-    ],
-    "OPEN_MEMORIES": [
-      "show my memories",
-      "open memories",
-      "my photos",
-      "family photos",
-      "photo album",
-      "view memories"
-    ],
-    "OPEN_CAREGIVER": [
-      "caregiver",
-      "caretaker",
-      "caregiver dashboard",
-      "caretaker portal",
-      "open caregiver"
-    ],
-    "GO_HOME": [
-      "go home",
-      "home page",
-      "back to dashboard",
-      "main screen",
-      "return home",
-      "exit to home"
-    ],
-    "HELP": [
-      "help",
-      "what can i say",
-      "voice commands",
-      "how does this work",
-      "assistant guide"
-    ],
-    "CLOSE": [
-      "close",
-      "exit",
-      "quit",
-      "dismiss",
-      "stop",
-      "cancel"
-    ]
-  },
+        "OPEN_GAMES": [
+            "गेले",
+            "गेलेनो लुबैयो",
+            "गेलेमु",
+            "गेलेमु दिनथि",
+            "गोदान गेलेमु",
+            "गेम्स खुलि",
+            "गेलेमु खुलि",
+            "open games",
+            "play games",
+            "show games",
+            "brain games",
+            "cognitive exercises",
+            "i want to play games",
+            "start games",
+            "take me to games"
+        ],
+        "NEXT_GAME": [
+            "उननि गेलेमु",
+            "गुबुन गेलेमु",
+            "गोदान गेलेमु दिनथि",
+            "next game",
+            "another game",
+            "new game",
+            "show next game",
+            "give me another game",
+            "switch game"
+        ],
+        "OPEN_GAME": [
+            "जागाय",
+            "खुलि",
+            "गेले",
+            "play",
+            "open",
+            "start",
+            "launch"
+        ],
+        "OPEN_REMINDERS": [
+            "रुटिन",
+            "खामानि",
+            "आंनि खामानि",
+            "दिनैनि रुटिन",
+            "open reminders",
+            "show reminders",
+            "my reminders",
+            "routine",
+            "daily routine",
+            "open routine",
+            "show schedule",
+            "view schedule"
+        ],
+        "TODAY_REMINDERS": [
+            "दिनैनि खामानि",
+            "दिनै मा मावनांगौ",
+            "दिनैनि रुटिन",
+            "what do i have today",
+            "today reminders",
+            "what tasks today",
+            "what is on today",
+            "today's schedule",
+            "what should i do today",
+            "schedule for today"
+        ],
+        "NEXT_REMINDER": [
+            "उननि खामानि",
+            "उनाव मा मावनांगौ",
+            "पायनि खामानि",
+            "what is my next task",
+            "next reminder",
+            "next task",
+            "what is next",
+            "what should i do next",
+            "upcoming reminder"
+        ],
+        "ADD_ROUTINE": [
+            "खामानि दाजाब",
+            "गोदान खामानि",
+            "add a task",
+            "add routine",
+            "create task",
+            "new routine",
+            "new task",
+            "schedule walk",
+            "schedule activity",
+            "add reminder",
+            "set reminder"
+        ],
+        "COMPLETE_ROUTINE": [
+            "खामानि जोबबाय",
+            "मावफुंबाय",
+            "खामानि फोजोबबाय",
+            "मुलि",
+            "मुलि लोंबाय",
+            "mark task done",
+            "task completed",
+            "routine done",
+            "completed task",
+            "finished task",
+            "i finished my task",
+            "mark routine completed"
+        ],
+        "REMOVE_ROUTINE": [
+            "खामानि बोखार",
+            "दानगार",
+            "delete task",
+            "remove task",
+            "delete routine",
+            "remove routine",
+            "cancel task",
+            "clear task"
+        ],
+        "UPDATE_ROUTINE": [
+            "समाय सोलाय",
+            "खामानि समा सोलाय",
+            "change the time",
+            "update routine",
+            "change routine time",
+            "reschedule task",
+            "reschedule routine",
+            "modify task time"
+        ],
+        "OPEN_MEDICATIONS": [
+            "मुलि",
+            "आंनि मुलि",
+            "मुलिनि फारिलाइ",
+            "मुलि दिनथि",
+            "मुलिफोर",
+            "show my medicines",
+            "open medications",
+            "my medicines",
+            "show medicines",
+            "medicine list",
+            "prescriptions",
+            "open medicine schedule"
+        ],
+        "TODAY_MEDICATIONS": [
+            "दिनैनि मुलि",
+            "दिनै मा मुलि जानांगौ",
+            "what medicine do i take today",
+            "today's medicines",
+            "medicines for today",
+            "what pills today",
+            "what medicines should i take today",
+            "daily medication"
+        ],
+        "NEXT_MEDICATION": [
+            "उननि मुलि",
+            "उननि दिउस",
+            "पायनि मुलि",
+            "what is my next dose",
+            "next medicine",
+            "next pill",
+            "when is my next dose",
+            "what medicine next",
+            "upcoming medicine"
+        ],
+        "MEDICATION_TAKEN": [
+            "मुलि जाबाय",
+            "मुलि लोंबाय",
+            "आं मुलि जाबाय",
+            "i took my medicine",
+            "medicine taken",
+            "took pill",
+            "took tablet",
+            "already took medicine",
+            "i have taken my medicine",
+            "mark medicine taken"
+        ],
+        "MEDICATION_SKIPPED": [
+            "मुलि जायाखै",
+            "मुलि बावबाय",
+            "skip medicine",
+            "skip dose",
+            "skipped medicine",
+            "did not take medicine",
+            "missed medicine"
+        ],
+        "OPEN_ANALYTICS": [
+            "दावगानाय",
+            "आंनि स्कोर",
+            "फोरमान बिलाइ",
+            "show my progress",
+            "open analytics",
+            "my progress",
+            "cognitive score",
+            "performance report",
+            "how am i doing",
+            "show report"
+        ],
+        "OPEN_MEMORIES": [
+            "गोसोखांनाय",
+            "गोजाम फोटो",
+            "नख'रनि एल्बम",
+            "show my memories",
+            "open memories",
+            "my photos",
+            "family photos",
+            "photo album",
+            "view memories"
+        ],
+        "OPEN_CAREGIVER": [
+            "हेफाजाबगिरि",
+            "डाक्टर",
+            "caregiver",
+            "caretaker",
+            "caregiver dashboard",
+            "caretaker portal",
+            "open caregiver"
+        ],
+        "GO_HOME": [
+            "नआव थां",
+            "होम",
+            "गाहाय बिखा",
+            "go home",
+            "home page",
+            "back to dashboard",
+            "main screen",
+            "return home",
+            "exit to home"
+        ],
+        "HELP": [
+            "हेफाजाब",
+            "हेफाजाब हो",
+            "आं मा बुंनो हायो",
+            "help",
+            "what can i say",
+            "voice commands",
+            "how does this work",
+            "assistant guide"
+        ],
+        "CLOSE": [
+            "बन्द खालाम",
+            "थाद'",
+            "close",
+            "exit",
+            "quit",
+            "dismiss",
+            "stop",
+            "cancel"
+        ]
+    },
   "games": {
     "WATER_JUGS": [
       "water jugs",

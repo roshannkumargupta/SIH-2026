@@ -5,6 +5,8 @@ import type {
   GameSessionCreate,
   GameSummary,
   AdaptiveLevelResponse,
+  GameAbilityItem,
+  GameAbilityOverviewResponse,
 } from "../types/api";
 
 export const gamesApi = {
@@ -45,4 +47,13 @@ export const gamesApi = {
       `/games/patient/${patientId}/assign`,
       { assigned_game_types },
     ),
+
+  getPatientAbilities: (patientId: string) =>
+    apiClient.get<GameAbilityOverviewResponse>(`/games/patient/${patientId}/abilities`),
+
+  setAbilityOverride: (patientId: string, gameId: string, overrideLevel: number | null) =>
+    apiClient.put<GameAbilityItem>(`/games/patient/${patientId}/ability-override`, {
+      game_id: gameId,
+      override_level: overrideLevel,
+    }),
 };

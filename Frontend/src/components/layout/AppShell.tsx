@@ -6,13 +6,13 @@ import { VoiceTriggerButton } from "@/features/voice/components/VoiceTriggerButt
 
 export interface AppShellProps {
   children?: ReactNode;
-  progress?: number;
+  progress?: number | undefined;
   className?: string;
 }
 
 export function AppShell({ children, progress, className = "" }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-[#0A1420] text-[#E8ECEF] flex selection:bg-[#22C55E]/20">
+    <div className="min-h-screen bg-[#0A1420] text-[#E8ECEF] flex selection:bg-[#6FAF9A]/20">
       {/* Persistent Left Sidebar Navigation */}
       <AppSidebar />
 

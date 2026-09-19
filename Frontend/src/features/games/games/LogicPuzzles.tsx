@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { GameShell } from "../components/GameShell";
 import { useGameSession } from "../hooks/useGameSession";
+import { GameVoiceInputButton } from "../components/GameVoiceInputButton";
+import { parseSpokenNumber } from "@/features/voice/utils/normalizeText";
 
 type Puzzle = { question: string; answer: number; hint: string };
 
@@ -114,8 +116,8 @@ export default function LogicPuzzles({ level }: { level: number }) {
     sessionStart.current = Date.now();
   }, [level]);
 
-  const submit = () => {
-    const ans = parseInt(input, 10);
+  const submit = (customAns?: number) => {
+    const ans = customAns !== undefined ? customAns : parseInt(input, 10);
     setAttempts((a) => a + 1);
 
     if (ans === puzzle.answer) {
@@ -197,7 +199,7 @@ export default function LogicPuzzles({ level }: { level: number }) {
           {puzzle.question}
         </div>
 
-        <div className="flex gap-3 items-center justify-center">
+        <div className="flex flex-wrap gap-3 items-center justify-center">
           <input
             type="number"
             value={input}
@@ -207,14 +209,26 @@ export default function LogicPuzzles({ level }: { level: number }) {
             }}
             className="w-32 rounded-xl border-2 border-clay bg-ink text-cream text-center font-display text-2xl font-bold py-3 focus:border-sun focus:outline-none min-h-[48px]"
             placeholder="?"
+            disabled={completed}
             autoFocus
           />
           <button
-            onClick={submit}
-            className="px-7 py-3 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-black text-base hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center"
+            onClick={() => submit()}
+            disabled={completed}
+            className="px-7 py-3 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-black text-base hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation flex items-center justify-center cursor-pointer disabled:opacity-40"
           >
             Submit Answer
           </button>
+          <GameVoiceInputButton
+            disabled={completed}
+            onTranscript={(spoken) => {
+              const parsed = parseSpokenNumber(spoken);
+              if (parsed !== null) {
+                setInput(String(parsed));
+                submit(parsed);
+              }
+            }}
+          />
         </div>
 
         {attempts > 0 && !showHint && (

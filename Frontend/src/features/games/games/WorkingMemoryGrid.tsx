@@ -108,17 +108,16 @@ export default function WorkingMemoryGrid({ level }: { level: number }) {
         {
           label: "Phase",
           value: phase === "show" ? "Memorise" : phase === "recall" ? "Recall" : "Result",
-          highlight: phase === "show" ? "sun" : "tea-confirm",
+          highlight: phase === "show" ? "sun" : "tea",
         },
         { label: "Selected", value: `${selected.size}/${count}` },
       ]}
       feedback={
         lastResult && phase === "feedback"
-          ? {
-              text: lastResult === "correct" ? "✓ Excellent memory!" : "✗ Missed some squares!",
-              type: lastResult === "correct" ? "success" : "error",
-            }
-          : undefined
+          ? lastResult === "correct"
+            ? "✓ Excellent memory!"
+            : "✗ Missed some squares!"
+          : null
       }
       instructionHint={
         phase === "show"

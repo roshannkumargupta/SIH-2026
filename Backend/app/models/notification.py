@@ -19,6 +19,7 @@ class NotificationType(str, Enum):
     HYDRATION = "hydration"
     APPOINTMENT = "appointment"
     MOOD_ALERT = "mood_alert"
+    COGNITIVE_DECLINE = "cognitive_decline"
     GENERAL = "general"
 
 

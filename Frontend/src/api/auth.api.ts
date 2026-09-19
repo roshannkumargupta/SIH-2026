@@ -32,6 +32,7 @@ export const authApi = {
     name?: string;
     phone?: string;
     avatar_url?: string;
+    preferred_language?: string;
   }): Promise<User> => {
     const user = await apiClient.put<User>("/auth/profile", params);
     setStoredUser(user);

@@ -41,7 +41,7 @@ export function GameCard({ game, bestLevel, lastPlayed }: GameCardProps) {
     targetLevel <= 3 ? "Easy" : targetLevel <= 6 ? "Medium" : "Hard";
   const difficultyStyle =
     targetLevel <= 3
-      ? "bg-[#22C55E]/15 text-[#22C55E] border-[#22C55E]/30"
+      ? "bg-[#6FAF9A]/15 text-[#6FAF9A] border-[#6FAF9A]/30"
       : targetLevel <= 6
         ? "bg-[#E0A23B]/15 text-[#E0A23B] border-[#E0A23B]/30"
         : "bg-[#E85D6B]/15 text-[#E85D6B] border-[#E85D6B]/30";
@@ -52,7 +52,7 @@ export function GameCard({ game, bestLevel, lastPlayed }: GameCardProps) {
     <Link
       to={`/games/${game.id}` as never}
       search={{ level: String(targetLevel) } as never}
-      className="group flex flex-col justify-between rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-5 sm:p-6 shadow-md hover:border-white/15 hover:bg-[#152335] transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E] relative overflow-hidden"
+      className="group flex flex-col justify-between rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-5 sm:p-6 shadow-md hover:border-white/15 hover:bg-[#152335] transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6FAF9A] relative overflow-hidden"
       aria-label={`Play ${game.name}`}
     >
       <div>
@@ -81,7 +81,7 @@ export function GameCard({ game, bestLevel, lastPlayed }: GameCardProps) {
 
           {bestLevel !== undefined && bestLevel > 0 && (
             <div className="absolute bottom-2.5 left-3 z-10">
-              <span className="flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 font-bold backdrop-blur-md">
+              <span className="flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full bg-[#6FAF9A]/15 text-[#6FAF9A] border border-[#6FAF9A]/30 font-bold backdrop-blur-md">
                 <Star size={11} fill="currentColor" /> Lv {bestLevel}
               </span>
             </div>
@@ -90,7 +90,7 @@ export function GameCard({ game, bestLevel, lastPlayed }: GameCardProps) {
 
         {/* Game title + description */}
         <div className="space-y-1.5 flex-1">
-          <h3 className="font-display text-lg sm:text-xl font-bold text-[#E8ECEF] group-hover:text-[#22C55E] transition">
+          <h3 className="font-display text-lg sm:text-xl font-bold text-[#E8ECEF] group-hover:text-[#6FAF9A] transition">
             {game.name}
           </h3>
           <p className="text-sm text-[#8A99A8] leading-relaxed line-clamp-2">
@@ -128,7 +128,7 @@ export function GameCard({ game, bestLevel, lastPlayed }: GameCardProps) {
         </div>
 
         {/* Clearly visible circular play button bottom-right with primary teal-green */}
-        <span className="flex size-10 items-center justify-center rounded-full bg-[#22C55E] text-[#0A1420] shadow-md group-hover:scale-105 transition-transform shrink-0">
+        <span className="flex size-10 items-center justify-center rounded-full bg-[#6FAF9A] text-[#0A1420] shadow-md group-hover:scale-105 transition-transform shrink-0">
           <Play size={16} className="fill-current ml-0.5" />
         </span>
       </div>

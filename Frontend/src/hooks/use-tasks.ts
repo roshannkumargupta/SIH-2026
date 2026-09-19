@@ -93,6 +93,15 @@ export function useTasks(customPatientId?: string) {
     },
   });
 
+  const toggleTask = async (taskId: string) => {
+    const task = (todayQuery.data || []).find((t) => t.id === taskId);
+    if (task && task.status === "completed") {
+      return await resetMutation.mutateAsync(taskId);
+    } else {
+      return await completeMutation.mutateAsync(taskId);
+    }
+  };
+
   return {
     todayTasks: todayQuery.data || [],
     allTasks: allQuery.data || [],
@@ -102,6 +111,7 @@ export function useTasks(customPatientId?: string) {
     refetch: todayQuery.refetch,
     completeTask: completeMutation.mutateAsync,
     resetTask: resetMutation.mutateAsync,
+    toggleTask,
     createTask: createMutation.mutateAsync,
     deleteTask: deleteMutation.mutateAsync,
   };

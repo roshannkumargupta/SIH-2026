@@ -1,4 +1,4 @@
-import type { GameMetadata } from "../types/game.types";
+import type { GameMetadata, ClinicalDomain } from "../types/game.types";
 
 export const GAME_REGISTRY: GameMetadata[] = [
   {
@@ -10,6 +10,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 5,
     cognitiveDomains: ["problem_solving", "executive_function"],
+    clinicalDomains: ["executive_function"],
     icon: "🪣",
   },
   {
@@ -21,6 +22,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 5,
     cognitiveDomains: ["problem_solving", "executive_function", "spatial_reasoning"],
+    clinicalDomains: ["executive_function", "visuospatial"],
     icon: "🗼",
   },
   {
@@ -32,6 +34,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["problem_solving", "executive_function"],
+    clinicalDomains: ["executive_function"],
     icon: "🎱",
   },
   {
@@ -43,6 +46,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 5,
     cognitiveDomains: ["memory", "attention", "executive_function"],
+    clinicalDomains: ["memory", "attention", "executive_function"],
     icon: "🧠",
   },
   {
@@ -54,6 +58,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 6,
     cognitiveDomains: ["problem_solving", "executive_function"],
+    clinicalDomains: ["executive_function"],
     icon: "🧩",
   },
   {
@@ -65,6 +70,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["attention", "cognitive_flexibility", "processing_speed"],
+    clinicalDomains: ["attention", "executive_function"],
     icon: "🎨",
   },
   {
@@ -76,6 +82,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["spatial_reasoning"],
+    clinicalDomains: ["visuospatial"],
     icon: "🔄",
   },
   {
@@ -87,6 +94,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 3,
     cognitiveDomains: ["attention", "processing_speed"],
+    clinicalDomains: ["attention"],
     icon: "🔢",
   },
   {
@@ -98,6 +106,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 5,
     cognitiveDomains: ["spatial_reasoning", "problem_solving"],
+    clinicalDomains: ["visuospatial"],
     icon: "🌀",
   },
   {
@@ -109,6 +118,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["memory", "spatial_reasoning"],
+    clinicalDomains: ["memory", "visuospatial"],
     icon: "⬜",
   },
   {
@@ -120,6 +130,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 3,
     cognitiveDomains: ["processing_speed", "executive_function"],
+    clinicalDomains: ["attention", "executive_function"],
     icon: "➕",
   },
   {
@@ -131,6 +142,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["problem_solving", "cognitive_flexibility"],
+    clinicalDomains: ["language"],
     icon: "📝",
   },
   {
@@ -142,6 +154,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["memory", "attention"],
+    clinicalDomains: ["memory", "attention"],
     icon: "🔵",
   },
   {
@@ -153,6 +166,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["memory", "attention"],
+    clinicalDomains: ["memory", "attention"],
     icon: "🃏",
   },
   {
@@ -164,6 +178,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 3,
     cognitiveDomains: ["processing_speed", "attention"],
+    clinicalDomains: ["attention"],
     icon: "⚡",
   },
   {
@@ -175,6 +190,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["memory", "problem_solving"],
+    clinicalDomains: ["memory", "executive_function"],
     icon: "🔟",
   },
   {
@@ -186,6 +202,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 5,
     cognitiveDomains: ["executive_function", "attention", "cognitive_flexibility"],
+    clinicalDomains: ["attention", "executive_function"],
     icon: "⚖️",
   },
   {
@@ -197,6 +214,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 3,
     cognitiveDomains: ["attention", "processing_speed"],
+    clinicalDomains: ["attention", "visuospatial"],
     icon: "🔍",
   },
   {
@@ -208,6 +226,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["problem_solving", "cognitive_flexibility"],
+    clinicalDomains: ["language"],
     icon: "🔤",
   },
   {
@@ -219,6 +238,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["processing_speed", "cognitive_flexibility", "executive_function"],
+    clinicalDomains: ["attention", "executive_function"],
     icon: "🗺️",
   },
   {
@@ -230,6 +250,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["memory", "executive_function"],
+    clinicalDomains: ["memory", "executive_function", "visuospatial"],
     icon: "🟦",
   },
   {
@@ -241,6 +262,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 6,
     cognitiveDomains: ["memory"],
+    clinicalDomains: ["memory"],
     icon: "💭",
   },
   {
@@ -252,6 +274,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["memory", "executive_function"],
+    clinicalDomains: ["memory", "executive_function"],
     icon: "🌅",
   },
   {
@@ -263,6 +286,7 @@ export const GAME_REGISTRY: GameMetadata[] = [
     maxLevel: 10,
     estimatedMinutes: 4,
     cognitiveDomains: ["memory", "attention"],
+    clinicalDomains: ["memory", "language"],
     icon: "🏮",
   },
 ];
@@ -278,3 +302,8 @@ export const GAME_MAP = new Map(GAME_REGISTRY.map((g) => [g.id, g]));
 export const ALL_CATEGORIES = Array.from(
   new Set(GAME_REGISTRY.map((g) => g.category)),
 ) as GameMetadata["category"][];
+
+/** Maps each game ID to its clinical assessment domains (mirrors shared/game_cognitive_domains.json). */
+export const GAME_CLINICAL_DOMAIN_MAP: Record<string, ClinicalDomain[]> = Object.fromEntries(
+  GAME_REGISTRY.map((g) => [g.id, g.clinicalDomains]),
+);

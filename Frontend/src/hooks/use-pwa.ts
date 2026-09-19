@@ -35,7 +35,7 @@ export function usePWA() {
     window.addEventListener("appinstalled", handleAppInstalled);
 
     // Register Service Worker in production / browser
-    if ("serviceWorker" in navigator && process.env.NODE_ENV !== "test") {
+    if ("serviceWorker" in navigator && process.env["NODE_ENV"] !== "test") {
       window.addEventListener("load", () => {
         navigator.serviceWorker
           .register("/sw.js")

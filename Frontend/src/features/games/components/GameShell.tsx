@@ -17,43 +17,43 @@ import { formatDuration } from "../utils/gameMetrics";
 export interface GameShellStat {
   label: string;
   value: string | number;
-  highlight?: "sun" | "tea" | "fire" | "cream" | boolean;
-  icon?: ReactNode;
+  highlight?: "sun" | "tea" | "fire" | "cream" | boolean | undefined;
+  icon?: ReactNode | undefined;
 }
 
 export interface GameShellResult {
   score: number;
   accuracy: number;
   durationSeconds: number;
-  synced?: boolean;
-  offline?: boolean;
-  maxLevel?: number;
-  gameName?: string;
-  metrics?: Record<string, unknown>;
+  synced?: boolean | undefined;
+  offline?: boolean | undefined;
+  maxLevel?: number | undefined;
+  gameName?: string | undefined;
+  metrics?: Record<string, unknown> | undefined;
 }
 
 export interface GameShellProps {
   /** Explicit game metadata or game ID string to resolve from GAME_REGISTRY */
-  game?: GameMetadata;
-  gameId?: string;
+  game?: GameMetadata | undefined;
+  gameId?: string | undefined;
   children: ReactNode;
   /** Current level (1-based) */
   level: number;
-  showLevelSelector?: boolean;
+  showLevelSelector?: boolean | undefined;
 
   /** Standardized In-Game Heads-Up Display (HUD) */
-  score?: number;
-  targetScore?: number;
-  accuracy?: number;
-  stats?: GameShellStat[];
-  feedback?: string | null;
-  instructionHint?: string;
+  score?: number | undefined;
+  targetScore?: number | undefined;
+  accuracy?: number | undefined;
+  stats?: GameShellStat[] | undefined;
+  feedback?: string | null | undefined;
+  instructionHint?: string | undefined;
 
   /** End-of-Session Summary Screen */
-  completed?: boolean;
-  results?: GameShellResult;
-  onPlayAgain?: () => void;
-  onNextLevel?: () => void;
+  completed?: boolean | undefined;
+  results?: GameShellResult | undefined;
+  onPlayAgain?: (() => void) | undefined;
+  onNextLevel?: (() => void) | undefined;
 }
 
 export function GameShell({
@@ -83,6 +83,7 @@ export function GameShell({
       maxLevel: 10,
       estimatedMinutes: 4,
       cognitiveDomains: ["memory"],
+      clinicalDomains: ["memory"],
       icon: "🧠",
     };
 
@@ -205,7 +206,7 @@ export function GameShell({
           className="min-h-[46px] px-5 text-sm font-bold text-[#E8ECEF] bg-[#121D2B] border border-white/8 hover:bg-[#152335] active:scale-95 shadow-sm touch-manipulation rounded-full flex items-center gap-2.5"
         >
           <Link to="/games">
-            <ArrowLeft size={18} className="stroke-[2.5] text-[#22C55E]" />
+            <ArrowLeft size={18} className="stroke-[2.5] text-[#6FAF9A]" />
             <span>{t("common:allGames", { defaultValue: "Exit to Games" })}</span>
           </Link>
         </Button>
@@ -229,22 +230,22 @@ export function GameShell({
                     </button>
                   </div>
                 ) : adaptiveInfo.recommended_level !== level ? (
-                  <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#22C55E]/30 bg-[#22C55E]/15 text-[#22C55E] text-xs font-semibold shadow-xs animate-fadeIn">
-                    <Sparkles size={14} className="text-[#22C55E] shrink-0" />
+                  <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#6FAF9A]/30 bg-[#6FAF9A]/15 text-[#6FAF9A] text-xs font-semibold shadow-xs animate-fadeIn">
+                    <Sparkles size={14} className="text-[#6FAF9A] shrink-0" />
                     <span>
                       AI Suggests Level {adaptiveInfo.recommended_level}: {adaptiveInfo.rationale}
                     </span>
                     <button
                       type="button"
                       onClick={() => applySuggestedLevel(adaptiveInfo.recommended_level)}
-                      className="ml-1.5 px-3 py-1 rounded-full bg-[#22C55E] text-[#0A1420] text-xs font-bold hover:bg-[#1ea850] active:scale-95 transition cursor-pointer touch-manipulation min-h-[44px] inline-flex items-center justify-center shadow-xs"
+                      className="ml-1.5 px-3 py-1 rounded-full bg-[#6FAF9A] text-[#0A1420] text-xs font-bold hover:bg-[#5E9E8A] active:scale-95 transition cursor-pointer touch-manipulation min-h-[44px] inline-flex items-center justify-center shadow-xs"
                     >
                       Apply
                     </button>
                     <button
                       type="button"
                       onClick={() => setIsDismissed(true)}
-                      className="ml-0.5 text-[#22C55E] hover:text-white transition p-1 min-h-[44px] min-w-[44px] inline-flex items-center justify-center touch-manipulation"
+                      className="ml-0.5 text-[#6FAF9A] hover:text-white transition p-1 min-h-[44px] min-w-[44px] inline-flex items-center justify-center touch-manipulation"
                       title="Dismiss suggestion"
                       aria-label="Dismiss suggestion"
                     >
@@ -282,7 +283,7 @@ export function GameShell({
                 {d.replace(/_/g, " ")}
               </span>
             ))}
-            <span className="text-[11px] px-2.5 py-0.5 rounded-full border border-[#22C55E]/30 bg-[#22C55E]/15 text-[#22C55E] font-bold">
+            <span className="text-[11px] px-2.5 py-0.5 rounded-full border border-[#6FAF9A]/30 bg-[#6FAF9A]/15 text-[#6FAF9A] font-bold">
               {t("games:level", { level: effectiveLevel, maxLevel: resolvedGame.maxLevel })}
             </span>
           </div>
@@ -325,7 +326,7 @@ export function GameShell({
                     <span className="text-[11px] font-bold uppercase tracking-wider text-[#8A99A8]">
                       {t("games:accuracy", { defaultValue: "Accuracy" })}
                     </span>
-                    <span className="font-display text-xl sm:text-2xl font-black text-[#22C55E]">
+                    <span className="font-display text-xl sm:text-2xl font-black text-[#6FAF9A]">
                       {Math.round(accuracy)}%
                     </span>
                   </div>
@@ -343,7 +344,7 @@ export function GameShell({
                     <span
                       className={`font-display text-lg sm:text-xl font-black ${
                         st.highlight === "tea"
-                          ? "text-[#22C55E]"
+                          ? "text-[#6FAF9A]"
                           : st.highlight === "fire"
                             ? "text-[#E85D6B]"
                             : st.highlight === "sun"
@@ -365,7 +366,7 @@ export function GameShell({
                       feedback.startsWith("✓") ||
                       feedback.toLowerCase().includes("correct") ||
                       feedback.toLowerCase().includes("great")
-                        ? "bg-[#22C55E]/20 border-[#22C55E]/40 text-[#22C55E]"
+                        ? "bg-[#6FAF9A]/20 border-[#6FAF9A]/40 text-[#6FAF9A]"
                         : "bg-[#E85D6B]/20 border-[#E85D6B]/40 text-[#E85D6B]"
                     }`}
                   >
@@ -415,7 +416,7 @@ export function GameShell({
                       <p className="text-xs font-bold uppercase text-[#8A99A8] mb-1">
                         {t("games:accuracy", { defaultValue: "Accuracy" })}
                       </p>
-                      <p className="font-display text-3xl font-bold text-[#22C55E]">
+                      <p className="font-display text-3xl font-bold text-[#6FAF9A]">
                         {Math.round(currentResult.accuracy)}%
                       </p>
                     </div>
@@ -436,8 +437,8 @@ export function GameShell({
                       <span>{t("games:resultSavedLocally", { defaultValue: "Saved locally (will sync online)" })}</span>
                     </div>
                   ) : currentResult.synced ? (
-                    <div className="flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-800 mb-5 w-full justify-center">
-                      <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+                    <div className="flex items-center gap-2 rounded-full border border-[#6FAF9A]/30 bg-[#6FAF9A]/10 text-[#6FAF9A] px-4 py-2 text-sm text-emerald-800 mb-5 w-full justify-center">
+                      <CheckCircle2 size={16} className="text-[#6FAF9A] shrink-0" />
                       <span>{t("games:performanceRecorded", { defaultValue: "Performance securely recorded" })}</span>
                     </div>
                   ) : null}

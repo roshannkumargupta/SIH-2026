@@ -29,7 +29,17 @@ function generateClientId(): string {
   return "evt_" + Math.random().toString(36).substring(2, 11) + "_" + Date.now();
 }
 
-function getRawQueue(): Required<Omit<SyncBatchRequest, "patient_id" | "last_synced_at">> {
+export interface OfflineSyncQueue {
+  game_events: SyncGameEvent[];
+  medication_events: SyncMedicationEvent[];
+  task_events: SyncTaskEvent[];
+  memory_events: SyncMemoryEvent[];
+  voice_events: SyncVoiceEvent[];
+  hydration_events: SyncHydrationEvent[];
+  mood_events: SyncMoodEvent[];
+}
+
+function getRawQueue(): OfflineSyncQueue {
   if (typeof window === "undefined") {
     return {
       game_events: [],
@@ -78,7 +88,7 @@ function getRawQueue(): Required<Omit<SyncBatchRequest, "patient_id" | "last_syn
   }
 }
 
-function saveQueue(queue: Required<Omit<SyncBatchRequest, "patient_id" | "last_synced_at">>): void {
+function saveQueue(queue: OfflineSyncQueue): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));

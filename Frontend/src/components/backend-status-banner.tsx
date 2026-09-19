@@ -114,7 +114,7 @@ export function BackendStatusBanner() {
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
           <span className="text-cream/90 flex items-center gap-2">
-            <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="size-2 rounded-full bg-[#6FAF9A] animate-pulse" />
             Install SmritiSetu on your device for one-tap home screen access and faster offline
             play.
           </span>

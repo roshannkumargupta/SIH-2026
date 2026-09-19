@@ -22,7 +22,7 @@ export function HowToPlay({ title, instructions, tips, defaultOpen = false }: Ho
         aria-expanded={open}
       >
         <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-[#22C55E]/15 text-[#22C55E]">
+          <span className="flex size-9 items-center justify-center rounded-xl bg-[#6FAF9A]/15 text-[#6FAF9A]">
             <HelpCircle size={20} />
           </span>
           <span className="font-display text-base sm:text-lg font-bold text-[#E8ECEF]">
@@ -39,7 +39,7 @@ export function HowToPlay({ title, instructions, tips, defaultOpen = false }: Ho
           <ol className="space-y-2.5">
             {instructions.map((step, i) => (
               <li key={i} className="flex gap-3 text-sm text-[#E8ECEF]/90 font-medium">
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#22C55E] text-[#0A1420] text-xs font-black shadow-xs">
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#6FAF9A] text-[#0A1420] text-xs font-black shadow-xs">
                   {i + 1}
                 </span>
                 <span className="pt-0.5">{step}</span>

@@ -182,3 +182,61 @@ def test_northeast_nlp_intents(client):
     res_brx = interpret_command("मुलि लोंबाय", "brx", api_key=None)
     assert res_brx["intent"] == "COMPLETE_ROUTINE"
 
+
+def test_voice_medications_dictation_and_log(client, patient_user, db):
+    """
+    Verifies /api/v1/voice/medications-dictation and /api/v1/voice/medication-log endpoints.
+    """
+    from datetime import date, time
+    from app.models.medication import MedicationSchedule, MedicationFrequency, MedicationLog, MedicationLogStatus
+    from app.models.prescription import Prescription
+
+    patient = patient_user["user"]
+
+    # Create dummy prescription and schedule
+    rx = Prescription(
+        patient_id=patient.id,
+        doctor_id=patient.id,
+        medicine_name="Donepezil",
+        dosage="5mg",
+        start_date=date.today(),
+        instructions="Take with water before bed",
+    )
+    db.add(rx)
+    db.commit()
+    db.refresh(rx)
+
+    sched = MedicationSchedule(
+        prescription_id=rx.id,
+        patient_id=patient.id,
+        medicine_name="Donepezil",
+        dosage="5mg",
+        scheduled_time=time(21, 0),
+        frequency=MedicationFrequency.DAILY,
+        start_date=date.today(),
+    )
+    db.add(sched)
+    db.commit()
+    db.refresh(sched)
+
+    # 1. Fetch medication dictation
+    res = client.get(
+        f"/api/v1/voice/medications-dictation?patient_id={patient.id}&language=hi-IN",
+        headers=patient_user["headers"],
+    )
+    assert res.status_code == 200
+    data = res.json()
+    assert data["total_doses"] >= 1
+    assert "Donepezil" in data["dictation"] or "दवाइयां" in data["dictation"] or "doses" in data["dictation"]
+    assert len(data["doses"]) >= 1
+    log_id = data["doses"][0]["log_id"]
+
+    # 2. Update dose via voice log endpoint with confirmation
+    post_res = client.post(
+        "/api/v1/voice/medication-log",
+        headers=patient_user["headers"],
+        json={"log_id": log_id, "status": "taken", "confirmed": True},
+    )
+    assert post_res.status_code == 200
+    assert post_res.json()["status"] == "success"
+

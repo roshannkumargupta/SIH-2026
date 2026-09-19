@@ -116,3 +116,77 @@ class GameAssignment(Base):
         default=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
+
+
+class PatientGameAbility(Base):
+    """Per-patient, per-game Bayesian ability state and caregiver override."""
+
+    __tablename__ = "patient_game_abilities"
+
+    id: Mapped[UUID] = mapped_column(
+        primary_key=True,
+        default=uuid4,
+    )
+
+    patient_id: Mapped[UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+
+    game_id: Mapped[str] = mapped_column(
+        String(100),
+        nullable=False,
+        index=True,
+    )
+
+    theta: Mapped[float] = mapped_column(
+        Float,
+        default=1.0,
+        nullable=False,
+    )
+
+    sigma: Mapped[float] = mapped_column(
+        Float,
+        default=1.5,
+        nullable=False,
+    )
+
+    manual_override_level: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    last_level_played: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    last_recommended_level: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    last_lowered_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    sessions_count: Mapped[int] = mapped_column(
+        Integer,
+        default=0,
+        nullable=False,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )

@@ -212,3 +212,142 @@ def test_calibration_api_endpoints(client, patient_user, caretaker_user, setup_r
     )
     assert adaptive_res.status_code == 200
     assert adaptive_res.json()["ai_difficulty_enabled"] is False
+
+
+def test_adaptive_level_no_double_jumps(db, patient_user):
+    """Guardrail: never jump more than 1 level per recommendation."""
+    from app.models.game import PatientGameAbility
+
+    patient_id = patient_user["user"].id
+    ability = PatientGameAbility(
+        patient_id=patient_id,
+        game_id="water-jugs",
+        theta=8.5,  # High latent ability
+        sigma=0.3,
+        last_level_played=1,  # Played level 1
+        sessions_count=5,
+    )
+    db.add(ability)
+    db.commit()
+
+    rec = engine.recommend_level(db, patient_id, "water-jugs")
+    # Even though theta=8.5, max step is +1 (from 1 to 2)
+    assert rec["recommended_level"] == 2
+    assert "raised" in rec["rationale"].lower()
+
+
+def test_adaptive_level_anti_oscillation_cooldown(db, patient_user):
+    """Guardrail: never raise level within 30 minutes of a lowering."""
+    from app.models.game import PatientGameAbility
+
+    patient_id = patient_user["user"].id
+    now = datetime.now(timezone.utc)
+
+    ability = PatientGameAbility(
+        patient_id=patient_id,
+        game_id="ball-sort",
+        theta=3.2,
+        sigma=0.4,
+        last_level_played=2,
+        sessions_count=5,
+        last_lowered_at=now - timedelta(minutes=10),  # Lowered 10 min ago
+    )
+    db.add(ability)
+    db.commit()
+
+    rec = engine.recommend_level(db, patient_id, "ball-sort")
+    # Should maintain at level 2 because 10 minutes < 30-minute cooldown
+    assert rec["recommended_level"] == 2
+    assert rec["cooldown_active"] is True
+    assert "cooldown" in rec["rationale"].lower()
+
+
+def test_adaptive_level_manual_override_precedence(db, patient_user):
+    """Guardrail: caregiver manual override strictly takes precedence."""
+    from app.models.game import PatientGameAbility
+
+    patient_id = patient_user["user"].id
+    ability = PatientGameAbility(
+        patient_id=patient_id,
+        game_id="tower-of-hanoi",
+        theta=1.0,
+        sigma=0.4,
+        last_level_played=1,
+        manual_override_level=4,
+        sessions_count=5,
+    )
+    db.add(ability)
+    db.commit()
+
+    rec = engine.recommend_level(db, patient_id, "tower-of-hanoi")
+    assert rec["recommended_level"] == 4
+    assert rec["manual_override_level"] == 4
+    assert "manual caregiver override" in rec["rationale"].lower()
+
+
+def test_patient_abilities_api_and_override_workflow(client, patient_user, caretaker_user, setup_relationships):
+    """Verify GET /abilities across all 24 games and PUT /ability-override."""
+    patient_id = str(patient_user["user"].id)
+
+    # 1. GET abilities overview
+    res = client.get(
+        f"/api/v1/games/patient/{patient_id}/abilities",
+        headers=caretaker_user["headers"],
+    )
+    assert res.status_code == 200
+    data = res.json()
+    assert data["controller_type"] == "statistical_controller"
+    assert "75%" in data["target_accuracy_band"]
+    assert len(data["abilities"]) == 24  # All 24 games registered
+
+    first_game = data["abilities"][0]
+    game_id = first_game["game_id"]
+    assert first_game["current_level"] >= 1
+    assert first_game["max_level"] >= 1
+
+    # 2. Caregiver sets manual override for that game
+    override_res = client.put(
+        f"/api/v1/games/patient/{patient_id}/ability-override",
+        headers=caretaker_user["headers"],
+        json={"game_id": game_id, "override_level": 5},
+    )
+    assert override_res.status_code == 200
+    updated_item = override_res.json()
+    assert updated_item["manual_override_level"] == 5
+    assert updated_item["recommended_level"] == 5
+
+    # 3. Verify adaptive recommendation endpoint now returns the override level
+    rec_res = client.get(
+        f"/api/v1/games/adaptive-level/{patient_id}/{game_id}",
+        headers=patient_user["headers"],
+    )
+    assert rec_res.status_code == 200
+    assert rec_res.json()["recommended_level"] == 5
+
+    # 4. Clear override (set back to None)
+    clear_res = client.put(
+        f"/api/v1/games/patient/{patient_id}/ability-override",
+        headers=caretaker_user["headers"],
+        json={"game_id": game_id, "override_level": None},
+    )
+    assert clear_res.status_code == 200
+    assert clear_res.json()["manual_override_level"] is None
+
+
+def test_assessment_caching_and_invalidation(db, patient_user):
+    """Verify daily in-memory assessment caching and cache invalidation."""
+    patient_id = patient_user["user"].id
+
+    # 1. First evaluation computes and caches
+    eval1 = engine.evaluate_cognition(db, patient_id, use_cache=True)
+    today_key = (patient_id, datetime.now(timezone.utc).strftime("%Y-%m-%d"))
+    assert today_key in engine._assessment_cache
+
+    # 2. Subsequent call returns cached dictionary
+    eval2 = engine.evaluate_cognition(db, patient_id, use_cache=True)
+    assert eval2 is eval1
+
+    # 3. Explicit invalidation removes it
+    engine.invalidate_assessment_cache(patient_id)
+    assert today_key not in engine._assessment_cache
+

@@ -94,5 +94,41 @@ class AdaptiveLevelResponse(BaseModel):
     rationale: str
     based_on_sessions: int
     ai_difficulty_enabled: bool = True
-    model_type: Literal["heuristic", "ml"] = "heuristic"
+    model_type: Literal["heuristic", "ml", "statistical_controller"] = "statistical_controller"
+    theta: float | None = None
+    sigma: float | None = None
+    manual_override_level: int | None = None
+    cooldown_active: bool = False
+    last_lowered_at: datetime | None = None
+
+
+class GameAbilityItem(BaseModel):
+    game_id: str
+    game_name: str
+    cognitive_domains: list[str]
+    theta: float
+    sigma: float
+    confidence: str
+    current_level: int
+    recommended_level: int
+    max_level: int
+    manual_override_level: int | None = None
+    sessions_count: int
+    last_played_at: datetime | None = None
+    last_lowered_at: datetime | None = None
+    cooldown_active: bool = False
+
+
+class GameAbilityOverviewResponse(BaseModel):
+    patient_id: UUID
+    controller_type: str = "statistical_controller"
+    description: str
+    target_accuracy_band: str = "75% - 80%"
+    abilities: list[GameAbilityItem]
+
+
+class GameOverrideRequest(BaseModel):
+    game_id: str
+    override_level: int | None = None  # None resets to automatic AI recommendation
+
 

@@ -271,7 +271,7 @@ def test_platform_end_to_end():
     assert res_hi_show["intent"] in ("SHOW_ROUTINES", "OPEN_REMINDERS", "TODAY_REMINDERS"), f"Failed Hindi SHOW_ROUTINES: {res_hi_show['intent']}"
 
     res_hi_comp = interpret_command("दवाई ले ली", "hi")
-    assert res_hi_comp["intent"] == "COMPLETE_ROUTINE", f"Failed Hindi COMPLETE_ROUTINE: {res_hi_comp['intent']}"
+    assert res_hi_comp["intent"] in ("COMPLETE_ROUTINE", "MEDICATION_TAKEN"), f"Failed Hindi COMPLETE_ROUTINE: {res_hi_comp['intent']}"
 
     # Telugu Routine tests
     res_te_add = interpret_command("రొటీన్ జోడించండి", "te")

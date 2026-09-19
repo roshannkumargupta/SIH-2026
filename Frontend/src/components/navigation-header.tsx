@@ -32,7 +32,7 @@ import { toast } from "sonner";
 import defaultProfilePhoto from "@/assets/default-avatar.svg";
 
 interface NavigationHeaderProps {
-  progress?: number;
+  progress?: number | undefined;
 }
 
 export function NavigationHeader({ progress }: NavigationHeaderProps) {
@@ -103,8 +103,8 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
       await setLanguage(editLanguage);
       await authApi.updateProfile({
         name: editName.trim(),
-        phone: editPhone.trim() || undefined,
-        avatar_url: editAvatarBase64 || undefined,
+        ...(editPhone.trim() ? { phone: editPhone.trim() } : {}),
+        ...(editAvatarBase64 ? { avatar_url: editAvatarBase64 } : {}),
         preferred_language: editLanguage,
       });
       if (refetchMe) await refetchMe();
@@ -136,7 +136,7 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
         {/* Desktop subtle companion pill */}
         <div className="hidden lg:flex items-center gap-2.5">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/8 text-xs font-semibold text-[#8A99A8]">
-            <Sparkles size={13} className="text-[#22C55E]" />
+            <Sparkles size={13} className="text-[#6FAF9A]" />
             <span>Cognitive Care Companion</span>
           </span>
         </div>
@@ -147,19 +147,19 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
             <div className="hidden sm:block w-32 md:w-36 bg-[#121D2B] border border-white/8 rounded-full px-3 py-1.5 shadow-sm">
               <div className="mb-1 flex justify-between text-[11px] font-bold text-[#E8ECEF]">
                 <span className="text-[#8A99A8]">{t("nav.today")}</span>
-                <span className="text-[#22C55E] font-extrabold">{progress}%</span>
+                <span className="text-[#6FAF9A] font-extrabold">{progress}%</span>
               </div>
               <Progress
                 value={progress}
                 aria-label={`${progress}% complete`}
-                className="h-1.5 bg-white/10 rounded-full [&>div]:bg-[#22C55E]"
+                className="h-1.5 bg-white/10 rounded-full [&>div]:bg-[#6FAF9A]"
               />
             </div>
           )}
 
           {/* Global Dynamic Language Switcher */}
-          <div className="flex items-center gap-1.5 rounded-full border border-white/8 bg-[#121D2B] px-3 py-1.5 text-xs text-[#E8ECEF] hover:border-[#22C55E]/40 transition shadow-sm">
-            <Globe size={14} className="text-[#22C55E] shrink-0" aria-hidden="true" />
+          <div className="flex items-center gap-1.5 rounded-full border border-white/8 bg-[#121D2B] px-3 py-1.5 text-xs text-[#E8ECEF] hover:border-[#6FAF9A]/40 transition shadow-sm">
+            <Globe size={14} className="text-[#6FAF9A] shrink-0" aria-hidden="true" />
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as VoiceLanguageCode)}
@@ -180,7 +180,7 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
               <button
                 type="button"
                 onClick={() => setShowNotifications((v) => !v)}
-                className="relative flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/8 bg-[#121D2B] text-[#E8ECEF] hover:border-[#22C55E]/40 transition shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E]"
+                className="relative flex size-9 sm:size-10 items-center justify-center rounded-full border border-white/8 bg-[#121D2B] text-[#E8ECEF] hover:border-[#6FAF9A]/40 transition shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6FAF9A]"
                 aria-label={t("nav.notifications")}
               >
                 <Bell size={17} />
@@ -196,7 +196,7 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
                 <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-white/10 bg-[#121D2B] backdrop-blur-xl p-4 shadow-2xl z-50 text-[#E8ECEF] animate-in fade-in zoom-in-95 duration-150">
                   <div className="flex items-center justify-between pb-3 border-b border-white/8">
                     <h3 className="font-display font-bold text-base text-[#E8ECEF]">{t("nav.notifications")}</h3>
-                    <span className="text-xs text-[#22C55E] font-bold px-2 py-0.5 rounded-full bg-[#22C55E]/10">
+                    <span className="text-xs text-[#6FAF9A] font-bold px-2 py-0.5 rounded-full bg-[#6FAF9A]/10">
                       {notifications.length} alerts
                     </span>
                   </div>
@@ -212,7 +212,7 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
                           className={`p-3 rounded-xl border text-sm transition flex items-start justify-between gap-3 ${
                             n.status === "read"
                               ? "border-white/5 bg-white/5 text-[#8A99A8]"
-                              : "border-[#22C55E]/20 bg-[#22C55E]/5 text-[#E8ECEF] shadow-sm"
+                              : "border-[#6FAF9A]/20 bg-[#6FAF9A]/5 text-[#E8ECEF] shadow-sm"
                           }`}
                         >
                           <div>
@@ -223,7 +223,7 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
                             <button
                               type="button"
                               onClick={() => markAsRead(n.id)}
-                              className="size-7 shrink-0 flex items-center justify-center rounded-lg bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] transition shadow-sm"
+                              className="size-7 shrink-0 flex items-center justify-center rounded-lg bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] transition shadow-sm"
                               title={t("nav.markRead")}
                             >
                               <Check size={14} strokeWidth={2.5} />
@@ -244,13 +244,13 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
               <button
                 type="button"
                 onClick={handleOpenEditProfile}
-                className="flex items-center gap-2 rounded-full p-1 pl-1.5 pr-3 bg-[#121D2B] border border-white/8 hover:border-[#22C55E]/40 transition text-left shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#22C55E]"
+                className="flex items-center gap-2 rounded-full p-1 pl-1.5 pr-3 bg-[#121D2B] border border-white/8 hover:border-[#6FAF9A]/40 transition text-left shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6FAF9A]"
                 title={t("nav.editProfile")}
               >
                 <img
                   src={user.avatar_url || defaultProfilePhoto}
                   alt={user.name}
-                  className="size-7 rounded-full border border-[#22C55E]/40 object-cover shadow-sm"
+                  className="size-7 rounded-full border border-[#6FAF9A]/40 object-cover shadow-sm"
                 />
                 <span className="hidden sm:inline text-xs font-semibold text-[#E8ECEF]">{user.name}</span>
               </button>
@@ -267,7 +267,7 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
           ) : (
             <Link
               to="/login"
-              className="text-xs font-bold text-[#22C55E] hover:underline px-3 py-1.5 rounded-full bg-white/5 border border-white/8"
+              className="text-xs font-bold text-[#6FAF9A] hover:underline px-3 py-1.5 rounded-full bg-white/5 border border-white/8"
             >
               {t("nav.signIn")}
             </Link>
@@ -289,7 +289,7 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
               <img
                 src={editAvatarBase64 || defaultProfilePhoto}
                 alt="Profile Preview"
-                className="size-24 rounded-full border-2 border-[#22C55E]/60 object-cover shadow-md"
+                className="size-24 rounded-full border-2 border-[#6FAF9A]/60 object-cover shadow-md"
               />
               <input
                 type="file"
@@ -344,7 +344,7 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
                 id="prof-lang"
                 value={editLanguage}
                 onChange={(e) => setEditLanguage(e.target.value as VoiceLanguageCode)}
-                className="w-full bg-[#0A1420] border border-white/10 text-[#E8ECEF] mt-1 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#22C55E]"
+                className="w-full bg-[#0A1420] border border-white/10 text-[#E8ECEF] mt-1 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#6FAF9A]"
               >
                 {supportedLanguages.map((l) => (
                   <option key={l.code} value={l.code} className="bg-[#121D2B] text-[#E8ECEF]">
@@ -363,7 +363,7 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="default" disabled={isSavingProfile} className="rounded-full bg-[#22C55E] text-[#0A1420] font-bold hover:bg-[#1ea850]">
+              <Button type="submit" variant="default" disabled={isSavingProfile} className="rounded-full bg-[#6FAF9A] text-[#0A1420] font-bold hover:bg-[#5E9E8A]">
                 {isSavingProfile ? "Saving…" : "Save Changes"}
               </Button>
             </div>

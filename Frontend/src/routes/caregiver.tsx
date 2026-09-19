@@ -498,10 +498,10 @@ function CaregiverPage() {
           <div className="flex items-center gap-3">
             {selectedPatientId ? (
               <Button variant="outline" size="touch" onClick={() => setSelectedPatientId(null)} className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold">
-                <ArrowLeft size={18} className="mr-2 text-[#22C55E]" /> All Assigned Patients
+                <ArrowLeft size={18} className="mr-2 text-[#6FAF9A]" /> All Assigned Patients
               </Button>
             ) : (
-              <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/25">
+              <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#6FAF9A]/15 text-[#6FAF9A] border border-[#6FAF9A]/25">
                 Caregiver Clinical Monitoring Portal
               </span>
             )}
@@ -511,7 +511,7 @@ function CaregiverPage() {
               <span
                 className={`inline-block size-2 rounded-full ${
                   wsStatus === "connected"
-                    ? "bg-[#22C55E] animate-pulse"
+                    ? "bg-[#6FAF9A] animate-pulse"
                     : wsStatus === "connecting"
                       ? "bg-amber-400 animate-ping"
                       : "bg-[#8A99A8]/40"
@@ -531,7 +531,7 @@ function CaregiverPage() {
             <Button
               size="touch"
               onClick={() => navigate({ to: "/caregiver/add-patient" })}
-              className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-bold shadow-sm"
+              className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] font-bold shadow-sm"
             >
               <UserPlus size={18} className="mr-2" /> Add / Connect Patient
             </Button>
@@ -586,7 +586,7 @@ function CaregiverPage() {
             {/* Caregiver Portal Hero Header */}
             <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
               <div className="flex items-center gap-4">
-                <span className="flex size-16 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] shadow-inner">
+                <span className="flex size-16 items-center justify-center rounded-2xl bg-[#6FAF9A]/15 text-[#6FAF9A] shadow-inner">
                   <Users size={34} />
                 </span>
                 <div>
@@ -603,7 +603,7 @@ function CaregiverPage() {
             {/* Assigned Patients Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold uppercase text-[#22C55E] tracking-wider">
+                <h2 className="text-lg font-bold uppercase text-[#6FAF9A] tracking-wider">
                   Assigned Patients ({dashboard?.total_patients ?? 0})
                 </h2>
               </div>
@@ -616,13 +616,13 @@ function CaregiverPage() {
                 <div className="rounded-3xl border border-rose-500/20 bg-rose-500/10 p-8 text-center text-rose-300 shadow-xl">
                   <p className="text-lg font-bold">Unable to load caregiver dashboard</p>
                   <p className="text-sm opacity-80 mt-1 mb-4">{formatApiError(dashError)}</p>
-                  <Button onClick={() => refetchDashboard()} className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-bold shadow-sm">
+                  <Button onClick={() => refetchDashboard()} className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] font-bold shadow-sm">
                     Retry
                   </Button>
                 </div>
               ) : !dashboard?.patients || dashboard.patients.length === 0 ? (
                 <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-12 text-center text-[#8A99A8] shadow-xl">
-                  <Users size={48} className="mx-auto text-[#22C55E]/40 mb-4" />
+                  <Users size={48} className="mx-auto text-[#6FAF9A]/40 mb-4" />
                   <p className="text-2xl font-bold text-[#E8ECEF]">
                     No assigned patients connected yet
                   </p>
@@ -632,7 +632,7 @@ function CaregiverPage() {
                   <Button
                     size="touch"
                     onClick={() => navigate({ to: "/caregiver/add-patient" })}
-                    className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-bold shadow-sm"
+                    className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] font-bold shadow-sm"
                   >
                     <UserPlus size={18} className="mr-2" /> Add or Connect Patient
                   </Button>
@@ -642,12 +642,12 @@ function CaregiverPage() {
                   {dashboard.patients.map((item) => (
                     <article
                       key={item.patient.id}
-                      className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 shadow-xl hover:border-[#22C55E]/40 transition flex flex-col justify-between"
+                      className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 shadow-xl hover:border-[#6FAF9A]/40 transition flex flex-col justify-between"
                     >
                       <div>
                         <div className="flex items-start justify-between gap-4 pb-4 border-b border-white/10">
                           <div className="flex items-center gap-3">
-                            <span className="flex size-14 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] font-display text-2xl font-bold shadow-sm">
+                            <span className="flex size-14 items-center justify-center rounded-2xl bg-[#6FAF9A]/15 text-[#6FAF9A] font-display text-2xl font-bold shadow-sm">
                               {item.patient.name.charAt(0)}
                             </span>
                             <div>
@@ -661,7 +661,7 @@ function CaregiverPage() {
                           <span
                             className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${
                               item.risk_level === "low"
-                                ? "bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/25"
+                                ? "bg-[#6FAF9A]/15 text-[#6FAF9A] border border-[#6FAF9A]/25"
                                 : "bg-amber-500/15 text-amber-300 border border-amber-500/25"
                             }`}
                           >
@@ -672,7 +672,7 @@ function CaregiverPage() {
                         {/* Metrics Grid */}
                         <div className="grid grid-cols-3 gap-2 mt-4 text-center">
                           <div className="rounded-2xl border border-white/8 bg-[#0A1420] p-3">
-                            <p className="text-[11px] font-bold uppercase text-[#22C55E]">Cognitive</p>
+                            <p className="text-[11px] font-bold uppercase text-[#6FAF9A]">Cognitive</p>
                             <p className="font-display text-xl font-bold text-[#E8ECEF] mt-1">
                               {item.latest_cognitive_score != null
                                 ? `${item.latest_cognitive_score.toFixed(0)}%`
@@ -690,7 +690,7 @@ function CaregiverPage() {
                           </div>
 
                           <div className="rounded-2xl border border-white/8 bg-[#0A1420] p-3">
-                            <p className="text-[11px] font-bold uppercase text-[#22C55E]">
+                            <p className="text-[11px] font-bold uppercase text-[#6FAF9A]">
                               Pending Tasks
                             </p>
                             <p className="font-display text-xl font-bold text-[#E8ECEF] mt-1">
@@ -704,7 +704,7 @@ function CaregiverPage() {
                       <div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
                         <Button
                           size="touch"
-                          className="w-full text-base font-bold rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-sm"
+                          className="w-full text-base font-bold rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] shadow-sm"
                           onClick={() => {
                             setSelectedPatientId(item.patient.id);
                             setActiveTab("overview");
@@ -728,7 +728,7 @@ function CaregiverPage() {
             <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-xl">
               <div className="flex flex-wrap items-start justify-between gap-6 pb-6 border-b border-white/10">
                 <div className="flex items-center gap-4">
-                  <span className="flex size-16 items-center justify-center rounded-2xl bg-[#22C55E]/15 text-[#22C55E] font-display text-3xl font-bold shadow-inner">
+                  <span className="flex size-16 items-center justify-center rounded-2xl bg-[#6FAF9A]/15 text-[#6FAF9A] font-display text-3xl font-bold shadow-inner">
                     {patientDetail?.patient.name?.charAt(0) ||
                       selectedPatientItem?.patient.name?.charAt(0) ||
                       "P"}
@@ -738,7 +738,7 @@ function CaregiverPage() {
                       <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#E8ECEF]">
                         {patientDetail?.patient.name || selectedPatientItem?.patient.name}
                       </h1>
-                      <span className="px-3 py-0.5 rounded-full text-xs font-bold uppercase bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      <span className="px-3 py-0.5 rounded-full text-xs font-bold uppercase bg-[#6FAF9A]/15 text-[#6FAF9A] border border-[#6FAF9A]/30">
                         Active Patient
                       </span>
                       {analytics?.risk_level && (
@@ -876,7 +876,7 @@ function CaregiverPage() {
                 {/* 4 Vital Stat Cards */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-5 shadow-xl">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#22C55E]">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#6FAF9A]">
                       <Brain size={18} /> Cognitive Score
                     </div>
                     <p className="font-display text-3xl font-bold text-[#E8ECEF] mt-2">
@@ -905,7 +905,7 @@ function CaregiverPage() {
                   </div>
 
                   <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-5 shadow-xl">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#22C55E]">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#6FAF9A]">
                       <CheckSquare size={18} /> Task Completion
                     </div>
                     <p className="font-display text-3xl font-bold text-[#E8ECEF] mt-2">
@@ -920,7 +920,7 @@ function CaregiverPage() {
                   </div>
 
                   <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-5 shadow-xl">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#22C55E]">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#6FAF9A]">
                       <TrendingUp size={18} /> Avg Game Accuracy
                     </div>
                     <p className="font-display text-3xl font-bold text-[#E8ECEF] mt-2">
@@ -948,7 +948,7 @@ function CaregiverPage() {
                             {patientDetail?.profile?.emergency_contact_name || "Primary Contact"}
                           </p>
                         </div>
-                        <p className="text-[#22C55E] font-bold">
+                        <p className="text-[#6FAF9A] font-bold">
                           {patientDetail?.profile?.emergency_contact_phone || "Not set"}
                         </p>
                       </div>
@@ -967,7 +967,7 @@ function CaregiverPage() {
 
                   <div className="rounded-3xl border border-white/8 bg-[#121D2B] p-6 shadow-xl">
                     <h3 className="font-display text-xl font-bold text-[#E8ECEF] mb-4 flex items-center gap-2">
-                      <Stethoscope size={20} className="text-[#22C55E]" /> Medical Supervision (Optional)
+                      <Stethoscope size={20} className="text-[#6FAF9A]" /> Medical Supervision (Optional)
                     </h3>
                     <div className="space-y-3 text-sm">
                       <div className="p-3.5 rounded-2xl bg-[#0A1420] border border-white/8 shadow-sm">
@@ -998,7 +998,7 @@ function CaregiverPage() {
                       </p>
                     </div>
                     {moodTrend && (
-                      <span className="text-xs font-bold text-primary px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100">
+                      <span className="text-xs font-bold text-primary px-3 py-1 rounded-full bg-[#6FAF9A]/15 border border-emerald-100">
                         {moodTrend.total_checkins} total{" "}
                         {moodTrend.total_checkins === 1 ? "check-in" : "check-ins"}
                       </span>
@@ -1035,7 +1035,7 @@ function CaregiverPage() {
                             emoji: "😌",
                             label: "Calm",
                             count: moodTrend.mood_counts?.calm || 0,
-                            color: "text-emerald-900 bg-emerald-50 border-emerald-200",
+                            color: "text-[#6FAF9A] bg-[#6FAF9A]/15 border-[#6FAF9A]/30",
                           },
                           {
                             mood: "confused",
@@ -1258,7 +1258,7 @@ function CaregiverPage() {
                             <span
                               className={`flex size-12 shrink-0 items-center justify-center rounded-2xl border ${
                                 isTaken
-                                  ? "border-emerald-200 bg-emerald-100 text-emerald-800"
+                                  ? "border-[#6FAF9A]/30 bg-[#6FAF9A]/20 text-[#6FAF9A]"
                                   : "border-amber-200 bg-amber-100 text-amber-800"
                               }`}
                             >
@@ -1272,7 +1272,7 @@ function CaregiverPage() {
                                 <span
                                   className={`px-3 py-0.5 rounded-full text-xs font-bold uppercase ${
                                     isTaken
-                                      ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                                      ? "bg-[#6FAF9A]/15 text-[#6FAF9A] border border-[#6FAF9A]/30"
                                       : "bg-amber-50 text-amber-800 border border-amber-200"
                                   }`}
                                 >
@@ -1443,7 +1443,7 @@ function CaregiverPage() {
                               onClick={() => handleToggleTask(t.id)}
                               className={`flex size-10 shrink-0 items-center justify-center rounded-2xl border transition ${
                                 isCompleted
-                                  ? "border-emerald-300 bg-emerald-600 text-white shadow-sm"
+                                  ? "border-[#6FAF9A]/50 bg-[#6FAF9A] text-white shadow-sm"
                                   : "border-border/60 bg-white text-muted-foreground hover:border-primary"
                               }`}
                               title={isCompleted ? "Mark pending" : "Mark completed"}
@@ -1694,7 +1694,7 @@ function CaregiverPage() {
 
                             <div className="p-5">
                               <div className="flex items-center justify-between text-xs font-bold text-primary mb-1">
-                                <span className="uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-50 text-primary border border-emerald-100">{tag}</span>
+                                <span className="uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#6FAF9A]/15 text-primary border border-emerald-100">{tag}</span>
                                 {m.location && <span className="text-muted-foreground font-medium">{m.location}</span>}
                               </div>
                               <h4 className="font-display text-xl font-bold text-foreground mb-1">
@@ -1763,7 +1763,7 @@ function CaregiverPage() {
                             <span
                               className={`px-3 py-0.5 rounded-full text-[10px] font-extrabold uppercase ${
                                 isAssigned
-                                  ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                                  ? "bg-[#6FAF9A]/15 text-[#6FAF9A] border border-[#6FAF9A]/30"
                                   : "bg-muted text-muted-foreground"
                               }`}
                             >
@@ -1827,7 +1827,7 @@ function CaregiverPage() {
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                       <div className="rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md p-4 shadow-card">
                         <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Task Completion</p>
-                        <p className="font-display text-3xl font-bold text-emerald-700 mt-1">
+                        <p className="font-display text-3xl font-bold text-[#6FAF9A] mt-1">
                           {analytics.task_completion_rate.toFixed(1)}%
                         </p>
                         <p className="text-xs text-muted-foreground mt-1 font-medium">
@@ -2007,7 +2007,7 @@ function CaregiverPage() {
                   <p className="text-sm text-muted-foreground py-8 text-center font-medium">Loading appointments...</p>
                 ) : appointments.length === 0 ? (
                   <div className="rounded-3xl border border-white/70 bg-white/80 backdrop-blur-md p-10 text-center shadow-card">
-                    <span className="flex size-16 items-center justify-center rounded-2xl bg-emerald-100 text-primary mx-auto mb-4 shadow-inner">
+                    <span className="flex size-16 items-center justify-center rounded-2xl bg-[#6FAF9A]/20 text-primary mx-auto mb-4 shadow-inner">
                       <Calendar size={32} />
                     </span>
                     <h3 className="text-xl font-bold text-foreground">No Appointments Scheduled</h3>
@@ -2022,7 +2022,7 @@ function CaregiverPage() {
                       const isPast = apptDate < new Date();
                       const statusColors: Record<string, string> = {
                         scheduled: "bg-sky-50 text-sky-800 border-sky-200",
-                        completed: "bg-emerald-50 text-emerald-800 border-emerald-200",
+                        completed: "bg-[#6FAF9A]/15 text-[#6FAF9A] border-[#6FAF9A]/30",
                         cancelled: "bg-muted text-muted-foreground border-border/50",
                         missed: "bg-rose-50 text-rose-800 border-rose-200",
                       };
@@ -2147,7 +2147,7 @@ function CaregiverPage() {
                 {/* AI Recommendations */}
                 <div className="rounded-3xl border border-white/70 bg-white/85 backdrop-blur-md p-6 shadow-card">
                   <h3 className="font-display text-xl font-bold text-foreground mb-3 flex items-center gap-2">
-                    <CheckSquare size={18} className="text-emerald-700" /> Caregiver Recommendations
+                    <CheckSquare size={18} className="text-[#6FAF9A]" /> Caregiver Recommendations
                   </h3>
                   {analytics?.recommendations && analytics.recommendations.length > 0 ? (
                     <ul className="space-y-2 text-sm text-foreground/90 list-disc list-inside font-medium">
@@ -2194,7 +2194,7 @@ function CaregiverPage() {
                           </div>
                           <div className="flex items-center gap-4">
                             <span className="text-primary font-bold">{session.score} pts</span>
-                            <span className="text-emerald-700 font-bold">
+                            <span className="text-[#6FAF9A] font-bold">
                               {session.accuracy.toFixed(0)}% acc
                             </span>
                             <span className="text-xs text-muted-foreground font-medium">

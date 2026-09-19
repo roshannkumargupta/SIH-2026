@@ -54,7 +54,7 @@ export function AppSidebar() {
                 to="/"
                 className={`flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-sm ${
                   currentPath === "/"
-                    ? "bg-[#22C55E] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
+                    ? "bg-[#6FAF9A] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
                     : "text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5 font-medium [&_svg]:text-[#8A99A8]"
                 }`}
               >
@@ -67,7 +67,7 @@ export function AppSidebar() {
                 to="/games"
                 className={`flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-sm ${
                   currentPath.startsWith("/games")
-                    ? "bg-[#22C55E] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
+                    ? "bg-[#6FAF9A] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
                     : "text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5 font-medium [&_svg]:text-[#8A99A8]"
                 }`}
               >
@@ -80,7 +80,7 @@ export function AppSidebar() {
                 to="/medication"
                 className={`flex items-center justify-between px-3.5 py-3 rounded-xl transition text-sm ${
                   currentPath.startsWith("/medication")
-                    ? "bg-[#22C55E] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
+                    ? "bg-[#6FAF9A] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
                     : "text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5 font-medium [&_svg]:text-[#8A99A8]"
                 }`}
               >
@@ -100,7 +100,7 @@ export function AppSidebar() {
                 to="/routine"
                 className={`flex items-center justify-between px-3.5 py-3 rounded-xl transition text-sm ${
                   currentPath.startsWith("/routine")
-                    ? "bg-[#22C55E] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
+                    ? "bg-[#6FAF9A] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
                     : "text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5 font-medium [&_svg]:text-[#8A99A8]"
                 }`}
               >
@@ -120,7 +120,7 @@ export function AppSidebar() {
                 to="/memories"
                 className={`flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-sm ${
                   currentPath.startsWith("/memories")
-                    ? "bg-[#22C55E] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
+                    ? "bg-[#6FAF9A] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
                     : "text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5 font-medium [&_svg]:text-[#8A99A8]"
                 }`}
               >
@@ -133,7 +133,7 @@ export function AppSidebar() {
                 to="/calm"
                 className={`flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-sm ${
                   currentPath.startsWith("/calm")
-                    ? "bg-[#22C55E] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
+                    ? "bg-[#6FAF9A] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
                     : "text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5 font-medium [&_svg]:text-[#8A99A8]"
                 }`}
               >
@@ -150,7 +150,7 @@ export function AppSidebar() {
                 to="/caregiver"
                 className={`flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-sm ${
                   currentPath.startsWith("/caregiver")
-                    ? "bg-[#22C55E] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
+                    ? "bg-[#6FAF9A] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
                     : "text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5 font-medium [&_svg]:text-[#8A99A8]"
                 }`}
               >
@@ -161,7 +161,7 @@ export function AppSidebar() {
                 to="/analytics"
                 className={`flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-sm ${
                   currentPath.startsWith("/analytics")
-                    ? "bg-[#22C55E] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
+                    ? "bg-[#6FAF9A] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
                     : "text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5 font-medium [&_svg]:text-[#8A99A8]"
                 }`}
               >
@@ -178,7 +178,7 @@ export function AppSidebar() {
                 to="/doctor"
                 className={`flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-sm ${
                   currentPath.startsWith("/doctor")
-                    ? "bg-[#22C55E] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
+                    ? "bg-[#6FAF9A] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
                     : "text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5 font-medium [&_svg]:text-[#8A99A8]"
                 }`}
               >
@@ -189,7 +189,7 @@ export function AppSidebar() {
                 to="/analytics"
                 className={`flex items-center gap-3 px-3.5 py-3 rounded-xl transition text-sm ${
                   currentPath.startsWith("/analytics")
-                    ? "bg-[#22C55E] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
+                    ? "bg-[#6FAF9A] text-[#0A1420] font-bold shadow-sm [&_svg]:text-[#0A1420]"
                     : "text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5 font-medium [&_svg]:text-[#8A99A8]"
                 }`}
               >

@@ -70,7 +70,7 @@ function Index() {
     try {
       await logMood({
         mood,
-        note: moodNote.trim() || undefined,
+        ...(moodNote.trim() ? { note: moodNote.trim() } : {}),
       });
       setRecentMoodAcknowledged(mood);
       setMoodNote("");
@@ -144,7 +144,7 @@ function Index() {
       await updateLogStatus({
         logId: nextScheduledLog.id,
         status: newStatus,
-        notes: newStatus === "taken" ? "Confirmed taken by patient on home screen" : undefined,
+        ...(newStatus === "taken" ? { notes: "Confirmed taken by patient on home screen" } : {}),
       });
       toast.success(
         newStatus === "taken" ? t("dashboard:medTakenSubtext") : t("dashboard:dueToday"),
@@ -190,7 +190,7 @@ function Index() {
       title: "Ball Sort Puzzle",
       desc: "Sort vibrant balls into matching tubes with clarity.",
       difficulty: "Easy",
-      diffColor: "bg-[#22C55E]/15 text-[#22C55E] border-[#22C55E]/30",
+      diffColor: "bg-[#6FAF9A]/15 text-[#6FAF9A] border-[#6FAF9A]/30",
       icon: "🎱",
       gradient: "from-[#1d3a3d] to-[#112426]",
     },
@@ -217,9 +217,12 @@ function Index() {
                 aria-label="Welcome Hero Banner"
                 className="relative overflow-hidden rounded-3xl border border-white/8 bg-gradient-to-br from-[#13283E] via-[#0F2032] to-[#0A1420] p-6 sm:p-8 shadow-2xl"
               >
-                {/* Subtle ambient decorative gradient glows */}
-                <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#22C55E]/10 blur-3xl pointer-events-none" />
+                {/* Subtle ambient decorative gradient glows & emblem watermark */}
+                <div className="absolute top-0 right-0 -mr-20 -mt-20 size-80 rounded-full bg-[#6FAF9A]/10 blur-3xl pointer-events-none" />
                 <div className="absolute bottom-0 right-1/4 -mb-20 size-64 rounded-full bg-[#2DD4BF]/10 blur-3xl pointer-events-none" />
+                <div className="hidden sm:block absolute -right-4 -bottom-4 size-44 md:size-52 opacity-20 pointer-events-none select-none">
+                  <img src="/assets/brain-logo.png" alt="" className="w-full h-full object-contain filter drop-shadow-[0_0_25px_rgba(229,169,60,0.6)]" />
+                </div>
 
                 <div className="relative z-10 space-y-6">
                   {/* Top user avatar and greeting */}
@@ -227,12 +230,12 @@ function Index() {
                     <img
                       src={user?.avatar_url || defaultProfilePhoto}
                       alt={patientName}
-                      className="size-14 sm:size-16 rounded-full border-2 border-[#22C55E]/60 object-cover shadow-lg shrink-0"
+                      className="size-14 sm:size-16 rounded-full border-2 border-[#6FAF9A]/60 object-cover shadow-lg shrink-0"
                     />
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-3 py-0.5 text-xs font-semibold text-[#8A99A8]">
-                          <Sparkles size={12} className="text-[#22C55E]" /> {todayFormatted}
+                          <Sparkles size={12} className="text-[#6FAF9A]" /> {todayFormatted}
                         </span>
                       </div>
                       <h1 className="font-serif text-4xl sm:text-5xl lg:text-5xl font-bold tracking-tight text-[#E8ECEF]">
@@ -247,7 +250,7 @@ function Index() {
                   {/* "Continue where you left off" Slim Featured Card */}
                   <div className="rounded-2xl border border-white/8 bg-[#121D2B]/90 backdrop-blur-md p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md">
                     <div className="space-y-1">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#22C55E]">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#6FAF9A]">
                         Featured Cognitive Exercise
                       </span>
                       <h3 className="font-display text-base sm:text-lg font-bold text-[#E8ECEF]">
@@ -261,7 +264,7 @@ function Index() {
                       asChild
                       variant="default"
                       size="default"
-                      className="rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] font-extrabold px-6 shrink-0 shadow-md"
+                      className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] font-extrabold px-6 shrink-0 shadow-md"
                     >
                       <Link to="/games">
                         <Play size={16} className="fill-current mr-1.5" />
@@ -367,7 +370,7 @@ function Index() {
                   </div>
                   <Link
                     to="/games"
-                    className="flex items-center gap-1 text-xs font-bold text-[#22C55E] hover:underline"
+                    className="flex items-center gap-1 text-xs font-bold text-[#6FAF9A] hover:underline"
                   >
                     <span>View All (22)</span>
                     <ArrowRight size={14} />
@@ -378,8 +381,7 @@ function Index() {
                   {featuredGames.map((game) => (
                     <Link
                       key={game.id}
-                      to="/games/$gameId"
-                      params={{ gameId: game.id }}
+                      to={`/games/${game.id}` as any}
                       className="group flex flex-col justify-between rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-5 sm:p-6 hover:border-white/15 hover:bg-[#152335] transition duration-200 shadow-md relative overflow-hidden"
                     >
                       {/* Tall Illustrated Top Banner (140-180px height per spec) */}
@@ -397,7 +399,7 @@ function Index() {
                       </div>
 
                       <div className="space-y-1.5 flex-1">
-                        <h3 className="font-display text-lg sm:text-xl font-bold text-[#E8ECEF] group-hover:text-[#22C55E] transition">
+                        <h3 className="font-display text-lg sm:text-xl font-bold text-[#E8ECEF] group-hover:text-[#6FAF9A] transition">
                           {game.title}
                         </h3>
                         <p className="text-sm text-[#8A99A8] line-clamp-2 leading-relaxed">
@@ -410,7 +412,7 @@ function Index() {
                           Recommended for today
                         </span>
                         {/* Prominent Teal-green circular play button */}
-                        <span className="flex size-10 items-center justify-center rounded-full bg-[#22C55E] text-[#0A1420] shadow-md group-hover:scale-105 transition-transform">
+                        <span className="flex size-10 items-center justify-center rounded-full bg-[#6FAF9A] text-[#0A1420] shadow-md group-hover:scale-105 transition-transform">
                           <Play size={16} className="fill-current ml-0.5" />
                         </span>
                       </div>
@@ -426,7 +428,7 @@ function Index() {
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#22C55E]">
+                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#6FAF9A]">
                       <Heart size={14} aria-hidden="true" />
                       <span>{t("dashboard:moodSectionTitle")}</span>
                     </div>
@@ -438,7 +440,7 @@ function Index() {
                   <button
                     type="button"
                     onClick={() => setShowMoodNote(!showMoodNote)}
-                    className="text-xs font-bold text-[#22C55E] hover:underline self-start sm:self-auto cursor-pointer"
+                    className="text-xs font-bold text-[#6FAF9A] hover:underline self-start sm:self-auto cursor-pointer"
                   >
                     {showMoodNote ? t("dashboard:moodHideNote") : t("dashboard:moodAddNote")}
                   </button>
@@ -452,7 +454,7 @@ function Index() {
                       onChange={(e) => setMoodNote(e.target.value)}
                       placeholder={t("dashboard:moodNotePlaceholder")}
                       maxLength={200}
-                      className="w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[#E8ECEF] text-xs focus:outline-none focus:border-[#22C55E] placeholder:text-[#8A99A8]"
+                      className="w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[#E8ECEF] text-xs focus:outline-none focus:border-[#6FAF9A] placeholder:text-[#8A99A8]"
                     />
                   </div>
                 )}
@@ -471,9 +473,9 @@ function Index() {
                       type: "calm" as MoodType,
                       emoji: "😌",
                       labelKey: "dashboard:moodCalm",
-                      border: "border-[#22C55E]/30 hover:border-[#22C55E]",
-                      bg: "bg-[#22C55E]/10 hover:bg-[#22C55E]/15",
-                      text: "text-[#22C55E]",
+                      border: "border-[#6FAF9A]/30 hover:border-[#6FAF9A]",
+                      bg: "bg-[#6FAF9A]/10 hover:bg-[#6FAF9A]/15",
+                      text: "text-[#6FAF9A]",
                     },
                     {
                       type: "confused" as MoodType,
@@ -508,7 +510,7 @@ function Index() {
                           {t(item.labelKey)}
                         </span>
                         {isAcknowledged && (
-                          <span className="absolute top-2 right-2 flex size-4 items-center justify-center rounded-full bg-[#22C55E] text-[#0A1420] shadow-sm">
+                          <span className="absolute top-2 right-2 flex size-4 items-center justify-center rounded-full bg-[#6FAF9A] text-[#0A1420] shadow-sm">
                             <Check size={10} strokeWidth={3} />
                           </span>
                         )}
@@ -518,8 +520,8 @@ function Index() {
                 </div>
 
                 {recentMoodAcknowledged && (
-                  <div className="p-3 rounded-xl bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#E8ECEF] text-xs font-medium flex items-center gap-2 animate-in fade-in">
-                    <Check size={16} className="text-[#22C55E] shrink-0" />
+                  <div className="p-3 rounded-xl bg-[#6FAF9A]/10 border border-[#6FAF9A]/30 text-[#E8ECEF] text-xs font-medium flex items-center gap-2 animate-in fade-in">
+                    <Check size={16} className="text-[#6FAF9A] shrink-0" />
                     <span>{t("dashboard:moodAcknowledged")}</span>
                   </div>
                 )}
@@ -542,7 +544,7 @@ function Index() {
                     <p className="text-xs text-[#8A99A8] line-clamp-1">
                       {latestMemory?.description || t("dashboard:memoriesEmptyDesc")}
                     </p>
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-[#22C55E] pt-1">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-[#6FAF9A] pt-1">
                       <span>{hasMemories ? t("dashboard:exploreMemories") : t("dashboard:createFirstMemory")}</span>
                       <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                     </span>
@@ -574,7 +576,7 @@ function Index() {
                   <h3 className="font-display text-base font-bold text-[#E8ECEF]">
                     {t("nav.today")} Progress
                   </h3>
-                  <span className="text-[11px] font-bold text-[#22C55E] px-2 py-0.5 rounded-full bg-[#22C55E]/10">
+                  <span className="text-[11px] font-bold text-[#6FAF9A] px-2 py-0.5 rounded-full bg-[#6FAF9A]/10">
                     Daily Score
                   </span>
                 </div>
@@ -598,7 +600,7 @@ function Index() {
                         cy="60"
                         r="50"
                         fill="none"
-                        stroke="#22C55E"
+                        stroke="#6FAF9A"
                         strokeWidth="10"
                         strokeLinecap="round"
                         className="transition-all duration-700 ease-out"
@@ -632,10 +634,10 @@ function Index() {
                   </div>
 
                   <div className="rounded-xl border border-white/5 bg-white/5 p-3.5 text-left">
-                    <span className="flex size-8 items-center justify-center rounded-lg bg-[#22C55E]/15 text-[#22C55E] mb-2">
+                    <span className="flex size-8 items-center justify-center rounded-lg bg-[#6FAF9A]/15 text-[#6FAF9A] mb-2">
                       <Brain size={16} />
                     </span>
-                    <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#22C55E]">
+                    <p className="font-display text-2xl sm:text-3xl font-extrabold text-[#6FAF9A]">
                       {Math.round(gameSummary?.average_accuracy || 0)}%
                     </p>
                     <p className="text-[11px] text-[#8A99A8] font-bold uppercase tracking-wider mt-1">
@@ -683,7 +685,7 @@ function Index() {
                   </div>
                   <Link
                     to="/routine"
-                    className="text-xs font-bold text-[#22C55E] hover:underline"
+                    className="text-xs font-bold text-[#6FAF9A] hover:underline"
                   >
                     View All
                   </Link>
@@ -718,8 +720,8 @@ function Index() {
                         onClick={handleToggleMedicine}
                         className={`size-7 shrink-0 flex items-center justify-center rounded-lg transition cursor-pointer ${
                           isMedicineTaken
-                            ? "bg-[#22C55E] text-[#0A1420]"
-                            : "border border-white/20 hover:border-[#22C55E] text-transparent"
+                            ? "bg-[#6FAF9A] text-[#0A1420]"
+                            : "border border-white/20 hover:border-[#6FAF9A] text-transparent"
                         }`}
                         title={isMedicineTaken ? "Marked taken" : "Mark as taken"}
                       >
@@ -763,8 +765,8 @@ function Index() {
                           onClick={() => handleToggleTask(task.id)}
                           className={`size-7 shrink-0 flex items-center justify-center rounded-lg transition cursor-pointer ${
                             isDone
-                              ? "bg-[#22C55E] text-[#0A1420]"
-                              : "border border-white/20 hover:border-[#22C55E] text-transparent"
+                              ? "bg-[#6FAF9A] text-[#0A1420]"
+                              : "border border-white/20 hover:border-[#6FAF9A] text-transparent"
                           }`}
                           title={isDone ? "Completed" : "Mark complete"}
                         >

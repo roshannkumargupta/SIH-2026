@@ -22,7 +22,7 @@ export function SoundscapePlayer() {
   const location = useLocation();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const [activeTrack, setActiveTrack] = useState<SoundscapeTrack>(SOUNDSCAPES[0]);
+  const [activeTrack, setActiveTrack] = useState<SoundscapeTrack>(SOUNDSCAPES[0]!);
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.6);
   const [isMuted, setIsMuted] = useState(false);
@@ -121,12 +121,12 @@ export function SoundscapePlayer() {
       {/* Main Active Soundscape Showcase Card */}
       <div className="relative overflow-hidden rounded-3xl bg-[#121D2B] border border-white/8 p-8 sm:p-10 shadow-xl">
         <div className="flex flex-col items-center text-center space-y-6">
-          <div className="w-20 h-20 rounded-2xl bg-[#22C55E]/15 border border-[#22C55E]/20 shadow-sm flex items-center justify-center text-[#22C55E]">
+          <div className="w-20 h-20 rounded-2xl bg-[#6FAF9A]/15 border border-[#6FAF9A]/20 shadow-sm flex items-center justify-center text-[#6FAF9A]">
             {getTrackIcon(activeTrack.theme)}
           </div>
 
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#22C55E]/15 border border-[#22C55E]/25 text-[#22C55E] text-xs font-bold shadow-sm">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#6FAF9A]/15 border border-[#6FAF9A]/25 text-[#6FAF9A] text-xs font-bold shadow-sm">
               <Sparkles className="w-3.5 h-3.5" />
               <span>{t("dashboard:soundscapeCalmEnv")}</span>
             </div>
@@ -153,7 +153,7 @@ export function SoundscapePlayer() {
               onClick={handleTogglePlay}
               disabled={isCurrentUnavailable}
               size="lg"
-              className="h-16 w-16 rounded-full shadow-lg transition-transform active:scale-95 bg-[#22C55E] hover:bg-[#1ea850] text-[#0A1420] shadow-[#22C55E]/20"
+              className="h-16 w-16 rounded-full shadow-lg transition-transform active:scale-95 bg-[#6FAF9A] hover:bg-[#5E9E8A] text-[#0A1420] shadow-[#6FAF9A]/20"
               aria-label={
                 isPlaying ? t("dashboard:soundscapePause") : t("dashboard:soundscapePlay")
               }
@@ -206,13 +206,13 @@ export function SoundscapePlayer() {
                 onClick={() => handleSelectTrack(track)}
                 className={`flex items-start gap-4 p-4 rounded-3xl border text-left transition-all ${
                   isSelected
-                    ? "bg-[#121D2B] border-[#22C55E] ring-2 ring-[#22C55E]/30 shadow-lg"
+                    ? "bg-[#121D2B] border-[#6FAF9A] ring-2 ring-[#6FAF9A]/30 shadow-lg"
                     : "bg-[#121D2B]/80 border-white/8 hover:bg-[#121D2B] hover:border-white/15 shadow-md"
                 }`}
               >
                 <div
                   className={`p-3 rounded-2xl ${
-                    isSelected ? "bg-[#22C55E]/15 text-[#22C55E]" : "bg-[#0A1420] text-[#8A99A8]"
+                    isSelected ? "bg-[#6FAF9A]/15 text-[#6FAF9A]" : "bg-[#0A1420] text-[#8A99A8]"
                   }`}
                 >
                   {getTrackIcon(track.theme)}
@@ -228,8 +228,8 @@ export function SoundscapePlayer() {
                       </span>
                     ) : isSelected && isPlaying ? (
                       <span className="flex h-2.5 w-2.5 relative">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#6FAF9A] opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#6FAF9A]"></span>
                       </span>
                     ) : null}
                   </div>

@@ -1,12 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { House, UserPlus, AlertCircle } from "lucide-react";
+import { UserPlus, AlertCircle } from "lucide-react";
 import { useAuth } from "../hooks/use-auth";
 import { useLanguage } from "@/context/LanguageContext";
 import { formatApiError } from "../api/client";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { AppLogo } from "@/components/AppLogo";
 import type { UserRole } from "../types/api";
 
 export const Route = createFileRoute("/register")({
@@ -60,7 +61,7 @@ function RegisterPage() {
         email: cleanEmail,
         password,
         role,
-        phone: phone.trim() || undefined,
+        ...(phone.trim() ? { phone: phone.trim() } : {}),
       });
 
       if (user.role === "caretaker") {
@@ -86,17 +87,13 @@ function RegisterPage() {
     patient: t("auth:patient"),
     caretaker: t("auth:caretaker"),
     doctor: t("auth:doctor"),
+    admin: "Admin",
   };
 
   return (
     <div className="min-h-screen bg-[#0A1420] text-[#E8ECEF] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link to="/" className="inline-flex items-center gap-3">
-          <span className="flex size-14 items-center justify-center rounded-2xl bg-[#22C55E] text-[#0A1420] shadow-sm">
-            <House size={28} strokeWidth={2.5} />
-          </span>
-          <span className="font-display text-4xl font-bold text-[#E8ECEF]">SmritiSetu</span>
-        </Link>
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center flex flex-col items-center">
+        <AppLogo size="lg" />
         <h1 className="mt-6 text-3xl font-display font-bold tracking-tight text-[#E8ECEF]">
           {t("auth:registerTitle")}
         </h1>
@@ -124,7 +121,7 @@ function RegisterPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Lalita Devi"
-                className="h-12 text-base bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl focus-visible:ring-[#22C55E] shadow-sm"
+                className="h-12 text-base bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl focus-visible:ring-[#6FAF9A] shadow-sm"
               />
             </div>
 
@@ -139,7 +136,7 @@ function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="h-12 text-base bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl focus-visible:ring-[#22C55E] shadow-sm"
+                className="h-12 text-base bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl focus-visible:ring-[#6FAF9A] shadow-sm"
               />
             </div>
 
@@ -153,7 +150,7 @@ function RegisterPage() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+91 98765 43210"
-                className="h-12 text-base bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl focus-visible:ring-[#22C55E] shadow-sm"
+                className="h-12 text-base bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl focus-visible:ring-[#6FAF9A] shadow-sm"
               />
             </div>
 
@@ -169,7 +166,7 @@ function RegisterPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="h-12 text-base bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl focus-visible:ring-[#22C55E] shadow-sm"
+                className="h-12 text-base bg-[#0A1420] border-white/10 text-[#E8ECEF] placeholder:text-[#8A99A8] rounded-2xl focus-visible:ring-[#6FAF9A] shadow-sm"
               />
             </div>
 
@@ -183,7 +180,7 @@ function RegisterPage() {
                     onClick={() => setRole(r)}
                     className={`py-3 px-2 rounded-2xl border text-xs sm:text-sm font-bold capitalize transition-all ${
                       role === r
-                        ? "border-[#22C55E] bg-[#22C55E] text-[#0A1420] shadow-sm font-bold"
+                        ? "border-[#6FAF9A] bg-[#6FAF9A] text-[#0A1420] shadow-sm font-bold"
                         : "border-white/10 bg-[#0A1420] text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5"
                     }`}
                   >
@@ -197,7 +194,7 @@ function RegisterPage() {
               type="submit"
               disabled={isLoading}
               size="touch"
-              className="w-full text-base sm:text-lg mt-3 font-bold rounded-full bg-[#22C55E] text-[#0A1420] hover:bg-[#1ea850] shadow-lg shadow-[#22C55E]/20"
+              className="w-full text-base sm:text-lg mt-3 font-bold rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] shadow-lg shadow-[#6FAF9A]/20"
             >
               {isLoading ? (
                 t("common:loading")
@@ -211,7 +208,7 @@ function RegisterPage() {
 
           <div className="mt-6 text-center text-sm text-[#8A99A8] font-medium">
             {t("auth:alreadyHaveAccount")}{" "}
-            <Link to="/login" className="font-bold text-[#22C55E] hover:underline">
+            <Link to="/login" className="font-bold text-[#6FAF9A] hover:underline">
               {t("common:signIn")}
             </Link>
           </div>

@@ -41,12 +41,7 @@ export type VoiceIntent =
   | "UNKNOWN";
 
 export type VoiceStatusState =
-  | "idle"
-  | "listening"
-  | "processing"
-  | "speaking"
-  | "success"
-  | "error";
+  "idle" | "listening" | "processing" | "speaking" | "success" | "error";
 
 export interface InterpretResult {
   intent: VoiceIntent;

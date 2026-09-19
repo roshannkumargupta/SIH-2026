@@ -144,7 +144,11 @@ export default function SimonSays({ level }: { level: number }) {
       targetScore={target}
       stats={[
         { label: "Sequence Length", value: sequence.length || seqLength, highlight: "sun" },
-        { label: "Turn", value: isPlaying ? "Watching" : isPlayerTurn ? "Your Turn" : "Ready", highlight: isPlayerTurn ? "tea" : "cream" },
+        {
+          label: "Turn",
+          value: isPlaying ? "Watching" : isPlayerTurn ? "Your Turn" : "Ready",
+          highlight: isPlayerTurn ? "tea" : "cream",
+        },
       ]}
       feedback={feedbackText}
       instructionHint="Watch the colors flash, then tap them in the exact same order"

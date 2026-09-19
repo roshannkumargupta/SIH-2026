@@ -29,7 +29,6 @@ export interface LanguageContextValue {
 import { SUPPORTED_LANGUAGES_LIST } from "@/features/voice/config/languageRegistry";
 export { SUPPORTED_LANGUAGES_LIST };
 
-
 const STORAGE_KEY = "smritisetu_preferred_language";
 
 export function normalizeLanguageCode(raw: string | undefined | null): VoiceLanguageCode {
@@ -86,7 +85,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     }
   }, [user?.preferred_language]);
 
-  const shortLang = (language.includes("-") ? (language.split("-")[0] ?? language) : language).toLowerCase();
+  const shortLang = (
+    language.includes("-") ? (language.split("-")[0] ?? language) : language
+  ).toLowerCase();
 
   const setLanguage = useCallback(
     async (code: VoiceLanguageCode) => {

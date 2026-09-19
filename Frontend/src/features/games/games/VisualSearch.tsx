@@ -140,7 +140,13 @@ export default function VisualSearch({ level }: { level: number }) {
         offline,
       }}
       onPlayAgain={resetGame}
-      onNextLevel={level < 10 ? () => { window.location.href = `/games/visual-search?level=${level + 1}`; } : undefined}
+      onNextLevel={
+        level < 10
+          ? () => {
+              window.location.href = `/games/visual-search?level=${level + 1}`;
+            }
+          : undefined
+      }
     >
       <div className="space-y-5">
         <div className="flex items-center justify-center gap-3 p-3 bg-surface/60 rounded-xl border border-clay/60 max-w-xs mx-auto">

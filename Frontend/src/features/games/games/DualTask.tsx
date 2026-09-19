@@ -161,7 +161,9 @@ export default function DualTask({ level }: { level: number }) {
         {/* Shapes area */}
         <div className="rounded-2xl border-2 border-clay bg-ink/50 p-5 shadow-sm">
           <p className="text-sm text-cream/80 mb-3 font-bold">
-            Count the <span className="text-sun capitalize font-black text-base">{problem.targetShape}s</span>:
+            Count the{" "}
+            <span className="text-sun capitalize font-black text-base">{problem.targetShape}s</span>
+            :
           </p>
           <div className="flex flex-wrap gap-2.5 justify-center sm:justify-start">
             {problem.shapes.map((item, i) => (
@@ -174,14 +176,20 @@ export default function DualTask({ level }: { level: number }) {
 
         {/* Math area */}
         <div className="rounded-2xl border-2 border-clay bg-ink/50 p-5 text-center shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-wider text-cream/50 mb-1">Solve the calculation:</p>
-          <span className="font-display text-4xl sm:text-5xl font-black text-fire">{problem.math} = ?</span>
+          <p className="text-xs font-bold uppercase tracking-wider text-cream/50 mb-1">
+            Solve the calculation:
+          </p>
+          <span className="font-display text-4xl sm:text-5xl font-black text-fire">
+            {problem.math} = ?
+          </span>
         </div>
 
         {/* Inputs */}
         <div className="flex gap-4 flex-wrap justify-center items-end pt-1">
           <div className="flex flex-col items-center gap-1.5">
-            <label className="text-xs text-sun font-bold uppercase tracking-wider">Shape Count</label>
+            <label className="text-xs text-sun font-bold uppercase tracking-wider">
+              Shape Count
+            </label>
             <input
               type="number"
               value={shapeInput}
@@ -191,7 +199,9 @@ export default function DualTask({ level }: { level: number }) {
             />
           </div>
           <div className="flex flex-col items-center gap-1.5">
-            <label className="text-xs text-fire font-bold uppercase tracking-wider">Math Answer</label>
+            <label className="text-xs text-fire font-bold uppercase tracking-wider">
+              Math Answer
+            </label>
             <input
               type="number"
               value={mathInput}

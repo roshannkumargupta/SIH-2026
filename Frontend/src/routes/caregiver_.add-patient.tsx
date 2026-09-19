@@ -148,7 +148,11 @@ function AddPatientPage() {
     <AppShell className="p-4 sm:p-6 lg:p-8 max-w-3xl mx-auto space-y-6">
       {/* Back navigation */}
       <div>
-        <Button asChild variant="outline" className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold">
+        <Button
+          asChild
+          variant="outline"
+          className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold"
+        >
           <Link to="/caregiver">
             <ArrowLeft size={18} className="mr-2 text-[#6FAF9A]" /> Back to Caregiver Hub
           </Link>
@@ -183,8 +187,8 @@ function AddPatientPage() {
           </div>
           <p className="text-xs text-[#8A99A8] font-medium">
             Enter the patient's Gmail / email identifier. If the patient already has an account,
-            entering their email will connect them to your dashboard. If registering a new
-            patient, provide an initial password for their login.
+            entering their email will connect them to your dashboard. If registering a new patient,
+            provide an initial password for their login.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -336,8 +340,8 @@ function AddPatientPage() {
             <Globe size={20} /> Preferred Language
           </div>
           <p className="text-xs text-[#8A99A8] font-medium">
-            The Voice Assistant, dashboard interface, and reminders will automatically adapt to
-            this language.
+            The Voice Assistant, dashboard interface, and reminders will automatically adapt to this
+            language.
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -354,7 +358,9 @@ function AddPatientPage() {
                       : "border-white/8 bg-[#0A1420]/60 hover:bg-[#0A1420] hover:border-white/15"
                   }`}
                 >
-                  <p className={`text-sm font-bold ${selected ? "text-[#6FAF9A]" : "text-[#E8ECEF]"}`}>
+                  <p
+                    className={`text-sm font-bold ${selected ? "text-[#6FAF9A]" : "text-[#E8ECEF]"}`}
+                  >
                     {lang.label}
                   </p>
                   {selected && (

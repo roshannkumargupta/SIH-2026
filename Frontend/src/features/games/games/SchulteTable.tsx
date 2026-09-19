@@ -91,7 +91,7 @@ export default function SchulteTable({ level }: { level: number }) {
       completed={completed}
       results={{
         score: finalScore,
-        accuracy: 100,
+        accuracy: finalScore,
         durationSeconds: finalDuration,
         synced,
         offline,

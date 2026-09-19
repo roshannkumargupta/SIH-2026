@@ -2,7 +2,7 @@ import json
 from datetime import datetime, timezone
 from uuid import UUID
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.ai.cognitive_engine import engine

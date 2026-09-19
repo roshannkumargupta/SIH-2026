@@ -1,6 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Pill, ArrowLeft, Check, Clock, FileText, Calendar, XCircle, Volume2, Mic } from "lucide-react";
+import {
+  Pill,
+  ArrowLeft,
+  Check,
+  Clock,
+  FileText,
+  Calendar,
+  XCircle,
+  Volume2,
+  Mic,
+} from "lucide-react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
@@ -31,11 +41,19 @@ function MedicationPage() {
   const { todaySchedules, todayLogs, prescriptions, updateLogStatus, isLoading } = useMedications();
   const [activeTab, setActiveTab] = useState<"today" | "prescriptions">("today");
   const { language, t } = useLanguage();
-  
+
   const [isVoiceOpen, setIsVoiceOpen] = useState(false);
-  const { voice, readScheduleAloud, readDoseAloud, confirmDoseTaken, isConfirmingDose, executeDoseTaken, cancelConfirmation } = useMedicationVoice(language);
+  const {
+    voice,
+    readScheduleAloud,
+    readDoseAloud,
+    confirmDoseTaken,
+    isConfirmingDose,
+    executeDoseTaken,
+    cancelConfirmation,
+  } = useMedicationVoice(language);
   const cap = getLanguageCapability(language as any);
-  
+
   const totalLogs = todayLogs.length || 1;
   const takenCount = todayLogs.filter((l) => l.status === "taken").length;
   const adherence = Math.round((takenCount / totalLogs) * 100);
@@ -68,13 +86,13 @@ function MedicationPage() {
 
   return (
     <AppShell progress={adherence}>
-      <VoiceAssistantModal 
-        isOpen={isVoiceOpen} 
-        onClose={() => setIsVoiceOpen(false)} 
-        defaultLanguage={language as any} 
+      <VoiceAssistantModal
+        isOpen={isVoiceOpen}
+        onClose={() => setIsVoiceOpen(false)}
+        defaultLanguage={language as any}
         controller={voice}
       />
-      
+
       {/* Page level Voice Mic floating button */}
       <div className="fixed bottom-6 right-6 z-40">
         <Button
@@ -88,7 +106,11 @@ function MedicationPage() {
       <div className="px-4 sm:px-8 py-6 max-w-[1550px] w-full mx-auto space-y-7 pb-24">
         {/* Navigation Breadcrumb & Tab Selector */}
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <Button asChild variant="outline" className="rounded-full bg-[#121D2B] border-white/8 text-[#E8ECEF] hover:bg-[#152335] shadow-sm font-semibold">
+          <Button
+            asChild
+            variant="outline"
+            className="rounded-full bg-[#121D2B] border-white/8 text-[#E8ECEF] hover:bg-[#152335] shadow-sm font-semibold"
+          >
             <Link to="/">
               <ArrowLeft size={18} className="mr-2 text-[#6FAF9A]" /> {t("common:backHome")}
             </Link>
@@ -133,12 +155,14 @@ function MedicationPage() {
                 <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#E8ECEF]">
                   {t("medication:pageTitle")}
                 </h1>
-                <p className="text-[#8A99A8] mt-1 font-medium text-sm sm:text-base">{t("medication:pageSubtitle")}</p>
-                
+                <p className="text-[#8A99A8] mt-1 font-medium text-sm sm:text-base">
+                  {t("medication:pageSubtitle")}
+                </p>
+
                 {cap.ttsMode === "full" ? (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={handleReadMedicinesAloud}
                     className="mt-3 rounded-full border-[#6FAF9A]/30 text-[#6FAF9A] bg-[#6FAF9A]/10 hover:bg-[#6FAF9A]/20"
                   >
@@ -158,27 +182,37 @@ function MedicationPage() {
                 <span>{t("medication:todaysAdherence")}</span>
                 <span className="text-[#6FAF9A] font-extrabold">{adherence}%</span>
               </div>
-              <Progress value={adherence} className="h-2 bg-white/10 [&>div]:bg-[#6FAF9A] rounded-full" />
+              <Progress
+                value={adherence}
+                className="h-2 bg-white/10 [&>div]:bg-[#6FAF9A] rounded-full"
+              />
               <p className="mt-2 text-xs text-[#8A99A8] font-semibold text-right">
                 {takenCount} {t("dashboard:completedOf")} {todayLogs.length}
               </p>
             </div>
           </div>
         </div>
-        
+
         {isConfirmingDose && (
           <div className="rounded-2xl border border-[#6FAF9A]/40 bg-[#6FAF9A]/10 p-6 flex flex-col items-center justify-center text-center">
-             <h3 className="text-xl font-bold text-[#E8ECEF] mb-4">
-               Mark {isConfirmingDose.name} as taken?
-             </h3>
-             <div className="flex gap-4">
-               <Button onClick={() => executeDoseTaken(isConfirmingDose.logId, "taken", () => {})} className="bg-[#6FAF9A] text-black hover:bg-[#5E9E8A]">
-                 Yes, taken
-               </Button>
-               <Button variant="outline" onClick={cancelConfirmation} className="bg-transparent text-[#E8ECEF]">
-                 No, cancel
-               </Button>
-             </div>
+            <h3 className="text-xl font-bold text-[#E8ECEF] mb-4">
+              Mark {isConfirmingDose.name} as taken?
+            </h3>
+            <div className="flex gap-4">
+              <Button
+                onClick={() => executeDoseTaken(isConfirmingDose.logId, "taken", () => {})}
+                className="bg-[#6FAF9A] text-black hover:bg-[#5E9E8A]"
+              >
+                Yes, taken
+              </Button>
+              <Button
+                variant="outline"
+                onClick={cancelConfirmation}
+                className="bg-transparent text-[#E8ECEF]"
+              >
+                No, cancel
+              </Button>
+            </div>
           </div>
         )}
 
@@ -186,7 +220,9 @@ function MedicationPage() {
           /* Today's Medication Logs Timeline */
           <div className="space-y-4">
             {isLoading ? (
-              <div className="py-12 text-center text-muted-foreground text-lg">{t("common:loading")}</div>
+              <div className="py-12 text-center text-muted-foreground text-lg">
+                {t("common:loading")}
+              </div>
             ) : todayLogs.length === 0 ? (
               <div className="rounded-3xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-12 text-center shadow-md">
                 <Pill size={48} className="mx-auto text-[#6FAF9A]/40 mb-4" />
@@ -251,19 +287,21 @@ function MedicationPage() {
                                 ? t("medication:skippedBadge")
                                 : t("medication:dueBadge")}
                           </span>
-                          
+
                           {cap.ttsMode === "full" && (
-                             <button
-                               onClick={() => readDoseAloud({
-                                 name: schedule?.medicine_name || "Medicine",
-                                 dose: schedule?.dosage || "1 tablet",
-                                 time: schedule?.scheduled_time?.slice(0, 5) || "10:00 AM",
-                                 instructions: schedule?.instructions || ""
-                               })}
-                               className="p-1 rounded-full text-[#6FAF9A] hover:bg-[#6FAF9A]/20 transition"
-                             >
-                               <Volume2 size={16} />
-                             </button>
+                            <button
+                              onClick={() =>
+                                readDoseAloud({
+                                  name: schedule?.medicine_name || "Medicine",
+                                  dose: schedule?.dosage || "1 tablet",
+                                  time: schedule?.scheduled_time?.slice(0, 5) || "10:00 AM",
+                                  instructions: schedule?.instructions || "",
+                                })
+                              }
+                              className="p-1 rounded-full text-[#6FAF9A] hover:bg-[#6FAF9A]/20 transition"
+                            >
+                              <Volume2 size={16} />
+                            </button>
                           )}
                         </div>
 
@@ -297,7 +335,9 @@ function MedicationPage() {
                           <Button
                             type="button"
                             size="touch"
-                            onClick={() => confirmDoseTaken(log.id, schedule?.medicine_name || "Medicine")}
+                            onClick={() =>
+                              confirmDoseTaken(log.id, schedule?.medicine_name || "Medicine")
+                            }
                             className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] font-bold shadow-md w-full sm:w-auto text-base"
                           >
                             <Check size={18} className="mr-2" /> {t("dashboard:takeMedicine")}

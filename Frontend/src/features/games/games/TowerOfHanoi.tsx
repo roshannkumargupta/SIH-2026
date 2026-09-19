@@ -100,7 +100,7 @@ export default function TowerOfHanoi({ level }: { level: number }) {
           gameId: "tower-of-hanoi",
           gameType: "tower_of_hanoi",
           score,
-          accuracy: 100,
+          accuracy: score,
           durationSeconds: Math.max(5, dur),
           level,
           difficulty: String(level),
@@ -128,13 +128,19 @@ export default function TowerOfHanoi({ level }: { level: number }) {
       completed={won}
       results={{
         score: finalScore,
-        accuracy: 100,
+        accuracy: finalScore,
         durationSeconds: finalDuration,
         synced,
         offline,
       }}
       onPlayAgain={resetGame}
-      onNextLevel={level < 10 ? () => { window.location.href = `/games/tower-of-hanoi?level=${level + 1}`; } : undefined}
+      onNextLevel={
+        level < 10
+          ? () => {
+              window.location.href = `/games/tower-of-hanoi?level=${level + 1}`;
+            }
+          : undefined
+      }
     >
       <div className="space-y-6">
         <div className="flex gap-4 justify-center">
@@ -167,7 +173,9 @@ export default function TowerOfHanoi({ level }: { level: number }) {
                   </div>
                 ))}
               </div>
-              <span className="text-xs text-[#E8ECEF]/80 mt-3 font-bold tracking-wide">Tower {idx + 1}</span>
+              <span className="text-xs text-[#E8ECEF]/80 mt-3 font-bold tracking-wide">
+                Tower {idx + 1}
+              </span>
             </button>
           ))}
         </div>

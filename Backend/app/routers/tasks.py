@@ -7,7 +7,6 @@ from app.core.dependencies import (
     DBSession,
     get_current_user,
 )
-from app.models.task import TaskStatus
 from app.models.user import User, UserRole
 from app.schemas.task import (
     TaskCreate,

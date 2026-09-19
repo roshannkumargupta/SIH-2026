@@ -19,9 +19,7 @@ export function AppShell({ children, progress, className = "" }: AppShellProps) 
       {/* Main Content Column */}
       <div className="flex-1 flex flex-col min-w-0">
         <NavigationHeader progress={progress} />
-        <main className={`flex-1 ${className}`}>
-          {children ?? <Outlet />}
-        </main>
+        <main className={`flex-1 ${className}`}>{children ?? <Outlet />}</main>
       </div>
 
       {/* Exactly ONE Voice Assistant Floating Trigger at the Shell Level */}

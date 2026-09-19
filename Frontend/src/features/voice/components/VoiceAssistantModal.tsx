@@ -88,15 +88,20 @@ export function VoiceAssistantModal({
   const isProcessing = status === "processing";
   const isSpeaking = status === "speaking";
 
-  const suggestions = t("suggestions", { returnObjects: true }) as Array<{ label: string; text: string }>;
-  const safeSuggestions = Array.isArray(suggestions) ? suggestions : [
-    { label: "🎮 Play Games", text: "Open games" },
-    { label: "🧩 Water Jugs", text: "Open water jugs" },
-    { label: "💊 Check Medicine", text: "Show my medicine" },
-    { label: "📅 Daily Routine", text: "Show today's reminders" },
-    { label: "📊 AI Analytics", text: "Show cognitive progress" },
-    { label: "🖼️ Memories", text: "Open memories" },
-  ];
+  const suggestions = t("suggestions", { returnObjects: true }) as Array<{
+    label: string;
+    text: string;
+  }>;
+  const safeSuggestions = Array.isArray(suggestions)
+    ? suggestions
+    : [
+        { label: "🎮 Play Games", text: "Open games" },
+        { label: "🧩 Water Jugs", text: "Open water jugs" },
+        { label: "💊 Check Medicine", text: "Show my medicine" },
+        { label: "📅 Daily Routine", text: "Show today's reminders" },
+        { label: "📊 AI Analytics", text: "Show cognitive progress" },
+        { label: "🖼️ Memories", text: "Open memories" },
+      ];
 
   return (
     <aside
@@ -248,10 +253,14 @@ export function VoiceAssistantModal({
               {lastIntent && (
                 <div className="flex items-center justify-between text-[10px] text-[#8A99A8] pt-1 border-t border-white/5">
                   <span>
-                    {t("ui.intent") || "Intent:"} <strong className="text-[#E8ECEF]">{lastIntent.intent}</strong>
+                    {t("ui.intent") || "Intent:"}{" "}
+                    <strong className="text-[#E8ECEF]">{lastIntent.intent}</strong>
                   </span>
                   <span>
-                    {t("ui.match") || "Match:"} <strong className="text-[#E8ECEF]">{Math.round(lastIntent.confidence * 100)}%</strong>
+                    {t("ui.match") || "Match:"}{" "}
+                    <strong className="text-[#E8ECEF]">
+                      {Math.round(lastIntent.confidence * 100)}%
+                    </strong>
                   </span>
                 </div>
               )}

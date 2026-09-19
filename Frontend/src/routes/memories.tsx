@@ -7,7 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useMemories } from "@/hooks/use-memories";
 import { useLanguage } from "@/context/LanguageContext";
 import { formatApiError } from "@/api/client";
@@ -118,7 +124,11 @@ function MemoriesPage() {
       <div className="px-4 sm:px-8 py-6 max-w-[1550px] w-full mx-auto space-y-7">
         {/* Navigation Breadcrumb & Action Bar */}
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <Button asChild variant="outline" className="rounded-full bg-[#121D2B] border-white/8 text-[#E8ECEF] hover:bg-[#152335] shadow-sm font-semibold">
+          <Button
+            asChild
+            variant="outline"
+            className="rounded-full bg-[#121D2B] border-white/8 text-[#E8ECEF] hover:bg-[#152335] shadow-sm font-semibold"
+          >
             <Link to="/">
               <ArrowLeft size={18} className="mr-2 text-[#6FAF9A]" /> {t("common:backHome")}
             </Link>
@@ -127,7 +137,10 @@ function MemoriesPage() {
           {/* Add Memory Dialog */}
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
-              <Button size="touch" className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] text-base font-bold shadow-md">
+              <Button
+                size="touch"
+                className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] text-base font-bold shadow-md"
+              >
                 <Plus size={20} className="mr-2" /> {t("memories:addMemory")}
               </Button>
             </DialogTrigger>
@@ -222,7 +235,8 @@ function MemoriesPage() {
                       onClick={() => fileInputRef.current?.click()}
                       className="rounded-full border-white/10 text-[#E8ECEF] bg-[#0A1420] hover:bg-white/5"
                     >
-                      <ImageIcon size={18} className="mr-2 text-[#6FAF9A]" /> {t("memories:uploadPhoto")}
+                      <ImageIcon size={18} className="mr-2 text-[#6FAF9A]" />{" "}
+                      {t("memories:uploadPhoto")}
                     </Button>
                     {imageBase64 && (
                       <span className="text-xs text-[#6FAF9A] font-bold">Photo attached</span>
@@ -244,7 +258,11 @@ function MemoriesPage() {
                   >
                     {t("common:cancel")}
                   </Button>
-                  <Button type="submit" disabled={isCreating} className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] font-bold">
+                  <Button
+                    type="submit"
+                    disabled={isCreating}
+                    className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] font-bold"
+                  >
                     {isCreating ? t("common:loading") : t("memories:saveMemory")}
                   </Button>
                 </div>
@@ -264,7 +282,9 @@ function MemoriesPage() {
               <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#E8ECEF]">
                 {t("memories:pageTitle")}
               </h1>
-              <p className="text-[#8A99A8] mt-1 font-medium text-sm sm:text-base">{t("memories:pageSubtitle")}</p>
+              <p className="text-[#8A99A8] mt-1 font-medium text-sm sm:text-base">
+                {t("memories:pageSubtitle")}
+              </p>
             </div>
           </div>
         </div>
@@ -310,8 +330,12 @@ function MemoriesPage() {
                     />
                     <div className="p-6">
                       <div className="flex items-center justify-between text-xs font-bold text-[#6FAF9A] mb-2">
-                        <span className="uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#6FAF9A]/15 text-[#6FAF9A] border border-[#6FAF9A]/30">{localizedTag}</span>
-                        {m.location && <span className="text-[#8A99A8] font-medium">{m.location}</span>}
+                        <span className="uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#6FAF9A]/15 text-[#6FAF9A] border border-[#6FAF9A]/30">
+                          {localizedTag}
+                        </span>
+                        {m.location && (
+                          <span className="text-[#8A99A8] font-medium">{m.location}</span>
+                        )}
                       </div>
                       <h2 className="font-display text-xl sm:text-2xl font-bold text-[#E8ECEF] mb-2 leading-tight">
                         {m.title}

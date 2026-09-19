@@ -49,7 +49,9 @@ export function HowToPlay({ title, instructions, tips, defaultOpen = false }: Ho
 
           {tips && tips.length > 0 && (
             <div className="mt-5 rounded-2xl border border-amber-500/20 bg-amber-500/10 px-4 py-3">
-              <p className="mb-2 text-xs font-bold uppercase text-amber-300">💡 {t("games:tips")}</p>
+              <p className="mb-2 text-xs font-bold uppercase text-amber-300">
+                💡 {t("games:tips")}
+              </p>
               <ul className="space-y-1">
                 {tips.map((tip, i) => (
                   <li key={i} className="text-sm text-amber-100 flex gap-2">

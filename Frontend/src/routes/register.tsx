@@ -171,7 +171,9 @@ function RegisterPage() {
             </div>
 
             <div>
-              <Label className="block text-sm font-bold text-[#E8ECEF] mb-2">{t("auth:role")}</Label>
+              <Label className="block text-sm font-bold text-[#E8ECEF] mb-2">
+                {t("auth:role")}
+              </Label>
               <div className="grid grid-cols-3 gap-2">
                 {(["patient", "caretaker", "doctor"] as const).map((r) => (
                   <button

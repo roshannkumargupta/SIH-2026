@@ -6,7 +6,13 @@ import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useTasks } from "@/hooks/use-tasks";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/hooks/use-auth";
@@ -115,7 +121,12 @@ function RoutinePage() {
       <div className="px-4 sm:px-8 py-6 max-w-[1550px] w-full mx-auto space-y-7">
         {/* Navigation Breadcrumb & Action Bar */}
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <Button asChild variant="outline" size="default" className="rounded-full bg-[#121D2B] border-white/8 text-[#E8ECEF] hover:bg-[#152335] shadow-sm font-semibold">
+          <Button
+            asChild
+            variant="outline"
+            size="default"
+            className="rounded-full bg-[#121D2B] border-white/8 text-[#E8ECEF] hover:bg-[#152335] shadow-sm font-semibold"
+          >
             <Link to="/">
               <ArrowLeft size={16} className="mr-1.5 text-[#6FAF9A]" /> {t("common:backHome")}
             </Link>
@@ -124,7 +135,11 @@ function RoutinePage() {
           {/* Add Activity Dialog */}
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
-              <Button variant="default" size="default" className="rounded-full text-sm font-bold shadow-md bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A]">
+              <Button
+                variant="default"
+                size="default"
+                className="rounded-full text-sm font-bold shadow-md bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A]"
+              >
                 <Plus size={16} className="mr-1.5" /> {t("routine:addTask")}
               </Button>
             </DialogTrigger>
@@ -208,7 +223,12 @@ function RoutinePage() {
                   >
                     {t("common:cancel")}
                   </Button>
-                  <Button type="submit" variant="default" disabled={isSubmitting} className="rounded-full bg-[#6FAF9A] text-[#0A1420] font-bold hover:bg-[#5E9E8A]">
+                  <Button
+                    type="submit"
+                    variant="default"
+                    disabled={isSubmitting}
+                    className="rounded-full bg-[#6FAF9A] text-[#0A1420] font-bold hover:bg-[#5E9E8A]"
+                  >
                     {isSubmitting ? t("common:loading") : t("routine:saveTask")}
                   </Button>
                 </div>
@@ -229,7 +249,9 @@ function RoutinePage() {
                 <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#E8ECEF]">
                   {t("routine:pageTitle")}
                 </h1>
-                <p className="text-[#8A99A8] text-sm font-medium mt-0.5">{t("routine:pageSubtitle")}</p>
+                <p className="text-[#8A99A8] text-sm font-medium mt-0.5">
+                  {t("routine:pageSubtitle")}
+                </p>
               </div>
             </div>
 
@@ -241,7 +263,9 @@ function RoutinePage() {
                   type="button"
                   onClick={() => setFilter(f)}
                   className={`px-4 py-1.5 rounded-full text-xs font-bold transition cursor-pointer ${
-                    filter === f ? "bg-[#6FAF9A] text-[#0A1420] shadow-md" : "text-[#8A99A8] hover:text-[#E8ECEF]"
+                    filter === f
+                      ? "bg-[#6FAF9A] text-[#0A1420] shadow-md"
+                      : "text-[#8A99A8] hover:text-[#E8ECEF]"
                   }`}
                 >
                   {filterLabels[f] || f}

@@ -4,7 +4,12 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/context/LanguageContext";
-import type { VoiceLanguageCode, VoiceStatusState, InterpretResult, SpeechPayload } from "../types/voice.types";
+import type {
+  VoiceLanguageCode,
+  VoiceStatusState,
+  InterpretResult,
+  SpeechPayload,
+} from "../types/voice.types";
 import { voiceApi } from "../services/voiceApi";
 import { ttsCache, prewarmTtsCache } from "../utils/ttsCache";
 import { getLanguageCapability } from "../config/languageRegistry";
@@ -120,10 +125,12 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           // Attempt to find a matching voice using the browserTtsChain
           const voices = window.speechSynthesis.getVoices();
           let bestVoice: SpeechSynthesisVoice | null = null;
-          
+
           if (voices.length > 0) {
             for (const prefix of cap.browserTtsChain) {
-              const matched = voices.find((v) => v.lang.toLowerCase().startsWith(prefix.toLowerCase()));
+              const matched = voices.find((v) =>
+                v.lang.toLowerCase().startsWith(prefix.toLowerCase()),
+              );
               if (matched) {
                 bestVoice = matched;
                 break;
@@ -161,13 +168,15 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
     async (payload: SpeechPayload) => {
       const cap = getLanguageCapability(language);
       const isShortOnly = cap.ttsMode === "short-only";
-      const shortPhrase = payload.shortKey ? String(t(payload.shortKey as any, payload.data as any)) : "";
+      const shortPhrase = payload.shortKey
+        ? String(t(payload.shortKey as any, payload.data as any))
+        : "";
       const textToSpeak = String(isShortOnly && shortPhrase ? shortPhrase : payload.fullText);
 
       // Always present the full information visually on screen in large text
       setLastResponse(payload.fullText);
       setStatusMessage(payload.fullText);
-      
+
       stopSpeaking();
       isSpeakingRef.current = true;
       setStatus("speaking");
@@ -177,10 +186,10 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           // Use our chunked SpeechQueue
           const queue = new SpeechQueue(
             (chunk: string) => voiceApi.synthesizeSpeech(chunk, language as VoiceLanguageCode),
-            language
+            language,
           );
           speechQueueRef.current = queue;
-          
+
           queue.onFinish = () => {
             isSpeakingRef.current = false;
             setStatus("idle");
@@ -251,7 +260,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
 
         case "OPEN_GAME": {
           const entity = result.entity?.toUpperCase() || "";
-          
+
           const gameRouteMap: Record<string, string> = {
             WATER_JUGS: "/games/water-jugs",
             TOWER_OF_HANOI: "/games/tower-of-hanoi",
@@ -275,9 +284,9 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
             MENTAL_ROTATION: "/games/mental-rotation",
             N_BACK: "/games/n-back",
           };
-          
+
           const targetRoute = gameRouteMap[entity];
-          
+
           if (targetRoute) {
             navigate({ to: targetRoute });
             triggerAutoClose();
@@ -287,7 +296,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
               entity: entity,
               fullText: t("responses.OPEN_GAME", { name: localizedName }),
               shortKey: "shortPhrases.OPEN_GAME",
-              data: { name: localizedName }
+              data: { name: localizedName },
             });
           } else {
             navigate({ to: "/games" });
@@ -336,20 +345,20 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
               await speak({
                 intent: result.intent,
                 fullText: dict.dictation,
-                shortKey: "shortPhrases.TODAY_REMINDERS"
+                shortKey: "shortPhrases.TODAY_REMINDERS",
               });
             } else {
               await speak({
                 intent: result.intent,
                 fullText: t("responses.TODAY_REMINDERS"),
-                shortKey: "shortPhrases.TODAY_REMINDERS"
+                shortKey: "shortPhrases.TODAY_REMINDERS",
               });
             }
           } catch {
             await speak({
               intent: result.intent,
               fullText: t("responses.TODAY_REMINDERS"),
-              shortKey: "shortPhrases.TODAY_REMINDERS"
+              shortKey: "shortPhrases.TODAY_REMINDERS",
             });
           }
           break;
@@ -368,7 +377,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
                 intent: result.intent,
                 fullText: fullText,
                 shortKey: "shortPhrases.NEXT_REMINDER",
-                data: { title: task.title, time: task.time }
+                data: { title: task.title, time: task.time },
               });
             } else {
               await speak({
@@ -437,7 +446,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           });
           break;
         }
-        
+
         case "TODAY_MEDICATIONS": {
           navigate({ to: "/medication" });
           triggerAutoClose();
@@ -448,7 +457,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           });
           break;
         }
-        
+
         case "NEXT_MEDICATION": {
           navigate({ to: "/medication" });
           triggerAutoClose();
@@ -459,7 +468,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           });
           break;
         }
-        
+
         case "MEDICATION_TAKEN": {
           navigate({ to: "/medication" });
           triggerAutoClose();
@@ -470,7 +479,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           });
           break;
         }
-        
+
         case "MEDICATION_SKIPPED": {
           navigate({ to: "/medication" });
           triggerAutoClose();
@@ -481,7 +490,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           });
           break;
         }
-        
+
         case "ADD_ROUTINE": {
           navigate({ to: "/routine" });
           triggerAutoClose();
@@ -492,7 +501,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           });
           break;
         }
-        
+
         case "COMPLETE_ROUTINE": {
           navigate({ to: "/routine" });
           triggerAutoClose();
@@ -503,7 +512,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           });
           break;
         }
-        
+
         case "REMOVE_ROUTINE": {
           navigate({ to: "/routine" });
           triggerAutoClose();
@@ -514,7 +523,7 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
           });
           break;
         }
-        
+
         case "UPDATE_ROUTINE": {
           navigate({ to: "/routine" });
           triggerAutoClose();
@@ -552,9 +561,11 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
       const clean = text.trim();
 
       // Elder-friendly direct voice/text dismissal commands
-      const closePhrases = t("phrases.CLOSE", { returnObjects: true }) as string[] || [];
-      const isClose = closePhrases.some(phrase => clean.toLowerCase().includes(phrase.toLowerCase())) || /^(close|exit|quit|band karo|बंद करो|बंद कर दो|বন্ধ করুন|বন্ধ কৰক|बन्द गर)$/i.test(clean);
-      
+      const closePhrases = (t("phrases.CLOSE", { returnObjects: true }) as string[]) || [];
+      const isClose =
+        closePhrases.some((phrase) => clean.toLowerCase().includes(phrase.toLowerCase())) ||
+        /^(close|exit|quit|band karo|बंद करो|बंद कर दो|বন্ধ করুন|বন্ধ কৰক|बन्द गर)$/i.test(clean);
+
       if (isClose) {
         triggerAutoClose(50);
         setStatus("idle");
@@ -806,7 +817,9 @@ export function useVoiceAssistant(initialLanguage?: VoiceLanguageCode, onAutoClo
 
           if (average > 2.2) {
             if (isSpeakingRef.current) {
-              console.log("[Voice] Barge-in: Audio energy detected voice input. Interrupting playback.");
+              console.log(
+                "[Voice] Barge-in: Audio energy detected voice input. Interrupting playback.",
+              );
               stopSpeaking();
             }
 

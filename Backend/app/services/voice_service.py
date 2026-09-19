@@ -3,9 +3,7 @@ import json
 import logging
 import urllib.request
 import urllib.error
-from typing import Any
 
-from fastapi import HTTPException, status
 from app.core.config import settings
 from app.schemas.voice import (
     TranscribeResponse,
@@ -23,7 +21,6 @@ from app.core.voice_languages import (
     SARVAM_TTS_SUPPORTED,
     BHASHINI_STT_SUPPORTED,
     BHASHINI_TTS_SUPPORTED,
-    get_language_capability,
 )
 
 

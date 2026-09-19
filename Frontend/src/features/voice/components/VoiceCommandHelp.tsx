@@ -71,17 +71,17 @@ export function VoiceCommandHelp({ language, onClose }: VoiceCommandHelpProps) {
   ];
 
   return (
-    <div className="rounded-2xl border border-white/60 bg-white/95 p-6 shadow-card space-y-5 text-foreground animate-in fade-in duration-200">
-      <div className="flex items-center justify-between border-b border-border/60 pb-4">
+    <div className="rounded-2xl border border-white/10 bg-[#121D2B] p-6 shadow-2xl space-y-5 text-[#E8ECEF] animate-in fade-in duration-200">
+      <div className="flex items-center justify-between border-b border-white/10 pb-4">
         <div className="flex items-center gap-3">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <span className="flex size-9 items-center justify-center rounded-xl bg-[#6FAF9A]/15 text-[#6FAF9A]">
             <HelpCircle size={22} />
           </span>
           <div>
-            <h3 className="font-display text-lg font-bold text-foreground">
+            <h3 className="font-display text-lg font-bold text-[#E8ECEF]">
               {shortLang === "hi" ? "आवाज़ कमांड गाइड" : "Voice Commands Guide"}
             </h3>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-[#8A99A8]">
               {shortLang === "hi"
                 ? "आप माइक दबाकर या नीचे टाइप करके ये कमांड बोल सकते हैं"
                 : "Speak or type any of these natural commands"}
@@ -92,7 +92,7 @@ export function VoiceCommandHelp({ language, onClose }: VoiceCommandHelpProps) {
         <button
           type="button"
           onClick={onClose}
-          className="rounded-full p-2 text-muted-foreground hover:text-foreground hover:bg-black/5 transition"
+          className="rounded-full p-2 text-[#8A99A8] hover:text-[#E8ECEF] hover:bg-white/5 transition"
           aria-label="Close help"
         >
           <X size={20} />
@@ -101,16 +101,19 @@ export function VoiceCommandHelp({ language, onClose }: VoiceCommandHelpProps) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         {commandCategories.map((cat, idx) => (
-          <div key={idx} className="rounded-2xl border border-border/60 bg-slate-50/80 p-4 space-y-2.5">
-            <div className="flex items-center gap-2 font-bold text-foreground text-sm">
+          <div
+            key={idx}
+            className="rounded-2xl border border-white/8 bg-[#0A1420] p-4 space-y-2.5"
+          >
+            <div className="flex items-center gap-2 font-bold text-[#E8ECEF] text-sm">
               {cat.icon}
               <span>{cat.title}</span>
             </div>
-            <ul className="space-y-1.5 text-xs text-muted-foreground">
+            <ul className="space-y-1.5 text-xs text-[#8A99A8]">
               {cat.examples.map((ex, i) => (
                 <li key={i} className="flex items-center gap-2">
-                  <span className="text-primary font-bold">•</span>
-                  <span className="text-foreground/90 font-medium">{ex}</span>
+                  <span className="text-[#6FAF9A] font-bold">•</span>
+                  <span className="text-[#E8ECEF]/90 font-medium">{ex}</span>
                 </li>
               ))}
             </ul>

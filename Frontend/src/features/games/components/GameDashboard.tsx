@@ -195,7 +195,10 @@ export function GameDashboard() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {sessions.slice(0, 8).map((s) => (
-                  <tr key={s.id} className="text-xs sm:text-sm hover:bg-white/[0.02] transition-colors">
+                  <tr
+                    key={s.id}
+                    className="text-xs sm:text-sm hover:bg-white/[0.02] transition-colors"
+                  >
                     <td className="py-3.5 font-bold capitalize text-[#E8ECEF]">
                       {s.game_id.replace(/-/g, " ")}
                     </td>

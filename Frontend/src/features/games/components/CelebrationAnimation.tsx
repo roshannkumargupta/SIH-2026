@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface CelebrationAnimationProps {
@@ -5,16 +6,27 @@ interface CelebrationAnimationProps {
 }
 
 export function CelebrationAnimation({ show }: CelebrationAnimationProps) {
-  if (!show) return null;
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (show) {
+      setVisible(true);
+      const timer = setTimeout(() => setVisible(false), 2000);
+      return () => clearTimeout(timer);
+    } else {
+      setVisible(false);
+    }
+  }, [show]);
 
   return (
     <AnimatePresence>
-      {show && (
+      {visible && (
         <motion.div
           className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
         >
           {/* Burst of particles */}
           {Array.from({ length: 20 }).map((_, i) => (
@@ -31,7 +43,7 @@ export function CelebrationAnimation({ show }: CelebrationAnimationProps) {
                 scale: 0,
                 opacity: 0,
               }}
-              transition={{ duration: 1.2, delay: i * 0.03, ease: "easeOut" }}
+              transition={{ duration: 0.5, delay: i * 0.015, ease: "easeOut" }}
             />
           ))}
           {/* Central trophy flash */}
@@ -39,7 +51,7 @@ export function CelebrationAnimation({ show }: CelebrationAnimationProps) {
             className="text-8xl"
             initial={{ scale: 0, rotate: -30 }}
             animate={{ scale: [0, 1.4, 1], rotate: [-30, 10, 0] }}
-            transition={{ duration: 0.6, ease: "backOut" }}
+            transition={{ duration: 0.4, ease: "backOut" }}
           >
             🏆
           </motion.div>

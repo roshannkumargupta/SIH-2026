@@ -2,9 +2,9 @@ from datetime import date, datetime
 from typing import Any
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field
 
-from app.models.medication import MedicationFrequency, MedicationLogStatus
+from app.models.medication import MedicationFrequency
 from app.models.task import TaskPriority, TaskRecurrence, TaskStatus
 from app.schemas.patient import PatientProfileResponse
 from app.schemas.user import UserResponse

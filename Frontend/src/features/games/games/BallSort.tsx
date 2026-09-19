@@ -151,7 +151,7 @@ export default function BallSort({ level }: { level: number }) {
           gameId: "ball-sort",
           gameType: "ball_sort",
           score: finalScore,
-          accuracy: 100,
+          accuracy: finalScore,
           durationSeconds: Math.max(5, finalDuration),
           level,
           difficulty: String(level),
@@ -175,7 +175,7 @@ export default function BallSort({ level }: { level: number }) {
       completed={won}
       results={{
         score: finalScore,
-        accuracy: 100,
+        accuracy: finalScore,
         durationSeconds: finalDuration,
         synced,
         offline,

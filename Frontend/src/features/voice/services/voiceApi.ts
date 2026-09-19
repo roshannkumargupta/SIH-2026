@@ -43,7 +43,6 @@ function createTimeoutSignal(timeoutMs = API_TIMEOUT_MS) {
   return { signal: controller.signal, clear: () => clearTimeout(timeoutId) };
 }
 
-
 export const voiceApi = {
   /** Transcribe audio blob to text via backend Sarvam proxy with 4s timeout */
   async transcribeAudio(

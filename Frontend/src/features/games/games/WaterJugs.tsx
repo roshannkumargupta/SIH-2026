@@ -94,7 +94,7 @@ export default function WaterJugs({ level }: { level: number }) {
           gameId: "water-jugs",
           gameType: "water_jugs",
           score: Math.min(100, score),
-          accuracy: 100,
+          accuracy: Math.min(100, score),
           durationSeconds: Math.max(5, dur),
           level,
           difficulty: String(level),
@@ -121,13 +121,19 @@ export default function WaterJugs({ level }: { level: number }) {
       completed={won}
       results={{
         score: finalScore,
-        accuracy: 100,
+        accuracy: finalScore,
         durationSeconds: finalDuration,
         synced,
         offline,
       }}
       onPlayAgain={resetGame}
-      onNextLevel={level < 10 ? () => { window.location.href = `/games/water-jugs?level=${level + 1}`; } : undefined}
+      onNextLevel={
+        level < 10
+          ? () => {
+              window.location.href = `/games/water-jugs?level=${level + 1}`;
+            }
+          : undefined
+      }
     >
       <div className="space-y-6">
         <div className="flex gap-4 justify-center flex-wrap">
@@ -135,7 +141,10 @@ export default function WaterJugs({ level }: { level: number }) {
             const fill_pct = (jugs[i]! / cap) * 100;
             const isTargetReached = jugs[i] === cfg.target;
             return (
-              <div key={i} className="flex flex-col items-center gap-3 p-3 rounded-2xl border border-clay/60 bg-ink/30">
+              <div
+                key={i}
+                className="flex flex-col items-center gap-3 p-3 rounded-2xl border border-clay/60 bg-ink/30"
+              >
                 <p className="text-base font-bold text-cream">
                   <span className={isTargetReached ? "text-sun font-extrabold" : "text-cream"}>
                     {jugs[i]}L

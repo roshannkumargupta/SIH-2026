@@ -37,8 +37,7 @@ export function GameCard({ game, bestLevel, lastPlayed }: GameCardProps) {
   const categoryText = categoryTranslationMap[game.category] || CATEGORY_LABELS[game.category];
 
   // Difficulty pill per spec: Easy=green, Medium=amber, Hard=red
-  const difficultyLabel =
-    targetLevel <= 3 ? "Easy" : targetLevel <= 6 ? "Medium" : "Hard";
+  const difficultyLabel = targetLevel <= 3 ? "Easy" : targetLevel <= 6 ? "Medium" : "Hard";
   const difficultyStyle =
     targetLevel <= 3
       ? "bg-[#6FAF9A]/15 text-[#6FAF9A] border-[#6FAF9A]/30"
@@ -74,7 +73,9 @@ export function GameCard({ game, bestLevel, lastPlayed }: GameCardProps) {
             <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-[#0A1420]/80 backdrop-blur-md border border-white/10 text-[#8A99A8] font-bold uppercase tracking-wider">
               {categoryText}
             </span>
-            <span className={`text-xs px-2.5 py-0.5 rounded-full border font-bold ${difficultyStyle}`}>
+            <span
+              className={`text-xs px-2.5 py-0.5 rounded-full border font-bold ${difficultyStyle}`}
+            >
               {difficultyLabel}
             </span>
           </div>
@@ -93,9 +94,7 @@ export function GameCard({ game, bestLevel, lastPlayed }: GameCardProps) {
           <h3 className="font-display text-lg sm:text-xl font-bold text-[#E8ECEF] group-hover:text-[#6FAF9A] transition">
             {game.name}
           </h3>
-          <p className="text-sm text-[#8A99A8] leading-relaxed line-clamp-2">
-            {game.description}
-          </p>
+          <p className="text-sm text-[#8A99A8] leading-relaxed line-clamp-2">{game.description}</p>
         </div>
 
         {/* Cognitive domains */}

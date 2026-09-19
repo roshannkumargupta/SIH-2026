@@ -70,7 +70,9 @@ export function VoiceTriggerButton({ className = "", defaultLanguage }: VoiceTri
             {/* Teal-green circular mic badge */}
             <span
               className={`flex size-10 items-center justify-center rounded-full transition-transform ${
-                isListening ? "bg-[#6FAF9A] text-[#0A1420] animate-pulse" : "bg-[#6FAF9A] text-[#0A1420] group-hover:scale-105"
+                isListening
+                  ? "bg-[#6FAF9A] text-[#0A1420] animate-pulse"
+                  : "bg-[#6FAF9A] text-[#0A1420] group-hover:scale-105"
               }`}
             >
               <Mic size={20} className={isListening ? "animate-bounce" : ""} />

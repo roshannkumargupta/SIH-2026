@@ -17,6 +17,7 @@ export default function WorkingMemoryGrid({ level }: { level: number }) {
   const [synced, setSynced] = useState(false);
   const [offline, setOffline] = useState(false);
   const saved = useRef(false);
+  const attempts = useRef(0);
   const sessionStart = useRef(Date.now());
   const target = Math.max(3, Math.ceil(level * 1.5));
   const displayTime = Math.max(2000 - level * 100, 800);
@@ -41,6 +42,7 @@ export default function WorkingMemoryGrid({ level }: { level: number }) {
     setSynced(false);
     setOffline(false);
     saved.current = false;
+    attempts.current = 0;
     setLastResult(null);
     sessionStart.current = Date.now();
     startRound();
@@ -67,6 +69,7 @@ export default function WorkingMemoryGrid({ level }: { level: number }) {
     const correct = positions.filter((p) => selected.has(p)).length;
     const wrong = [...selected].filter((s) => !positions.includes(s)).length;
     const perfect = correct === count && wrong === 0;
+    attempts.current += 1;
     setLastResult(perfect ? "correct" : "wrong");
     setPhase("feedback");
     if (perfect) {
@@ -74,7 +77,7 @@ export default function WorkingMemoryGrid({ level }: { level: number }) {
       setScore(newScore);
       if (newScore >= target && !saved.current) {
         saved.current = true;
-        const acc = 100;
+        const acc = Math.round((newScore / Math.max(1, attempts.current)) * 100);
         const dur = Math.round((Date.now() - sessionStart.current) / 1000);
         submitResult({
           gameId: "working-memory-grid",
@@ -127,13 +130,19 @@ export default function WorkingMemoryGrid({ level }: { level: number }) {
       completed={completed}
       results={{
         score: finalScore,
-        accuracy: 100,
+        accuracy: Math.round((score / Math.max(1, attempts.current)) * 100),
         durationSeconds: finalDuration,
         synced,
         offline,
       }}
       onPlayAgain={resetGame}
-      onNextLevel={level < 10 ? () => { window.location.href = `/games/working-memory-grid?level=${level + 1}`; } : undefined}
+      onNextLevel={
+        level < 10
+          ? () => {
+              window.location.href = `/games/working-memory-grid?level=${level + 1}`;
+            }
+          : undefined
+      }
     >
       <div className="flex flex-col items-center space-y-6">
         <div

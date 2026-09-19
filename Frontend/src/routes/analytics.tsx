@@ -75,8 +75,10 @@ function AnalyticsPage() {
   const [trendDays] = useState<number>(90);
   const [selectedDomainView, setSelectedDomainView] = useState<string>("all");
 
-  const { latestAssessment, trends, isLoading, isAssessing, triggerAssessment } =
-    useAnalytics(undefined, trendDays);
+  const { latestAssessment, trends, isLoading, isAssessing, triggerAssessment } = useAnalytics(
+    undefined,
+    trendDays,
+  );
 
   useEffect(() => {
     if (user && user.role === "patient") {
@@ -154,14 +156,9 @@ function AnalyticsPage() {
       memory: item.memory_score != null ? Math.round(item.memory_score) : null,
       attention: item.attention_score != null ? Math.round(item.attention_score) : null,
       executive:
-        item.executive_function_score != null
-          ? Math.round(item.executive_function_score)
-          : null,
+        item.executive_function_score != null ? Math.round(item.executive_function_score) : null,
       language: item.language_score != null ? Math.round(item.language_score) : null,
-      visuospatial:
-        item.visuospatial_score != null
-          ? Math.round(item.visuospatial_score)
-          : null,
+      visuospatial: item.visuospatial_score != null ? Math.round(item.visuospatial_score) : null,
     }));
   }, [trends]);
 
@@ -231,10 +228,10 @@ function AnalyticsPage() {
           <span className="font-semibold text-sky-300 uppercase tracking-wide mr-1.5">
             Heuristic Estimation Notice:
           </span>
-          These cognitive scores are heuristic telemetry estimates derived from interactive
-          gameplay accuracy and difficulty progression. They are intended for caregiver
-          tracking and <strong>do not constitute a formal clinical diagnosis</strong>. Please
-          consult a qualified neurologist or physician for clinical medical evaluations.
+          These cognitive scores are heuristic telemetry estimates derived from interactive gameplay
+          accuracy and difficulty progression. They are intended for caregiver tracking and{" "}
+          <strong>do not constitute a formal clinical diagnosis</strong>. Please consult a qualified
+          neurologist or physician for clinical medical evaluations.
         </div>
       </div>
 
@@ -243,15 +240,13 @@ function AnalyticsPage() {
         <div className="rounded-2xl border border-rose-500/40 bg-rose-950/40 p-5 flex items-start gap-4 shadow-xl">
           <AlertTriangle className="size-6 text-rose-400 shrink-0 mt-0.5 animate-pulse" />
           <div className="space-y-1 text-sm text-rose-100">
-            <h3 className="font-bold text-base text-rose-300">
-              Cognitive Decline Alert Triggered
-            </h3>
+            <h3 className="font-bold text-base text-rose-300">Cognitive Decline Alert Triggered</h3>
             <p className="leading-relaxed">
               Sustained downward performance detected across{" "}
               <strong>{declineDomains.length} domains</strong> (
-              {declineDomains.map((d) => d.replace("_", " ")).join(", ")}) over 14+
-              consecutive days. A professional clinical review with the primary healthcare
-              provider is strongly recommended.
+              {declineDomains.map((d) => d.replace("_", " ")).join(", ")}) over 14+ consecutive
+              days. A professional clinical review with the primary healthcare provider is strongly
+              recommended.
             </p>
           </div>
         </div>
@@ -296,9 +291,7 @@ function AnalyticsPage() {
               </p>
             ) : (
               <div>
-                <p className="font-display text-2xl font-bold text-amber-300">
-                  Insufficient Data
-                </p>
+                <p className="font-display text-2xl font-bold text-amber-300">Insufficient Data</p>
                 <p className="text-xs text-[#8A99A8] mt-1">Play games across ≥3 domains</p>
               </div>
             )}
@@ -494,9 +487,7 @@ function AnalyticsPage() {
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                     <div>
-                      <span className="font-bold text-base text-[#E8ECEF] mr-2">
-                        {domain.name}
-                      </span>
+                      <span className="font-bold text-base text-[#E8ECEF] mr-2">{domain.name}</span>
                       <span className="text-xs text-[#8A99A8]">{domain.description}</span>
                     </div>
                     {domain.score !== null ? (
@@ -584,12 +575,12 @@ function AnalyticsPage() {
           <div className="h-72 sm:h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendPoints} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.08)" vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  stroke="#8A99A8"
-                  tick={{ fill: "#8A99A8", fontSize: 11 }}
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255, 255, 255, 0.08)"
+                  vertical={false}
                 />
+                <XAxis dataKey="date" stroke="#8A99A8" tick={{ fill: "#8A99A8", fontSize: 11 }} />
                 <YAxis
                   domain={[0, 100]}
                   stroke="#8A99A8"

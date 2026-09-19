@@ -254,7 +254,8 @@ export function getLanguageCapability(code: string | undefined | null): Language
     return LANGUAGE_REGISTRY[clean as VoiceLanguageCode];
   }
   const match = Object.values(LANGUAGE_REGISTRY).find(
-    (cap) => cap.short === clean.toLowerCase() || cap.code.toLowerCase().startsWith(clean.toLowerCase()),
+    (cap) =>
+      cap.short === clean.toLowerCase() || cap.code.toLowerCase().startsWith(clean.toLowerCase()),
   );
   return match || LANGUAGE_REGISTRY["en-IN"];
 }

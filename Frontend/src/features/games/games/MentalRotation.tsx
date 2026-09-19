@@ -112,7 +112,9 @@ export default function MentalRotation({ level }: { level: number }) {
         <div className="flex items-center justify-center gap-8 sm:gap-12">
           {/* Reference shape */}
           <div className="flex flex-col items-center gap-2.5">
-            <span className="text-xs text-cream/60 font-bold uppercase tracking-wider">Reference</span>
+            <span className="text-xs text-cream/60 font-bold uppercase tracking-wider">
+              Reference
+            </span>
             <svg
               width="120"
               height="120"
@@ -133,7 +135,9 @@ export default function MentalRotation({ level }: { level: number }) {
 
           {/* Rotated/mirrored shape */}
           <div className="flex flex-col items-center gap-2.5">
-            <span className="text-xs text-cream/60 font-bold uppercase tracking-wider">Compare</span>
+            <span className="text-xs text-cream/60 font-bold uppercase tracking-wider">
+              Compare
+            </span>
             <svg
               width="120"
               height="120"

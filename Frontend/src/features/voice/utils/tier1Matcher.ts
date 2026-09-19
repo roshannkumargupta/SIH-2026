@@ -72,16 +72,20 @@ function scorePhrase(text: string, phraseRaw: string): number {
   if (text === phrase) {
     // Exact whole-phrase match
     score = 1.0;
-  } else if (text.startsWith(phrase + " ") || text.endsWith(" " + phrase) || text.includes(" " + phrase + " ")) {
+  } else if (
+    text.startsWith(phrase + " ") ||
+    text.endsWith(" " + phrase) ||
+    text.includes(" " + phrase + " ")
+  ) {
     // Subphrase exact word boundary match
     const coverage = phrase.length / text.length;
-    score = 0.70 + 0.20 * coverage;
+    score = 0.7 + 0.2 * coverage;
     if (text.startsWith(phrase)) {
       score += 0.05; // Appears at beginning
     }
   } else if (text.includes(phrase)) {
     // Substring match
-    score = 0.60;
+    score = 0.6;
     if (text.startsWith(phrase)) {
       score += 0.05;
     }
@@ -94,7 +98,7 @@ function scorePhrase(text: string, phraseRaw: string): number {
       }
     }
     if (matched === phraseTokens.length && phraseTokens.length > 1) {
-      score = 0.70;
+      score = 0.7;
     } else if (matched > 0 && phraseTokens.length > 1) {
       score = 0.45 * (matched / phraseTokens.length);
     }
@@ -121,7 +125,12 @@ export function tier1Match(raw: string, lang: VoiceLanguageCode = "en-IN"): Inte
   let best: MatchCandidate = { intent: "UNKNOWN", score: 0, entity: null };
 
   // Helper to test and update best
-  const evaluate = (intent: VoiceIntent, phrase: string, entity: string | null = null, bonus = 0) => {
+  const evaluate = (
+    intent: VoiceIntent,
+    phrase: string,
+    entity: string | null = null,
+    bonus = 0,
+  ) => {
     const s = scorePhrase(text, phrase) + bonus;
     if (s > best.score) {
       best = { intent, score: s, entity };

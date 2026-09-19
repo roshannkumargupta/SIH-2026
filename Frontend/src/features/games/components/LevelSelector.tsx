@@ -44,7 +44,9 @@ export function LevelSelector({ gameId, maxLevel = 10 }: LevelSelectorProps) {
         >
           −
         </button>
-        <span className="font-display text-xl font-bold text-[#6FAF9A] w-8 text-center">{level}</span>
+        <span className="font-display text-xl font-bold text-[#6FAF9A] w-8 text-center">
+          {level}
+        </span>
         <button
           type="button"
           onClick={() => setLevel(level + 1)}

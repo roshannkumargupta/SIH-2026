@@ -2,10 +2,10 @@ import json
 from datetime import date, datetime, time, timedelta, timezone
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import func, select
 
-from app.core.dependencies import DBSession, get_current_user, require_caretaker
+from app.core.dependencies import DBSession, require_caretaker
 from app.core.security import hash_password
 from app.models.assessment import CognitiveAssessment
 from app.models.game import GameSession
@@ -18,7 +18,7 @@ from app.models.medication import (
 from app.models.patient import PatientProfile
 from app.models.prescription import Prescription, PrescriptionStatus
 from app.models.relationship import CaretakerPatient
-from app.models.task import Task, TaskPriority, TaskRecurrence, TaskStatus
+from app.models.task import Task, TaskStatus
 from app.models.user import User, UserRole
 from app.schemas.caretaker import (
     CaretakerAddPatientRequest,
@@ -41,7 +41,7 @@ from app.services.memory_service import (
     get_memory,
     get_patient_memories,
 )
-from app.services.patient_service import create_patient_profile, get_patient_profile
+from app.services.patient_service import get_patient_profile
 from app.services.relationship_service import caretaker_has_patient_access
 
 router = APIRouter(

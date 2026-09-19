@@ -140,7 +140,9 @@ export default function DelayedRecall({ level }: { level: number }) {
       stats={[
         { label: "Phase", value: phaseLabel, highlight: phase === "recall" ? "tea" : "sun" },
         { label: "Target Words", value: wordCount },
-        ...(phase === "recall" ? [{ label: "Recalled", value: recalled.length, highlight: "sun" as const }] : []),
+        ...(phase === "recall"
+          ? [{ label: "Recalled", value: recalled.length, highlight: "sun" as const }]
+          : []),
       ]}
       instructionHint={
         phase === "study"
@@ -181,9 +183,15 @@ export default function DelayedRecall({ level }: { level: number }) {
 
         {phase === "distract" && (
           <div className="text-center space-y-5 py-6">
-            <p className="text-cream/80 text-base font-medium">Count along: (this is your distractor task)</p>
-            <p className="font-display text-8xl font-black text-fire animate-pulse">{distractNum}</p>
-            <p className="text-sm text-cream/50 animate-pulse font-medium">Hold the words in your memory…</p>
+            <p className="text-cream/80 text-base font-medium">
+              Count along: (this is your distractor task)
+            </p>
+            <p className="font-display text-8xl font-black text-fire animate-pulse">
+              {distractNum}
+            </p>
+            <p className="text-sm text-cream/50 animate-pulse font-medium">
+              Hold the words in your memory…
+            </p>
           </div>
         )}
 

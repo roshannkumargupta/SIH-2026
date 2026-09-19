@@ -7,9 +7,6 @@ from app.core.dependencies import (
     DBSession,
     get_current_user,
 )
-from app.models.medication import (
-    MedicationLogStatus,
-)
 from app.models.user import User, UserRole
 from app.schemas.medication import (
     MedicationActionRequest,

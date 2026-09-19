@@ -62,7 +62,10 @@ export default function ReactionTime({ level }: ReactionTimeProps) {
       if (newAttempts.length >= target && !saved.current) {
         saved.current = true;
         const avg = newAttempts.reduce((a, b) => a + b, 0) / newAttempts.length;
-        const score = Math.max(10, Math.min(100, Math.round((avgThreshold / Math.max(avgThreshold * 0.5, avg)) * 100)));
+        const score = Math.max(
+          10,
+          Math.min(100, Math.round((avgThreshold / Math.max(avgThreshold * 0.5, avg)) * 100)),
+        );
         const dur = Math.round((Date.now() - sessionStart.current) / 1000);
         submitResult({
           gameId: "reaction-time",
@@ -84,7 +87,13 @@ export default function ReactionTime({ level }: ReactionTimeProps) {
   const avgTime =
     attempts.length > 0 ? attempts.reduce((a, b) => a + b, 0) / attempts.length : null;
 
-  const finalScore = Math.max(10, Math.min(100, avgTime ? Math.round((avgThreshold / Math.max(avgThreshold * 0.5, avgTime)) * 100) : 60));
+  const finalScore = Math.max(
+    10,
+    Math.min(
+      100,
+      avgTime ? Math.round((avgThreshold / Math.max(avgThreshold * 0.5, avgTime)) * 100) : 60,
+    ),
+  );
   const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
 
   const resetGame = () => {
@@ -113,7 +122,9 @@ export default function ReactionTime({ level }: ReactionTimeProps) {
       stats={[
         { label: "Attempts", value: `${attempts.length} / ${target}` },
         { label: "Goal Speed", value: `<${avgThreshold}ms` },
-        ...(avgTime ? [{ label: "Your Average", value: `${avgTime.toFixed(0)}ms`, highlight: "tea" as const }] : []),
+        ...(avgTime
+          ? [{ label: "Your Average", value: `${avgTime.toFixed(0)}ms`, highlight: "tea" as const }]
+          : []),
       ]}
       instructionHint="Wait for the box to turn green, then click as fast as you can"
       completed={completed}
@@ -125,7 +136,13 @@ export default function ReactionTime({ level }: ReactionTimeProps) {
         offline,
       }}
       onPlayAgain={resetGame}
-      onNextLevel={level < 10 ? () => { window.location.href = `/games/reaction-time?level=${level + 1}`; } : undefined}
+      onNextLevel={
+        level < 10
+          ? () => {
+              window.location.href = `/games/reaction-time?level=${level + 1}`;
+            }
+          : undefined
+      }
     >
       <div className="space-y-6 max-w-lg mx-auto">
         <button

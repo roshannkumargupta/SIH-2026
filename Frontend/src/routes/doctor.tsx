@@ -107,7 +107,11 @@ function DoctorPage() {
     <AppShell className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto space-y-8">
       {/* Navigation Breadcrumb */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <Button asChild variant="outline" className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold">
+        <Button
+          asChild
+          variant="outline"
+          className="rounded-full bg-[#121D2B] border-white/10 text-[#E8ECEF] hover:bg-white/5 shadow-sm font-semibold"
+        >
           <Link to="/">
             <ArrowLeft size={18} className="mr-2 text-[#6FAF9A]" /> Back to Dashboard
           </Link>
@@ -116,7 +120,10 @@ function DoctorPage() {
         {/* Write Prescription Modal */}
         <Dialog open={isRxOpen} onOpenChange={setIsRxOpen}>
           <DialogTrigger asChild>
-            <Button size="touch" className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] text-base font-bold gap-2 shadow-lg shadow-[#6FAF9A]/20">
+            <Button
+              size="touch"
+              className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] text-base font-bold gap-2 shadow-lg shadow-[#6FAF9A]/20"
+            >
               <Plus size={20} /> WRITE PRESCRIPTION
             </Button>
           </DialogTrigger>
@@ -179,7 +186,11 @@ function DoctorPage() {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isSubmittingRx} className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] font-bold">
+                <Button
+                  type="submit"
+                  disabled={isSubmittingRx}
+                  className="rounded-full bg-[#6FAF9A] text-[#0A1420] hover:bg-[#5E9E8A] font-bold"
+                >
                   {isSubmittingRx ? "Issuing…" : "Issue Prescription"}
                 </Button>
               </div>

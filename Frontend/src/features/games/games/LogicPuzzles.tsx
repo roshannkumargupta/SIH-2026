@@ -29,12 +29,14 @@ const PUZZLES_BY_LEVEL: Puzzle[][] = [
   // Level 3-5
   [
     {
-      question: "If 5 cats catch 5 mice in 5 minutes, how many cats are needed to catch 100 mice in 100 minutes?",
+      question:
+        "If 5 cats catch 5 mice in 5 minutes, how many cats are needed to catch 100 mice in 100 minutes?",
       answer: 5,
       hint: "Each cat catches 1 mouse per 5 minutes. In 100 minutes, 1 cat catches 20 mice.",
     },
     {
-      question: "A doctor gives you 3 pills and tells you to take one every 30 minutes. How long do they last?",
+      question:
+        "A doctor gives you 3 pills and tells you to take one every 30 minutes. How long do they last?",
       answer: 60,
       hint: "First at minute 0, second at min 30, third at min 60. Answer in minutes.",
     },
@@ -47,7 +49,8 @@ const PUZZLES_BY_LEVEL: Puzzle[][] = [
   // Level 6-8
   [
     {
-      question: "A lily pad doubles in size every day. On day 48 it covers the entire pond. On which day did it cover half?",
+      question:
+        "A lily pad doubles in size every day. On day 48 it covers the entire pond. On which day did it cover half?",
       answer: 47,
       hint: "If it doubles each day, the day before full was half.",
     },
@@ -65,12 +68,14 @@ const PUZZLES_BY_LEVEL: Puzzle[][] = [
   // Level 9-10
   [
     {
-      question: "Two fathers and two sons go fishing. Each catches a fish, yet only 3 fish are caught. How many people are there?",
+      question:
+        "Two fathers and two sons go fishing. Each catches a fish, yet only 3 fish are caught. How many people are there?",
       answer: 3,
       hint: "Grandfather, father, and son.",
     },
     {
-      question: "A grandfather, father, and son's ages total 100. Grandfather is twice father's age, father is 25 years older than son. How old is the son?",
+      question:
+        "A grandfather, father, and son's ages total 100. Grandfather is twice father's age, father is 25 years older than son. How old is the son?",
       answer: 5,
       hint: "S + (S+25) + 2(S+25) = 100 → 4S + 75 = 100 → S = 25/4... let's simplify: son=5, father=30, grandfather=65. 5+30+65=100.",
     },
@@ -179,9 +184,7 @@ export default function LogicPuzzles({ level }: { level: number }) {
       level={level}
       score={score}
       targetScore={target}
-      stats={[
-        { label: "Puzzle", value: `${puzzleIdx + 1} / ${target}` },
-      ]}
+      stats={[{ label: "Puzzle", value: `${puzzleIdx + 1} / ${target}` }]}
       feedback={feedback}
       instructionHint="Read the puzzle carefully and enter the numerical answer"
       completed={completed}

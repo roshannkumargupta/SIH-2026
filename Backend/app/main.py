@@ -1,15 +1,13 @@
 import logging
 from contextlib import asynccontextmanager
-from datetime import datetime, timezone
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from sqlalchemy import text
 
 from app.core.config import settings
-from app.core.database import SessionLocal, init_db
+from app.core.database import init_db
 from app.routers.api import api_router
 from app.services.schedular_service import (
     start_scheduler,

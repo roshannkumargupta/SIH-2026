@@ -68,4 +68,3 @@ export const AppLogo: React.FC<AppLogoProps> = ({
 
   return content;
 };
-

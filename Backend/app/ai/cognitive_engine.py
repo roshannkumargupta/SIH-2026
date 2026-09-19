@@ -34,7 +34,6 @@ Medication and task adherence are computed separately and returned in an
 
 import logging
 import math
-import os
 from datetime import datetime, timedelta, timezone
 from typing import Any
 from uuid import UUID
@@ -44,8 +43,6 @@ from sqlalchemy.orm import Session
 
 from app.ai.game_domain_mapping import (
     CLINICAL_DOMAINS,
-    DOMAIN_GAME_IDS,
-    GAME_MAX_LEVELS,
     GAME_TO_DOMAINS,
     get_max_level_for_game,
     normalize_game_id,
@@ -56,7 +53,6 @@ from app.ai.ml_difficulty import (
     compute_telemetry_variance_modifiers,
     update_ability_state,
 )
-from app.core.config import settings
 from app.models.game import GameSession, PatientGameAbility
 from app.models.medication import MedicationLog, MedicationLogStatus
 from app.models.task import Task, TaskStatus

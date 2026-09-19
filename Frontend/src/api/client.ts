@@ -278,7 +278,8 @@ export const apiClient = {
   get: <T>(endpoint: string, options?: RequestInit) =>
     request<T>(endpoint, { ...options, method: "GET" }),
   post: <T>(endpoint: string, body?: unknown, options?: RequestInit) => {
-    const formattedBody = body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : null;
+    const formattedBody =
+      body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : null;
     return request<T>(endpoint, {
       ...options,
       method: "POST",
@@ -286,7 +287,8 @@ export const apiClient = {
     });
   },
   put: <T>(endpoint: string, body?: unknown, options?: RequestInit) => {
-    const formattedBody = body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : null;
+    const formattedBody =
+      body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : null;
     return request<T>(endpoint, {
       ...options,
       method: "PUT",
@@ -294,7 +296,8 @@ export const apiClient = {
     });
   },
   patch: <T>(endpoint: string, body?: unknown, options?: RequestInit) => {
-    const formattedBody = body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : null;
+    const formattedBody =
+      body instanceof FormData ? body : body !== undefined ? JSON.stringify(body) : null;
     return request<T>(endpoint, {
       ...options,
       method: "PATCH",

@@ -28,10 +28,10 @@ Key Principles
 import logging
 import math
 import os
-from datetime import datetime, timedelta, timezone
-from typing import Any, Final, Literal
+from datetime import datetime, timezone
+from typing import Any, Final
 
-from app.ai.game_domain_mapping import ALL_GAMES, get_max_level_for_game
+from app.ai.game_domain_mapping import ALL_GAMES
 
 logger = logging.getLogger("statistical_difficulty")
 

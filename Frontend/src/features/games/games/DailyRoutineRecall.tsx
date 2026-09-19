@@ -238,7 +238,8 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>, index: number) => {
-    if (submitted || !dragStartPos.current || dragStartPos.current.pointerId !== e.pointerId) return;
+    if (submitted || !dragStartPos.current || dragStartPos.current.pointerId !== e.pointerId)
+      return;
 
     const dx = e.clientX - dragStartPos.current.x;
     const dy = e.clientY - dragStartPos.current.y;
@@ -364,167 +365,168 @@ export default function DailyRoutineRecall({ level }: DailyRoutineRecallProps) {
       onPlayAgain={initGame}
     >
       <div className="space-y-6 max-w-2xl mx-auto">
-      {/* Header and prompt */}
-      <div className="text-center space-y-1">
-        <p className="text-cream/80 text-sm font-medium">{t("games:swapTip")}</p>
-        <p className="text-xs text-cream/50">🌅 Morning ➔ ☀️ Midday ➔ 🌙 Bedtime</p>
-      </div>
-
-      {/* Target sequencing tray */}
-      <div className="space-y-2.5">
-        {items.map((item, idx) => {
-          const isSelected = selectedIndex === idx;
-          const isBeingDragged = activeDragIndex === idx;
-          const isDragTarget = dragOverIndex === idx && activeDragIndex !== null && activeDragIndex !== idx;
-          const isCorrectPosition = submitted && targetItems[idx]?.id === item.id;
-          const isWrongPosition = submitted && targetItems[idx]?.id !== item.id;
-
-          return (
-            <div
-              key={item.id}
-              data-routine-idx={idx}
-              onPointerDown={(e) => handlePointerDown(e, idx)}
-              onPointerMove={(e) => handlePointerMove(e, idx)}
-              onPointerUp={(e) => handlePointerUp(e, idx)}
-              onPointerCancel={handlePointerCancel}
-              style={{ touchAction: activeDragIndex !== null ? "none" : "manipulation" }}
-              className={`flex items-center justify-between p-3.5 sm:p-4 rounded-2xl border-2 transition-all cursor-grab active:cursor-grabbing select-none shadow-sm touch-manipulation active:scale-[0.99] ${
-                isBeingDragged
-                  ? "border-sun bg-sun/30 ring-4 ring-sun/40 shadow-xl scale-[1.02] opacity-80 z-20"
-                  : isDragTarget
-                    ? "border-sun bg-sun/15 ring-2 ring-sun/60 scale-[1.01]"
-                    : isSelected
-                      ? "border-sun bg-sun/20 shadow-md ring-2 ring-sun/30 scale-[1.01]"
-                      : isCorrectPosition
-                        ? "border-tea-confirm bg-tea-confirm/15"
-                        : isWrongPosition
-                          ? "border-fire/60 bg-fire/10"
-                          : "border-clay bg-ink/60 hover:border-sun/40 hover:bg-clay/20"
-              }`}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  handleCardClick(idx);
-                }
-              }}
-              aria-label={`Step ${idx + 1}: ${t(`games:${item.key}`)}`}
-            >
-              {/* Order badge & emoji & name */}
-              <div className="flex items-center gap-3.5 min-w-0">
-                <span className="flex size-8 items-center justify-center rounded-xl bg-clay/50 text-cream/80 font-bold text-sm shrink-0">
-                  {idx + 1}
-                </span>
-                <span className="text-2xl sm:text-3xl shrink-0" aria-hidden="true">
-                  {item.icon}
-                </span>
-                <div className="truncate">
-                  <p className="font-bold text-cream text-base sm:text-lg truncate">
-                    {t(`games:${item.key}`)}
-                  </p>
-                  {isSelected && (
-                    <span className="text-[11px] text-sun font-semibold">
-                      ● {t("games:selectedCard")} — tap another card to swap
-                    </span>
-                  )}
-                  {isCorrectPosition && (
-                    <span className="text-[11px] text-tea-confirm font-semibold flex items-center gap-1">
-                      <CheckCircle size={12} /> Correct spot
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Accessible Earlier/Later nudge buttons (min 44x44px elderly accessibility) */}
-              {!submitted && (
-                <div
-                  className="flex items-center gap-1.5 shrink-0"
-                  onPointerDown={(e) => e.stopPropagation()}
-                >
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      moveCard(idx, -1);
-                    }}
-                    disabled={idx === 0}
-                    className="size-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border border-clay bg-ink hover:bg-clay/40 text-cream/80 disabled:opacity-30 disabled:cursor-not-allowed transition touch-manipulation active:scale-90"
-                    title={t("games:moveEarlier")}
-                    aria-label={t("games:moveEarlier")}
-                  >
-                    <ArrowLeft size={18} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      moveCard(idx, 1);
-                    }}
-                    disabled={idx === items.length - 1}
-                    className="size-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border border-clay bg-ink hover:bg-clay/40 text-cream/80 disabled:opacity-30 disabled:cursor-not-allowed transition touch-manipulation active:scale-90"
-                    title={t("games:moveLater")}
-                    aria-label={t("games:moveLater")}
-                  >
-                    <ArrowRight size={18} />
-                  </button>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Spare Cards Pool (for higher difficulty levels with distractors) */}
-      {poolItems.length > 0 && (
-        <div className="rounded-2xl border border-clay/60 bg-ink/40 p-4 space-y-2">
-          <p className="text-xs font-semibold text-cream/60">
-            Available Extras (tap to swap into your daily sequence):
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {poolItems.map((poolItem) => {
-              const isSelected = selectedPoolId === poolItem.id;
-              return (
-                <button
-                  key={poolItem.id}
-                  type="button"
-                  onClick={() => handlePoolCardClick(poolItem)}
-                  className={`flex items-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl border transition touch-manipulation active:scale-95 ${
-                    isSelected
-                      ? "border-sun bg-sun/20 text-sun font-bold"
-                      : "border-clay bg-ink text-cream/80 hover:border-sun/40"
-                  }`}
-                >
-                  <span className="text-xl">{poolItem.icon}</span>
-                  <span className="text-sm font-medium">{t(`games:${poolItem.key}`)}</span>
-                </button>
-              );
-            })}
-          </div>
+        {/* Header and prompt */}
+        <div className="text-center space-y-1">
+          <p className="text-cream/80 text-sm font-medium">{t("games:swapTip")}</p>
+          <p className="text-xs text-cream/50">🌅 Morning ➔ ☀️ Midday ➔ 🌙 Bedtime</p>
         </div>
-      )}
 
-      {/* Bottom Controls */}
-      <div className="flex items-center justify-between pt-2">
-        <button
-          type="button"
-          onClick={initGame}
-          disabled={submitted}
-          className="flex items-center gap-2 px-4 py-3 min-h-[44px] min-w-[44px] rounded-xl border border-clay text-cream/70 hover:text-cream hover:bg-clay/30 transition text-sm font-semibold touch-manipulation active:scale-95"
-        >
-          <RefreshCw size={16} />
-          Reset
-        </button>
+        {/* Target sequencing tray */}
+        <div className="space-y-2.5">
+          {items.map((item, idx) => {
+            const isSelected = selectedIndex === idx;
+            const isBeingDragged = activeDragIndex === idx;
+            const isDragTarget =
+              dragOverIndex === idx && activeDragIndex !== null && activeDragIndex !== idx;
+            const isCorrectPosition = submitted && targetItems[idx]?.id === item.id;
+            const isWrongPosition = submitted && targetItems[idx]?.id !== item.id;
 
-        <button
-          type="button"
-          onClick={checkSequence}
-          disabled={submitted}
-          className="px-7 py-3 min-h-[44px] rounded-xl bg-sun text-ink font-extrabold text-base hover:opacity-90 active:scale-95 transition shadow-card flex items-center gap-2 touch-manipulation"
-        >
-          ✓ {t("games:checkOrder")}
-        </button>
-      </div>
+            return (
+              <div
+                key={item.id}
+                data-routine-idx={idx}
+                onPointerDown={(e) => handlePointerDown(e, idx)}
+                onPointerMove={(e) => handlePointerMove(e, idx)}
+                onPointerUp={(e) => handlePointerUp(e, idx)}
+                onPointerCancel={handlePointerCancel}
+                style={{ touchAction: activeDragIndex !== null ? "none" : "manipulation" }}
+                className={`flex items-center justify-between p-3.5 sm:p-4 rounded-2xl border-2 transition-all cursor-grab active:cursor-grabbing select-none shadow-sm touch-manipulation active:scale-[0.99] ${
+                  isBeingDragged
+                    ? "border-sun bg-sun/30 ring-4 ring-sun/40 shadow-xl scale-[1.02] opacity-80 z-20"
+                    : isDragTarget
+                      ? "border-sun bg-sun/15 ring-2 ring-sun/60 scale-[1.01]"
+                      : isSelected
+                        ? "border-sun bg-sun/20 shadow-md ring-2 ring-sun/30 scale-[1.01]"
+                        : isCorrectPosition
+                          ? "border-tea-confirm bg-tea-confirm/15"
+                          : isWrongPosition
+                            ? "border-fire/60 bg-fire/10"
+                            : "border-clay bg-ink/60 hover:border-sun/40 hover:bg-clay/20"
+                }`}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleCardClick(idx);
+                  }
+                }}
+                aria-label={`Step ${idx + 1}: ${t(`games:${item.key}`)}`}
+              >
+                {/* Order badge & emoji & name */}
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <span className="flex size-8 items-center justify-center rounded-xl bg-clay/50 text-cream/80 font-bold text-sm shrink-0">
+                    {idx + 1}
+                  </span>
+                  <span className="text-2xl sm:text-3xl shrink-0" aria-hidden="true">
+                    {item.icon}
+                  </span>
+                  <div className="truncate">
+                    <p className="font-bold text-cream text-base sm:text-lg truncate">
+                      {t(`games:${item.key}`)}
+                    </p>
+                    {isSelected && (
+                      <span className="text-[11px] text-sun font-semibold">
+                        ● {t("games:selectedCard")} — tap another card to swap
+                      </span>
+                    )}
+                    {isCorrectPosition && (
+                      <span className="text-[11px] text-tea-confirm font-semibold flex items-center gap-1">
+                        <CheckCircle size={12} /> Correct spot
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Accessible Earlier/Later nudge buttons (min 44x44px elderly accessibility) */}
+                {!submitted && (
+                  <div
+                    className="flex items-center gap-1.5 shrink-0"
+                    onPointerDown={(e) => e.stopPropagation()}
+                  >
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        moveCard(idx, -1);
+                      }}
+                      disabled={idx === 0}
+                      className="size-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border border-clay bg-ink hover:bg-clay/40 text-cream/80 disabled:opacity-30 disabled:cursor-not-allowed transition touch-manipulation active:scale-90"
+                      title={t("games:moveEarlier")}
+                      aria-label={t("games:moveEarlier")}
+                    >
+                      <ArrowLeft size={18} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        moveCard(idx, 1);
+                      }}
+                      disabled={idx === items.length - 1}
+                      className="size-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl border border-clay bg-ink hover:bg-clay/40 text-cream/80 disabled:opacity-30 disabled:cursor-not-allowed transition touch-manipulation active:scale-90"
+                      title={t("games:moveLater")}
+                      aria-label={t("games:moveLater")}
+                    >
+                      <ArrowRight size={18} />
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Spare Cards Pool (for higher difficulty levels with distractors) */}
+        {poolItems.length > 0 && (
+          <div className="rounded-2xl border border-clay/60 bg-ink/40 p-4 space-y-2">
+            <p className="text-xs font-semibold text-cream/60">
+              Available Extras (tap to swap into your daily sequence):
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {poolItems.map((poolItem) => {
+                const isSelected = selectedPoolId === poolItem.id;
+                return (
+                  <button
+                    key={poolItem.id}
+                    type="button"
+                    onClick={() => handlePoolCardClick(poolItem)}
+                    className={`flex items-center gap-2 px-3.5 py-2.5 min-h-[44px] rounded-xl border transition touch-manipulation active:scale-95 ${
+                      isSelected
+                        ? "border-sun bg-sun/20 text-sun font-bold"
+                        : "border-clay bg-ink text-cream/80 hover:border-sun/40"
+                    }`}
+                  >
+                    <span className="text-xl">{poolItem.icon}</span>
+                    <span className="text-sm font-medium">{t(`games:${poolItem.key}`)}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Bottom Controls */}
+        <div className="flex items-center justify-between pt-2">
+          <button
+            type="button"
+            onClick={initGame}
+            disabled={submitted}
+            className="flex items-center gap-2 px-4 py-3 min-h-[44px] min-w-[44px] rounded-xl border border-clay text-cream/70 hover:text-cream hover:bg-clay/30 transition text-sm font-semibold touch-manipulation active:scale-95"
+          >
+            <RefreshCw size={16} />
+            Reset
+          </button>
+
+          <button
+            type="button"
+            onClick={checkSequence}
+            disabled={submitted}
+            className="px-7 py-3 min-h-[44px] rounded-xl bg-sun text-ink font-extrabold text-base hover:opacity-90 active:scale-95 transition shadow-card flex items-center gap-2 touch-manipulation"
+          >
+            ✓ {t("games:checkOrder")}
+          </button>
+        </div>
       </div>
     </GameShell>
   );

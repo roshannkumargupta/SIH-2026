@@ -43,9 +43,7 @@ function CalmPage() {
                 {t("dashboard:calmTitle")}
               </h1>
             </div>
-            <p className="text-sm text-[#8A99A8] mt-1 font-medium">
-              {t("dashboard:calmSubtitle")}
-            </p>
+            <p className="text-sm text-[#8A99A8] mt-1 font-medium">{t("dashboard:calmSubtitle")}</p>
           </div>
         </div>
 

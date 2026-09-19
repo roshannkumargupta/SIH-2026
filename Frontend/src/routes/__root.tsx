@@ -52,12 +52,14 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center py-12 glass-card p-8 rounded-3xl border border-white/60 shadow-card">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground font-display">Unable to display page</h1>
-        <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50/80 p-4 text-sm text-rose-800 text-left">
+      <div className="max-w-md text-center py-12 p-8 rounded-3xl border border-white/8 bg-[#121D2B] shadow-2xl">
+        <h1 className="text-2xl font-bold tracking-tight text-[#E8ECEF] font-display">
+          Unable to display page
+        </h1>
+        <div className="mt-4 rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-300 text-left">
           {userFriendlyError}
         </div>
-        <p className="mt-3 text-sm text-muted-foreground">
+        <p className="mt-3 text-sm text-[#8A99A8]">
           You can try refreshing the view or return to the home companion.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -66,13 +68,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/90 shadow-sm"
+            className="inline-flex items-center justify-center rounded-full bg-[#6FAF9A] px-5 py-2.5 text-sm font-semibold text-[#0A1420] transition-all hover:bg-[#5E9E8A] shadow-sm font-bold cursor-pointer"
           >
             Try again
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-full border border-border bg-white/80 px-5 py-2.5 text-sm font-semibold text-foreground transition-all hover:bg-white shadow-sm"
+            className="inline-flex items-center justify-center rounded-full border border-white/10 bg-[#0A1420] px-5 py-2.5 text-sm font-semibold text-[#E8ECEF] transition-all hover:bg-white/5 shadow-sm"
           >
             Back Home
           </a>

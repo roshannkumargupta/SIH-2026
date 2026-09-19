@@ -7,7 +7,6 @@ from sqlalchemy import select
 from app.core.dependencies import (
     DBSession,
     get_current_user,
-    require_admin,
     require_patient,
 )
 from app.models.patient import PatientCalibration

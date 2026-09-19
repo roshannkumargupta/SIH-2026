@@ -13,7 +13,6 @@ from app.schemas.hydration import (
     HydrationTodaySummary,
 )
 from app.services.hydration_service import (
-    get_daily_goal,
     get_hydration_history,
     get_today_summary,
     log_hydration,

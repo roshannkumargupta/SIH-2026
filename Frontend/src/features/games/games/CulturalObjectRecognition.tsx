@@ -121,7 +121,8 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
     ];
 
     const correct = aliases.some(
-      (alias) => cleanAnswer === alias || cleanAnswer.includes(alias) || alias.includes(cleanAnswer),
+      (alias) =>
+        cleanAnswer === alias || cleanAnswer.includes(alias) || alias.includes(cleanAnswer),
     );
 
     setIsCurrentCorrect(correct);
@@ -187,10 +188,10 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
       level={level}
       score={correctCount}
       targetScore={TOTAL_ROUNDS}
-      stats={[
-        { label: "Round", value: `${currentRoundIdx + 1} / ${TOTAL_ROUNDS}` },
-      ]}
-      instructionHint={isMultipleChoice ? "Identify the cultural artifact" : "Type or speak the artifact name"}
+      stats={[{ label: "Round", value: `${currentRoundIdx + 1} / ${TOTAL_ROUNDS}` }]}
+      instructionHint={
+        isMultipleChoice ? "Identify the cultural artifact" : "Type or speak the artifact name"
+      }
       completed={completed}
       results={{
         score: finalAccuracy,
@@ -216,9 +217,7 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
 
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-cream">
-              {roundAnswered
-                ? getTargetName(target)
-                : t("games:whichObjectIsThis")}
+              {roundAnswered ? getTargetName(target) : t("games:whichObjectIsThis")}
             </h2>
             <p className="text-xs sm:text-sm text-cream/60 mt-1 max-w-sm mx-auto">
               {getTargetState(target)}
@@ -233,11 +232,13 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
               const isSelected = selectedOptionId === option.id;
               const isCorrectOption = option.id === target.id;
 
-              let btnStyle = "border-clay bg-surface hover:border-sun/60 hover:bg-clay/40 text-cream";
+              let btnStyle =
+                "border-clay bg-surface hover:border-sun/60 hover:bg-clay/40 text-cream";
 
               if (roundAnswered) {
                 if (isCorrectOption) {
-                  btnStyle = "border-tea-confirm bg-tea-confirm/20 text-cream font-bold ring-2 ring-tea-confirm/50";
+                  btnStyle =
+                    "border-tea-confirm bg-tea-confirm/20 text-cream font-bold ring-2 ring-tea-confirm/50";
                 } else if (isSelected && !isCorrectOption) {
                   btnStyle = "border-fire bg-fire/20 text-cream/80 line-through";
                 } else {
@@ -254,7 +255,6 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
                   className={`p-4 rounded-2xl border-2 text-left font-semibold text-base transition-all flex items-center justify-between min-h-[52px] touch-manipulation select-none active:scale-[0.98] ${btnStyle}`}
                 >
                   <span className="flex items-center gap-2.5">
-                    <span className="text-2xl">{option.icon}</span>
                     <span>{getTargetName(option)}</span>
                   </span>
                   {roundAnswered && isCorrectOption && (
@@ -351,7 +351,9 @@ export default function CulturalObjectRecognition({ level }: CulturalObjectRecog
                 onClick={handleNextRound}
                 className="flex items-center gap-2 px-6 py-3 min-h-[48px] min-w-[48px] rounded-xl bg-sun text-ink font-extrabold hover:opacity-90 active:scale-95 active:opacity-90 transition shadow-md touch-manipulation"
               >
-                <span>{currentRoundIdx + 1 < TOTAL_ROUNDS ? t("games:nextObject") : t("common:done")}</span>
+                <span>
+                  {currentRoundIdx + 1 < TOTAL_ROUNDS ? t("games:nextObject") : t("common:done")}
+                </span>
                 <ChevronRight size={18} />
               </button>
             </div>

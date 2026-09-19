@@ -3,13 +3,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.core.dependencies import DBSession, get_current_user
 from app.models.user import User, UserRole
-from app.schemas.memory import MemoryCreate, MemoryResponse, MemoryUpdate
+from app.schemas.memory import MemoryCreate, MemoryResponse
 from app.services.memory_service import (
     create_memory,
     delete_memory,
     get_memory,
     get_patient_memories,
-    update_memory,
 )
 from app.services.relationship_service import (
     caretaker_has_patient_access,

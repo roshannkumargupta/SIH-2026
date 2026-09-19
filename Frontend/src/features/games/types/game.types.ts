@@ -11,11 +11,7 @@ export type CognitiveDomain =
 
 /** Five consolidated clinical cognitive domains used for patient assessment scoring. */
 export type ClinicalDomain =
-  | "memory"
-  | "attention"
-  | "executive_function"
-  | "language"
-  | "visuospatial";
+  "memory" | "attention" | "executive_function" | "language" | "visuospatial";
 
 export interface GameMetadata {
   id: string;

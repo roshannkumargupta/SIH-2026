@@ -87,9 +87,7 @@ export default function TrailMaking({ level }: { level: number }) {
     10,
     Math.min(
       100,
-      Math.round(
-        (100 * circles.length) / Math.max(circles.length, circles.length + errors),
-      ),
+      Math.round((100 * circles.length) / Math.max(circles.length, circles.length + errors)),
     ),
   );
   const finalDuration = Math.round((Date.now() - sessionStart.current) / 1000);
@@ -118,7 +116,13 @@ export default function TrailMaking({ level }: { level: number }) {
         offline,
       }}
       onPlayAgain={reset}
-      onNextLevel={level < 10 ? () => { window.location.href = `/games/trail-making?level=${level + 1}`; } : undefined}
+      onNextLevel={
+        level < 10
+          ? () => {
+              window.location.href = `/games/trail-making?level=${level + 1}`;
+            }
+          : undefined
+      }
     >
       <div className="space-y-4">
         <p className="text-xs text-cream/60 text-center font-medium">
@@ -126,7 +130,12 @@ export default function TrailMaking({ level }: { level: number }) {
         </p>
 
         <div className="relative w-full aspect-square max-w-sm mx-auto rounded-2xl border-2 border-clay bg-ink/30 overflow-hidden touch-manipulation select-none">
-          <svg ref={svgRef} viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" style={{ touchAction: "manipulation" }}>
+          <svg
+            ref={svgRef}
+            viewBox="0 0 100 100"
+            className="absolute inset-0 w-full h-full"
+            style={{ touchAction: "manipulation" }}
+          >
             {/* Trail lines */}
             {doneCircles.map((c, i) => {
               const next = doneCircles[i + 1];
@@ -148,13 +157,7 @@ export default function TrailMaking({ level }: { level: number }) {
             {circles.map((c, idx) => (
               <g key={idx} onClick={() => handleClick(idx)} className="cursor-pointer">
                 {/* Invisible hit target for touch — ensures ~56px tap area on mobile */}
-                <circle
-                  cx={c.x}
-                  cy={c.y}
-                  r="8"
-                  fill="transparent"
-                  pointerEvents="all"
-                />
+                <circle cx={c.x} cy={c.y} r="8" fill="transparent" pointerEvents="all" />
                 <circle
                   cx={c.x}
                   cy={c.y}

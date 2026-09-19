@@ -195,7 +195,9 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
               {showNotifications && (
                 <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-white/10 bg-[#121D2B] backdrop-blur-xl p-4 shadow-2xl z-50 text-[#E8ECEF] animate-in fade-in zoom-in-95 duration-150">
                   <div className="flex items-center justify-between pb-3 border-b border-white/8">
-                    <h3 className="font-display font-bold text-base text-[#E8ECEF]">{t("nav.notifications")}</h3>
+                    <h3 className="font-display font-bold text-base text-[#E8ECEF]">
+                      {t("nav.notifications")}
+                    </h3>
                     <span className="text-xs text-[#6FAF9A] font-bold px-2 py-0.5 rounded-full bg-[#6FAF9A]/10">
                       {notifications.length} alerts
                     </span>
@@ -217,7 +219,9 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
                         >
                           <div>
                             <p className="font-bold text-xs sm:text-sm text-[#E8ECEF]">{n.title}</p>
-                            <p className="mt-0.5 text-xs text-[#8A99A8] leading-relaxed">{n.message}</p>
+                            <p className="mt-0.5 text-xs text-[#8A99A8] leading-relaxed">
+                              {n.message}
+                            </p>
                           </div>
                           {n.status !== "read" && (
                             <button
@@ -252,7 +256,9 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
                   alt={user.name}
                   className="size-7 rounded-full border border-[#6FAF9A]/40 object-cover shadow-sm"
                 />
-                <span className="hidden sm:inline text-xs font-semibold text-[#E8ECEF]">{user.name}</span>
+                <span className="hidden sm:inline text-xs font-semibold text-[#E8ECEF]">
+                  {user.name}
+                </span>
               </button>
               <button
                 type="button"
@@ -363,7 +369,12 @@ export function NavigationHeader({ progress }: NavigationHeaderProps) {
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="default" disabled={isSavingProfile} className="rounded-full bg-[#6FAF9A] text-[#0A1420] font-bold hover:bg-[#5E9E8A]">
+              <Button
+                type="submit"
+                variant="default"
+                disabled={isSavingProfile}
+                className="rounded-full bg-[#6FAF9A] text-[#0A1420] font-bold hover:bg-[#5E9E8A]"
+              >
                 {isSavingProfile ? "Saving…" : "Save Changes"}
               </Button>
             </div>

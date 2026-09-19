@@ -10,7 +10,7 @@ from app.models.game import GameSession
 from app.models.hydration import HydrationLog, HydrationSource
 from app.models.medication import MedicationLog, MedicationSchedule
 from app.models.memory import Memory
-from app.models.mood_checkin import MoodCheckin, MoodType
+from app.models.mood_checkin import MoodCheckin
 from app.models.notification import Notification, NotificationType
 from app.models.task import Task
 from app.schemas.sync import SyncBatchRequest, SyncBatchResponse

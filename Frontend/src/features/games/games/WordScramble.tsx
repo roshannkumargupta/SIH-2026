@@ -109,7 +109,13 @@ export default function WordScramble({ level }: { level: number }) {
         offline,
       }}
       onPlayAgain={resetGame}
-      onNextLevel={level < 10 ? () => { window.location.href = `/games/word-scramble?level=${level + 1}`; } : undefined}
+      onNextLevel={
+        level < 10
+          ? () => {
+              window.location.href = `/games/word-scramble?level=${level + 1}`;
+            }
+          : undefined
+      }
     >
       <div className="space-y-6 text-center max-w-md mx-auto">
         <div className="inline-block rounded-2xl border-4 border-sun bg-ink px-8 py-5 shadow-card">

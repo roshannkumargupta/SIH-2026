@@ -12,7 +12,6 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.ai.cognitive_engine import engine
-from app.ai.game_domain_mapping import CLINICAL_DOMAINS
 from app.models.assessment import CognitiveAssessment
 from app.models.notification import Notification, NotificationStatus, NotificationType
 from app.schemas.analytics import AdherenceResponse
@@ -196,8 +195,6 @@ def get_patient_cognitive_trends(
 
     now = datetime.now(timezone.utc)
     for domain, attr in domain_attr_map.items():
-        all_values = [getattr(a, attr, None) for a in assessments]
-
         # 30-day window
         cutoff_30 = now - timedelta(days=30)
         values_30 = [

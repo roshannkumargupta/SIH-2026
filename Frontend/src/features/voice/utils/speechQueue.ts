@@ -42,7 +42,9 @@ export class SpeechQueue {
     const audioB64 = await this.synthesizeCallback(nextChunk);
     if (!audioB64 || this.abortController.signal.aborted) {
       // Audio synthesis was empty/unavailable for this chunk
-      throw new Error(`Speech synthesis returned no audio for chunk: "${nextChunk.slice(0, 20)}..."`);
+      throw new Error(
+        `Speech synthesis returned no audio for chunk: "${nextChunk.slice(0, 20)}..."`,
+      );
     }
 
     let audioSrc = audioB64;
@@ -75,7 +77,10 @@ export class SpeechQueue {
       };
 
       audio.play().catch((playErr) => {
-        console.warn("[Voice] Audio play() promise rejected (likely browser autoplay policy):", playErr);
+        console.warn(
+          "[Voice] Audio play() promise rejected (likely browser autoplay policy):",
+          playErr,
+        );
         this.currentAudio = null;
         reject(playErr);
       });

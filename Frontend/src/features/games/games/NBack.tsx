@@ -108,7 +108,11 @@ export default function NBack({ level }: NBackProps) {
       targetScore={target}
       stats={[
         { label: "N-Steps", value: `${n} back`, highlight: "sun" },
-        { label: "Status", value: running ? "Running" : "Paused", highlight: running ? "tea" : "cream" },
+        {
+          label: "Status",
+          value: running ? "Running" : "Paused",
+          highlight: running ? "tea" : "cream",
+        },
       ]}
       instructionHint={`Press "Match" when the letter matches the one shown ${n} step${n > 1 ? "s" : ""} ago`}
       completed={completed}

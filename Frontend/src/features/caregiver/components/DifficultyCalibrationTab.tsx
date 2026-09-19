@@ -146,7 +146,9 @@ export function DifficultyCalibrationTab({
   };
 
   // Bayesian psychometric abilities state
-  const [abilitiesOverview, setAbilitiesOverview] = useState<GameAbilityOverviewResponse | null>(null);
+  const [abilitiesOverview, setAbilitiesOverview] = useState<GameAbilityOverviewResponse | null>(
+    null,
+  );
   const [loadingAbilities, setLoadingAbilities] = useState(true);
   const [updatingGameId, setUpdatingGameId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -526,8 +528,9 @@ export function DifficultyCalibrationTab({
               </h3>
             </div>
             <p className="text-xs sm:text-sm text-cream/70 mt-1 max-w-2xl">
-              Grounded in Item Response Theory (IRT). Tracks latent capability (θ) and uncertainty (σ)
-              per game to sustain the patient in their optimal <strong>75%–80% challenge zone</strong>.
+              Grounded in Item Response Theory (IRT). Tracks latent capability (θ) and uncertainty
+              (σ) per game to sustain the patient in their optimal{" "}
+              <strong>75%–80% challenge zone</strong>.
             </p>
           </div>
 
@@ -546,7 +549,10 @@ export function DifficultyCalibrationTab({
         {/* Filter & Search Toolbar */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <div className="relative flex-1 max-w-sm">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cream/40" />
+            <Search
+              size={16}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cream/40"
+            />
             <input
               type="text"
               placeholder="Search games..."
@@ -558,20 +564,22 @@ export function DifficultyCalibrationTab({
 
           {/* Domain Filter Pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
-            {["all", "Memory", "Attention", "Executive Function", "Language", "Visuospatial"].map((dom) => (
-              <button
-                key={dom}
-                type="button"
-                onClick={() => setSelectedDomain(dom)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-                  selectedDomain === dom
-                    ? "bg-sun text-ink"
-                    : "bg-ink/50 text-cream/70 hover:bg-clay/40 hover:text-cream border border-clay/40"
-                }`}
-              >
-                {dom === "all" ? "All Domains" : dom}
-              </button>
-            ))}
+            {["all", "Memory", "Attention", "Executive Function", "Language", "Visuospatial"].map(
+              (dom) => (
+                <button
+                  key={dom}
+                  type="button"
+                  onClick={() => setSelectedDomain(dom)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                    selectedDomain === dom
+                      ? "bg-sun text-ink"
+                      : "bg-ink/50 text-cream/70 hover:bg-clay/40 hover:text-cream border border-clay/40"
+                  }`}
+                >
+                  {dom === "all" ? "All Domains" : dom}
+                </button>
+              ),
+            )}
           </div>
         </div>
 
@@ -620,9 +628,7 @@ export function DifficultyCalibrationTab({
                       <span className="text-xs font-mono font-bold text-sun">
                         θ = {item.theta.toFixed(1)}
                       </span>
-                      <p className="text-[10px] text-cream/50">
-                        ±{item.sigma.toFixed(2)} σ
-                      </p>
+                      <p className="text-[10px] text-cream/50">±{item.sigma.toFixed(2)} σ</p>
                     </div>
                   </div>
 
@@ -630,9 +636,7 @@ export function DifficultyCalibrationTab({
                   <div className="grid grid-cols-3 gap-2 bg-ink/70 rounded-lg p-2.5 my-3 border border-clay/30 text-center">
                     <div>
                       <span className="text-[10px] text-cream/50 block">Current Lvl</span>
-                      <span className="text-xs font-bold text-cream">
-                        Lvl {item.current_level}
-                      </span>
+                      <span className="text-xs font-bold text-cream">Lvl {item.current_level}</span>
                     </div>
                     <div>
                       <span className="text-[10px] text-cream/50 block">Recommended</span>
@@ -647,8 +651,8 @@ export function DifficultyCalibrationTab({
                           item.confidence === "high"
                             ? "text-tea-confirm"
                             : item.confidence === "medium"
-                            ? "text-sun"
-                            : "text-cream/50"
+                              ? "text-sun"
+                              : "text-cream/50"
                         }`}
                       >
                         {item.confidence}
@@ -688,7 +692,8 @@ export function DifficultyCalibrationTab({
                         <option value="">Auto (AI Rec: Level {item.recommended_level})</option>
                         {Array.from({ length: item.max_level }, (_, i) => i + 1).map((lvl) => (
                           <option key={lvl} value={lvl}>
-                            Lock at Level {lvl} {lvl === item.manual_override_level ? "★ (Active)" : ""}
+                            Lock at Level {lvl}{" "}
+                            {lvl === item.manual_override_level ? "★ (Active)" : ""}
                           </option>
                         ))}
                       </select>

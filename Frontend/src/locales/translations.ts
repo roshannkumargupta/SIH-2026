@@ -631,7 +631,9 @@ export function getTranslation(
   key: string,
   params?: Record<string, string | number>,
 ): string {
-  const short = (langCode.includes("-") ? (langCode.split("-")[0] ?? langCode) : langCode).toLowerCase();
+  const short = (
+    langCode.includes("-") ? (langCode.split("-")[0] ?? langCode) : langCode
+  ).toLowerCase();
   const enDict = TRANSLATIONS["en"] ?? {};
   const langDict = TRANSLATIONS[short] ?? enDict;
   const raw = langDict[key] ?? enDict[key] ?? key;

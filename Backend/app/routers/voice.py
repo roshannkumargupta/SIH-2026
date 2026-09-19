@@ -4,12 +4,11 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Request, status
 
 from app.core.dependencies import DBSession, get_current_user_optional
-from app.models.task import Task, TaskStatus
+from app.models.task import TaskStatus
 from app.models.user import User, UserRole
 from app.schemas.voice import (
     SynthesizeRequest,
     SynthesizeResponse,
-    TranscribeRequest,
     TranscribeResponse,
     InterpretRequest,
     InterpretResponse,

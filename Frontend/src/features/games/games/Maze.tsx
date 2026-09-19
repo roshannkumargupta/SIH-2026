@@ -87,7 +87,7 @@ export default function Maze({ level }: { level: number }) {
           gameId: "maze",
           gameType: "maze",
           score,
-          accuracy: 100,
+          accuracy: score,
           durationSeconds: Math.max(5, dur),
           level,
           difficulty: String(level),
@@ -128,7 +128,7 @@ export default function Maze({ level }: { level: number }) {
       completed={won}
       results={{
         score: finalScore,
-        accuracy: 100,
+        accuracy: finalScore,
         durationSeconds: finalDuration,
         synced,
         offline,
@@ -159,8 +159,16 @@ export default function Maze({ level }: { level: number }) {
                               : "bg-ink/30"
                     } flex items-center justify-center transition-colors`}
                   >
-                    {isPlayer && <span style={{ fontSize: cellSize * 0.6 }} className="text-ink">●</span>}
-                    {isGoal && !isPlayer && <span style={{ fontSize: cellSize * 0.6 }} className="text-cream">🏁</span>}
+                    {isPlayer && (
+                      <span style={{ fontSize: cellSize * 0.6 }} className="text-ink">
+                        ●
+                      </span>
+                    )}
+                    {isGoal && !isPlayer && (
+                      <span style={{ fontSize: cellSize * 0.6 }} className="text-cream">
+                        🏁
+                      </span>
+                    )}
                   </div>
                 );
               })}

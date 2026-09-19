@@ -37,8 +37,7 @@ export function useGameProgress() {
     // Sessions arrive newest-first from the API; if for any reason they don't,
     // sort defensively so mastery_reset detection is always newest-first.
     const sorted = [...sessions].sort(
-      (a, b) =>
-        new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime(),
+      (a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime(),
     );
 
     for (const s of sorted) {

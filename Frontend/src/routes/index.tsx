@@ -27,9 +27,10 @@ import { useMemories } from "@/hooks/use-memories";
 import { useGames } from "@/hooks/use-games";
 import { useHydration } from "@/hooks/use-hydration";
 import { useMood } from "@/hooks/use-mood";
+import { useGameProgress } from "@/hooks/useGameProgress";
 import type { MoodType } from "@/types/api";
 import { formatApiError } from "@/api/client";
-import { GAME_REGISTRY } from "@/features/games/data/gameRegistry";
+import { GAME_MAP } from "@/features/games/data/gameRegistry";
 import defaultProfilePhoto from "@/assets/default-avatar.svg";
 
 export const Route = createFileRoute("/")({
@@ -62,6 +63,7 @@ function Index() {
   const { summary: gameSummary } = useGames();
   const { summary: hydrationSummary, glassCount, logWater, isLogging } = useHydration();
   const { logMood, isLogging: isMoodLogging } = useMood();
+  const { getTargetLevel } = useGameProgress();
   const [moodNote, setMoodNote] = useState("");
   const [showMoodNote, setShowMoodNote] = useState(false);
   const [recentMoodAcknowledged, setRecentMoodAcknowledged] = useState<MoodType | null>(null);
@@ -165,7 +167,8 @@ function Index() {
   // Rotating Badge Palette for cards and reminders
   const badgePalette = ["#E85D6B", "#4DA3E0", "#9B7FE0", "#2DD4BF", "#E0A23B"];
 
-  // 4 Featured Cognitive Games
+  // 4 Featured Cognitive Games — levels computed from real progress
+  const featuredGameIds = ["water-jugs", "tower-of-hanoi", "ball-sort", "n-back"];
   const featuredGames = [
     {
       id: "water-jugs",
@@ -204,6 +207,10 @@ function Index() {
       gradient: "from-[#352549] to-[#1a1426]",
     },
   ];
+
+  // Resolve maxLevel for each featured game from GAME_MAP (falls back to 10)
+  const getFeaturedMaxLevel = (gameId: string): number =>
+    GAME_MAP?.get(gameId)?.maxLevel ?? 10;
 
   return (
     <AppShell progress={progress}>
@@ -378,10 +385,16 @@ function Index() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {featuredGames.map((game) => (
+                  {featuredGames.map((game) => {
+                    const targetLevel = getTargetLevel(
+                      game.id,
+                      getFeaturedMaxLevel(game.id),
+                    );
+                    return (
                     <Link
                       key={game.id}
                       to={`/games/${game.id}` as any}
+                      search={{ level: String(targetLevel) } as any}
                       className="group flex flex-col justify-between rounded-2xl border border-white/8 bg-[#121D2B]/85 backdrop-blur-md p-5 sm:p-6 hover:border-white/15 hover:bg-[#152335] transition duration-200 shadow-md relative overflow-hidden"
                     >
                       {/* Tall Illustrated Top Banner (140-180px height per spec) */}
@@ -409,7 +422,7 @@ function Index() {
 
                       <div className="mt-5 pt-3.5 border-t border-white/5 flex items-center justify-between">
                         <span className="text-xs font-semibold text-[#8A99A8]">
-                          Recommended for today
+                          {targetLevel > 1 ? `Continue at Level ${targetLevel}` : "Start at Level 1"}
                         </span>
                         {/* Prominent Teal-green circular play button */}
                         <span className="flex size-10 items-center justify-center rounded-full bg-[#6FAF9A] text-[#0A1420] shadow-md group-hover:scale-105 transition-transform">
@@ -417,7 +430,8 @@ function Index() {
                         </span>
                       </div>
                     </Link>
-                  ))}
+                    );
+                  })}
                 </div>
               </section>
 

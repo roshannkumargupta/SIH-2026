@@ -483,6 +483,46 @@ class CognitiveEngine:
             ).all()
         )
 
+        # 6a. Mastery-reset check: if the most recent session has mastery_reset=true
+        # in its metrics JSON, reset this patient's ability state back to level 1 so
+        # the AI recommendation agrees with the frontend's useGameProgress() hook.
+        if recent_sessions:
+            latest_session = recent_sessions[0]
+            latest_metrics: dict | None = None
+            if latest_session.metrics:
+                try:
+                    latest_metrics = (
+                        json.loads(latest_session.metrics)
+                        if isinstance(latest_session.metrics, str)
+                        else latest_session.metrics
+                    )
+                except Exception:
+                    pass
+            if isinstance(latest_metrics, dict) and latest_metrics.get("mastery_reset") is True:
+                logger.info(
+                    "Mastery reset detected for patient %s game %s — resetting ability state to L1",
+                    patient_id,
+                    norm_game_id,
+                )
+                ability.theta = 1.0
+                ability.sigma = INITIAL_SIGMA
+                ability.last_level_played = 1
+                ability.last_recommended_level = 1
+                db.commit()
+                return {
+                    "recommended_level": 1,
+                    "confidence": "high",
+                    "rationale": "Mastery cycle completed — starting fresh from Level 1",
+                    "based_on_sessions": ability.sessions_count,
+                    "ai_difficulty_enabled": True,
+                    "model_type": "statistical_controller",
+                    "theta": 1.0,
+                    "sigma": round(INITIAL_SIGMA, 2),
+                    "manual_override_level": ability.manual_override_level,
+                    "cooldown_active": False,
+                    "last_lowered_at": None,
+                }
+
         rolling_acc: float | None = None
         telemetry_notes: list[str] = []
         if recent_sessions:

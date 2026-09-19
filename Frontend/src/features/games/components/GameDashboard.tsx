@@ -4,6 +4,7 @@ import { GameCard } from "./GameCard";
 import { GAME_REGISTRY, getGamesByCategory, ALL_CATEGORIES } from "../data/gameRegistry";
 import { CATEGORY_LABELS } from "../types/game.types";
 import { useGames } from "@/hooks/use-games";
+import { useGameProgress } from "@/hooks/useGameProgress";
 import { useLanguage } from "@/context/LanguageContext";
 import type { GameCategory } from "../types/game.types";
 
@@ -11,22 +12,11 @@ type Filter = "all" | GameCategory;
 
 export function GameDashboard() {
   const [filter, setFilter] = useState<Filter>("all");
-  const { summary, sessions } = useGames();
+  const { summary, sessions = [] } = useGames();
+  const { progressMap } = useGameProgress();
   const { t } = useLanguage();
 
   const displayed = filter === "all" ? GAME_REGISTRY : getGamesByCategory(filter);
-
-  // Build per-game progress from sessions
-  const progressMap = new Map<string, { bestLevel: number; lastPlayed: string }>();
-  for (const s of sessions) {
-    const existing = progressMap.get(s.game_id);
-    if (!existing || s.level_achieved > existing.bestLevel) {
-      progressMap.set(s.game_id, {
-        bestLevel: s.level_achieved,
-        lastPlayed: s.completed_at,
-      });
-    }
-  }
 
   const categoryTranslationMap: Record<GameCategory, string> = {
     memory: t("games:memoryRecall"),

@@ -1,6 +1,6 @@
 import { cloneElement, isValidElement, useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Sparkles, X, Trophy, RotateCcw, Home, CloudOff, CheckCircle2, ArrowRight } from "lucide-react";
+import { ArrowLeft, Sparkles, X, Trophy, RotateCcw, Home, CloudOff, CheckCircle2, ArrowRight, Medal, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HowToPlay } from "./HowToPlay";
 import { LevelSelector } from "./LevelSelector";
@@ -54,6 +54,12 @@ export interface GameShellProps {
   results?: GameShellResult | undefined;
   onPlayAgain?: (() => void) | undefined;
   onNextLevel?: (() => void) | undefined;
+  /**
+   * Called when the player completes the game at max level (mastery).
+   * If not provided, GameShell handles it internally:
+   * submits a mastery_reset session marker then navigates to level 1.
+   */
+  onMasteryRestart?: (() => void) | undefined;
 }
 
 export function GameShell({
@@ -72,6 +78,7 @@ export function GameShell({
   results,
   onPlayAgain,
   onNextLevel,
+  onMasteryRestart,
 }: GameShellProps) {
   const resolvedGame: GameMetadata =
     game ??
@@ -144,7 +151,52 @@ export function GameShell({
   const effectiveLevel = level;
   const maxLevel = results?.maxLevel ?? resolvedGame.maxLevel;
   const isWon = (results?.accuracy ?? accuracy ?? 0) >= 60 || (results?.score ?? score ?? 0) >= 50;
+  const isMastered = isWon && level === maxLevel;
   const hasNextLevel = isWon && level < maxLevel;
+
+  // Internal mastery restart: submit a mastery_reset session marker, then go to level 1.
+  // This is used when no custom onMasteryRestart prop is provided.
+  const [isRestartingMastery, setIsRestartingMastery] = useState(false);
+
+  const handleMasteryRestart = async () => {
+    if (onMasteryRestart) {
+      onMasteryRestart();
+      return;
+    }
+    if (!user?.id) return;
+    setIsRestartingMastery(true);
+    try {
+      // Submit a mastery-reset marker so useGameProgress() resets bestLevel to 0
+      const existingMetrics = results?.metrics ?? {};
+      await gamesApi.submitGameSession({
+        patient_id: user.id,
+        game_type: resolvedGame.id,
+        game_id: resolvedGame.id,
+        score: results?.score ?? 0,
+        accuracy: results?.accuracy ?? 0,
+        duration_seconds: results?.durationSeconds ?? 0,
+        difficulty: "mastery_reset",
+        level_achieved: maxLevel,
+        metrics: {
+          ...existingMetrics,
+          mastery_reset: true,
+          mastered_at: new Date().toISOString(),
+          cycles_completed: typeof existingMetrics["cycles_completed"] === "number"
+            ? (existingMetrics["cycles_completed"] as number) + 1
+            : 1,
+        },
+      });
+    } catch {
+      // Non-fatal — we still navigate to level 1 even if the API call fails
+    } finally {
+      setIsRestartingMastery(false);
+      void navigate({
+        to: `/games/${resolvedGame.id}` as never,
+        search: { level: "1" } as never,
+        replace: false,
+      });
+    }
+  };
 
   const handleNextLevelClick = () => {
     if (onNextLevel) {
@@ -387,93 +439,95 @@ export function GameShell({
             {completed && currentResult ? (
               <>
                 <CelebrationAnimation show={currentResult.accuracy >= 60 || currentResult.score >= 50} />
-                <div className="animate-in fade-in zoom-in-95 duration-300 rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-2xl flex flex-col items-center text-center max-w-lg mx-auto text-[#E8ECEF]">
-                  <div className="flex size-20 items-center justify-center rounded-full bg-[#E0A23B]/15 text-[#E0A23B] mb-4 shadow-sm">
-                    <Trophy size={40} />
-                  </div>
 
-                  <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#E8ECEF] mb-1">
-                    {encouragement?.title ?? t("games:greatJob", { defaultValue: "Great Job!" })}
-                  </h2>
-                  <p className="text-[#8A99A8] text-sm max-w-sm mb-2 font-medium">
-                    {encouragement?.message}
-                  </p>
-                  <p className="text-[#8A99A8] text-xs mb-6">
-                    {currentResult.gameName ?? resolvedGame.name} · {t("games:level", { level, maxLevel })}
-                  </p>
+                {/* ══════════════════════════════════════════════════════
+                    MASTERED SCREEN — shown only when player wins at max level
+                    ══════════════════════════════════════════════════════ */}
+                {isMastered ? (
+                  <div className="animate-in fade-in zoom-in-95 duration-300 rounded-3xl border border-amber-400/30 bg-gradient-to-b from-[#1e1608] to-[#121D2B] p-6 sm:p-8 shadow-2xl flex flex-col items-center text-center max-w-lg mx-auto">
+                    {/* Gold medal icon */}
+                    <div className="flex size-24 items-center justify-center rounded-full bg-[#E0A23B]/20 border-2 border-[#E0A23B]/50 mb-4 shadow-lg">
+                      <Medal size={48} className="text-[#E0A23B]" />
+                    </div>
 
-                  {/* Stats Grid */}
-                  <div className="grid grid-cols-3 gap-3 w-full mb-6">
-                    <div className="rounded-2xl border border-white/8 bg-[#0A1420] py-4 px-2 shadow-xs">
-                      <p className="text-xs font-bold uppercase text-[#8A99A8] mb-1">
-                        {t("games:score", { defaultValue: "Score" })}
-                      </p>
-                      <p className="font-display text-3xl font-bold text-[#E0A23B]">
-                        {currentResult.score}
-                      </p>
+                    {/* Star row */}
+                    <div className="flex items-center gap-1 mb-3">
+                      {[1, 2, 3].map((i) => (
+                        <Star key={i} size={22} className="text-[#E0A23B] fill-[#E0A23B]" />
+                      ))}
                     </div>
-                    <div className="rounded-2xl border border-white/8 bg-[#0A1420] py-4 px-2 shadow-xs">
-                      <p className="text-xs font-bold uppercase text-[#8A99A8] mb-1">
-                        {t("games:accuracy", { defaultValue: "Accuracy" })}
-                      </p>
-                      <p className="font-display text-3xl font-bold text-[#6FAF9A]">
-                        {Math.round(currentResult.accuracy)}%
-                      </p>
-                    </div>
-                    <div className="rounded-2xl border border-white/8 bg-[#0A1420] py-4 px-2 shadow-xs">
-                      <p className="text-xs font-bold uppercase text-[#8A99A8] mb-1">
-                        {t("games:time", { defaultValue: "Time" })}
-                      </p>
-                      <p className="font-display text-3xl font-bold text-[#E8ECEF]">
-                        {formatDuration(currentResult.durationSeconds)}
-                      </p>
-                    </div>
-                  </div>
 
-                  {/* Sync Status Badge */}
-                  {currentResult.offline ? (
-                    <div className="flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm text-rose-800 mb-5 w-full justify-center">
-                      <CloudOff size={16} className="text-rose-600 shrink-0" />
-                      <span>{t("games:resultSavedLocally", { defaultValue: "Saved locally (will sync online)" })}</span>
-                    </div>
-                  ) : currentResult.synced ? (
-                    <div className="flex items-center gap-2 rounded-full border border-[#6FAF9A]/30 bg-[#6FAF9A]/10 text-[#6FAF9A] px-4 py-2 text-sm text-emerald-800 mb-5 w-full justify-center">
-                      <CheckCircle2 size={16} className="text-[#6FAF9A] shrink-0" />
-                      <span>{t("games:performanceRecorded", { defaultValue: "Performance securely recorded" })}</span>
-                    </div>
-                  ) : null}
+                    <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#E0A23B] mb-2">
+                      You&rsquo;ve Mastered This Game!
+                    </h2>
+                    <p className="text-[#E8ECEF] text-base font-medium mb-1">
+                      Congratulations! You completed all {maxLevel} levels of{" "}
+                      <span className="font-bold">{resolvedGame.name}</span>.
+                    </p>
+                    <p className="text-[#8A99A8] text-sm max-w-xs mb-6">
+                      Your brain has truly risen to this challenge. When you&rsquo;re ready, you can start fresh from Level 1 to keep training.
+                    </p>
 
-                  {/* Large Accessible Action Buttons */}
-                  <div className="flex flex-col gap-3 w-full">
-                    {hasNextLevel && (
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-3 gap-3 w-full mb-6">
+                      <div className="rounded-2xl border border-amber-400/20 bg-[#0A1420] py-4 px-2 shadow-xs">
+                        <p className="text-xs font-bold uppercase text-[#8A99A8] mb-1">
+                          {t("games:score", { defaultValue: "Score" })}
+                        </p>
+                        <p className="font-display text-3xl font-bold text-[#E0A23B]">
+                          {currentResult.score}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-amber-400/20 bg-[#0A1420] py-4 px-2 shadow-xs">
+                        <p className="text-xs font-bold uppercase text-[#8A99A8] mb-1">
+                          {t("games:accuracy", { defaultValue: "Accuracy" })}
+                        </p>
+                        <p className="font-display text-3xl font-bold text-[#6FAF9A]">
+                          {Math.round(currentResult.accuracy)}%
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-amber-400/20 bg-[#0A1420] py-4 px-2 shadow-xs">
+                        <p className="text-xs font-bold uppercase text-[#8A99A8] mb-1">
+                          {t("games:time", { defaultValue: "Time" })}
+                        </p>
+                        <p className="font-display text-3xl font-bold text-[#E8ECEF]">
+                          {formatDuration(currentResult.durationSeconds)}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Sync badge */}
+                    {currentResult.offline ? (
+                      <div className="flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm text-rose-800 mb-5 w-full justify-center">
+                        <CloudOff size={16} className="text-rose-600 shrink-0" />
+                        <span>{t("games:resultSavedLocally", { defaultValue: "Saved locally (will sync online)" })}</span>
+                      </div>
+                    ) : currentResult.synced ? (
+                      <div className="flex items-center gap-2 rounded-full border border-[#6FAF9A]/30 bg-[#6FAF9A]/10 text-[#6FAF9A] px-4 py-2 text-sm mb-5 w-full justify-center">
+                        <CheckCircle2 size={16} className="text-[#6FAF9A] shrink-0" />
+                        <span>{t("games:performanceRecorded", { defaultValue: "Performance securely recorded" })}</span>
+                      </div>
+                    ) : null}
+
+                    {/* Actions */}
+                    <div className="flex flex-col gap-3 w-full">
                       <Button
-                        onClick={handleNextLevelClick}
+                        onClick={() => void handleMasteryRestart()}
+                        disabled={isRestartingMastery}
                         variant="default"
                         size="touch"
-                        className="w-full min-h-[50px] text-base font-bold shadow-sm bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 touch-manipulation rounded-full flex items-center justify-center gap-2"
+                        className="w-full min-h-[52px] text-base font-bold shadow-md bg-[#E0A23B] hover:bg-[#c98e2e] text-[#0A1420] active:scale-95 touch-manipulation rounded-full flex items-center justify-center gap-2 border border-amber-400/30"
                       >
-                        <span>{t("games:nextLevel", { next: level + 1, defaultValue: `Next Level (${level + 1})` })}</span>
-                        <ArrowRight size={20} className="stroke-[2.5]" />
+                        <RotateCcw size={18} className="stroke-[2.5]" />
+                        <span>
+                          {isRestartingMastery ? "Saving mastery…" : "Restart from Level 1"}
+                        </span>
                       </Button>
-                    )}
-
-                    <div className="flex flex-col sm:flex-row gap-3 w-full">
-                      {onPlayAgain && (
-                        <Button
-                          onClick={onPlayAgain}
-                          variant="outline"
-                          size="touch"
-                          className="flex-1 min-h-[48px] text-sm font-semibold text-[#E8ECEF] bg-[#0A1420] border-white/10 hover:bg-white/5 active:scale-95 touch-manipulation rounded-full flex items-center justify-center gap-2"
-                        >
-                          <RotateCcw size={18} className="stroke-[2.5]" />
-                          <span>{t("games:playAgain", { defaultValue: "Play Again" })}</span>
-                        </Button>
-                      )}
                       <Button
                         asChild
                         variant="ghost"
                         size="touch"
-                        className="flex-1 min-h-[48px] border border-white/10 bg-[#0A1420] text-[#E8ECEF] hover:bg-white/5 active:scale-95 touch-manipulation text-sm font-semibold rounded-full flex items-center justify-center gap-2"
+                        className="w-full min-h-[48px] border border-white/10 bg-[#0A1420] text-[#E8ECEF] hover:bg-white/5 active:scale-95 touch-manipulation text-sm font-semibold rounded-full flex items-center justify-center gap-2"
                       >
                         <Link to="/games">
                           <Home size={18} className="stroke-[2.5]" />
@@ -482,7 +536,107 @@ export function GameShell({
                       </Button>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  /* ══════════════════════════════════════════════════════
+                     NORMAL RESULTS SCREEN
+                     ══════════════════════════════════════════════════════ */
+                  <div className="animate-in fade-in zoom-in-95 duration-300 rounded-3xl border border-white/8 bg-[#121D2B] p-6 sm:p-8 shadow-2xl flex flex-col items-center text-center max-w-lg mx-auto text-[#E8ECEF]">
+                    <div className="flex size-20 items-center justify-center rounded-full bg-[#E0A23B]/15 text-[#E0A23B] mb-4 shadow-sm">
+                      <Trophy size={40} />
+                    </div>
+
+                    <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#E8ECEF] mb-1">
+                      {encouragement?.title ?? t("games:greatJob", { defaultValue: "Great Job!" })}
+                    </h2>
+                    <p className="text-[#8A99A8] text-sm max-w-sm mb-2 font-medium">
+                      {encouragement?.message}
+                    </p>
+                    <p className="text-[#8A99A8] text-xs mb-6">
+                      {currentResult.gameName ?? resolvedGame.name} · {t("games:level", { level, maxLevel })}
+                    </p>
+
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-3 gap-3 w-full mb-6">
+                      <div className="rounded-2xl border border-white/8 bg-[#0A1420] py-4 px-2 shadow-xs">
+                        <p className="text-xs font-bold uppercase text-[#8A99A8] mb-1">
+                          {t("games:score", { defaultValue: "Score" })}
+                        </p>
+                        <p className="font-display text-3xl font-bold text-[#E0A23B]">
+                          {currentResult.score}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-white/8 bg-[#0A1420] py-4 px-2 shadow-xs">
+                        <p className="text-xs font-bold uppercase text-[#8A99A8] mb-1">
+                          {t("games:accuracy", { defaultValue: "Accuracy" })}
+                        </p>
+                        <p className="font-display text-3xl font-bold text-[#6FAF9A]">
+                          {Math.round(currentResult.accuracy)}%
+                        </p>
+                      </div>
+                      <div className="rounded-2xl border border-white/8 bg-[#0A1420] py-4 px-2 shadow-xs">
+                        <p className="text-xs font-bold uppercase text-[#8A99A8] mb-1">
+                          {t("games:time", { defaultValue: "Time" })}
+                        </p>
+                        <p className="font-display text-3xl font-bold text-[#E8ECEF]">
+                          {formatDuration(currentResult.durationSeconds)}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Sync Status Badge */}
+                    {currentResult.offline ? (
+                      <div className="flex items-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2 text-sm text-rose-800 mb-5 w-full justify-center">
+                        <CloudOff size={16} className="text-rose-600 shrink-0" />
+                        <span>{t("games:resultSavedLocally", { defaultValue: "Saved locally (will sync online)" })}</span>
+                      </div>
+                    ) : currentResult.synced ? (
+                      <div className="flex items-center gap-2 rounded-full border border-[#6FAF9A]/30 bg-[#6FAF9A]/10 text-[#6FAF9A] px-4 py-2 text-sm text-emerald-800 mb-5 w-full justify-center">
+                        <CheckCircle2 size={16} className="text-[#6FAF9A] shrink-0" />
+                        <span>{t("games:performanceRecorded", { defaultValue: "Performance securely recorded" })}</span>
+                      </div>
+                    ) : null}
+
+                    {/* Large Accessible Action Buttons */}
+                    <div className="flex flex-col gap-3 w-full">
+                      {hasNextLevel && (
+                        <Button
+                          onClick={handleNextLevelClick}
+                          variant="default"
+                          size="touch"
+                          className="w-full min-h-[50px] text-base font-bold shadow-sm bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 touch-manipulation rounded-full flex items-center justify-center gap-2"
+                        >
+                          <span>{t("games:nextLevel", { next: level + 1, defaultValue: `Next Level (${level + 1})` })}</span>
+                          <ArrowRight size={20} className="stroke-[2.5]" />
+                        </Button>
+                      )}
+
+                      <div className="flex flex-col sm:flex-row gap-3 w-full">
+                        {onPlayAgain && (
+                          <Button
+                            onClick={onPlayAgain}
+                            variant="outline"
+                            size="touch"
+                            className="flex-1 min-h-[48px] text-sm font-semibold text-[#E8ECEF] bg-[#0A1420] border-white/10 hover:bg-white/5 active:scale-95 touch-manipulation rounded-full flex items-center justify-center gap-2"
+                          >
+                            <RotateCcw size={18} className="stroke-[2.5]" />
+                            <span>{t("games:playAgain", { defaultValue: "Play Again" })}</span>
+                          </Button>
+                        )}
+                        <Button
+                          asChild
+                          variant="ghost"
+                          size="touch"
+                          className="flex-1 min-h-[48px] border border-white/10 bg-[#0A1420] text-[#E8ECEF] hover:bg-white/5 active:scale-95 touch-manipulation text-sm font-semibold rounded-full flex items-center justify-center gap-2"
+                        >
+                          <Link to="/games">
+                            <Home size={18} className="stroke-[2.5]" />
+                            <span>{t("common:allGames", { defaultValue: "All Games" })}</span>
+                          </Link>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </>
             ) : isValidElement(children) ? (
               cloneElement(children as React.ReactElement<{ level?: number }>, {
